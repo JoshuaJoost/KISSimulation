@@ -1,2 +1,5 @@
 Dateien an git senden:
 - [Alt] + [9] -> "unversioned files" [rechtsklick] -> "Add to VCS"
+
+Commit:
+- [Ctrl] + [k]
