@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyTyped="#mazeMoveRobot" prefHeight="700.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui_simulation.Controller">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyReleased="#mazeMoveRobot" prefHeight="700.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui_simulation.Controller">
    <children>
       <AnchorPane prefHeight="520.0" prefWidth="500.0">
          <children>
@@ -62,7 +62,7 @@
          <children>
             <Pane layoutY="20.0" prefHeight="180.0" prefWidth="300.0">
                <children>
-                  <TableView fx:id="mazeDateTable" prefHeight="180.0" prefWidth="300.0">
+                  <TableView fx:id="mazefileTable" onMouseClicked="#mazefileTableSelectRow" prefHeight="180.0" prefWidth="300.0">
                     <columns>
                       <TableColumn fx:id="mazefileTableNr" editable="false" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" resizable="false" text="Nr" />
                       <TableColumn fx:id="mazefileTableFilename" editable="false" maxWidth="180.0" minWidth="180.0" prefWidth="180.0" resizable="false" text="Dateiname" />

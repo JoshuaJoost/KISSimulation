@@ -1,3 +1,5 @@
+----------------- GIT: -------------------
+
 Dateien an git senden:
 - [Alt] + [9] -> "unversioned files" [rechtsklick] -> "Add to VCS"
 
@@ -6,3 +8,10 @@ Commit:
 
 Push:
 - [Ctrl] + [Shift] + [k]
+
+----------------- IntelliJ: -------------------
+
+- Einrücken: [Ctrl] + [Alt] + [l]
+- Aus-Kommentieren: [Ctrl] + [<]
+
+- Menü für diverse Einstellungen: [Ctrl] + [Alt] + [s]

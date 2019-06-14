@@ -8,12 +8,15 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
+    private static final int WINDOW_WIDTH = 800;
+    private static final int WINDOW_HEIGHT = 700;
+
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("View.fxml"));
         primaryStage.setTitle("KIS Simulation Roboter");
-        primaryStage.setScene(new Scene(root, 300, 275));
-        primaryStage.show();
+        primaryStage.setScene(new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT));
+        primaryStage.show(); // TODO erst nach initialiseGUI?
     }
 
 
