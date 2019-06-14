@@ -141,9 +141,9 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        mazefileTableNr.setCellValueFactory(new PropertyValueFactory<MazefileTableData, Integer>("nr"));
-        mazefileTableFilename.setCellValueFactory(new PropertyValueFactory<MazefileTableData, String>("FILE_NAME"));
-        mazefileTableSelected.setCellValueFactory(new PropertyValueFactory<MazefileTableData, String>("selected"));
+        mazefileTableNr.setCellValueFactory(new PropertyValueFactory<>("nr"));
+        mazefileTableFilename.setCellValueFactory(new PropertyValueFactory<>("FILE_NAME"));
+        mazefileTableSelected.setCellValueFactory(new PropertyValueFactory<>("selected"));
 
         mazefileTable.setItems(getMazeFiles(DIRECTORY_MAZE_FILES));
     }
