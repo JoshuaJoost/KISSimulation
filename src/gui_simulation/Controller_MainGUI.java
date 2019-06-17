@@ -23,7 +23,8 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 // TODO
-// - Sortieralgorithmus für MazefileTable schreiben
+// 0 - Sortieralgorithmus für MazefileTable schreiben
+// 9 - Klick Event: Roboter hinzufügen - Startposition in Maze selbst?
 
 public class Controller_MainGUI implements Initializable {
 
@@ -112,16 +113,17 @@ public class Controller_MainGUI implements Initializable {
     @FXML
     void addNewRobot(ActionEvent event) {
         System.out.println("x <" + mazePixelX + "> y <" + mazePixelY + ">");
+        SimulationRobot.addRobot(4, 3);
         int[] position = {30,31,32};
-        SimulationRobot.addRobot(4, 3, position);
+        SimulationRobot robot1 = SimulationRobot.getRobots().get(0);
+        robot1.setPosition(position);
 
         // Setze Roboter ins Labyrinth
-        for(int i = 0; i < position.length; i++){
-            Rectangle newRobotField = mazeFields.get(position[i]);
+        for(int i = 0; i < robot1.getPosition().length; i++){
+            Rectangle newRobotField = mazeFields.get(robot1.getPosition()[i]);
             newRobotField.setFill(SimulationRobot.getColor());
-            mazeFields.set(position[i], newRobotField);
+            mazeFields.set(robot1.getPosition()[i], newRobotField);
         }
-
     }
 
     @FXML

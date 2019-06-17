@@ -17,12 +17,11 @@ public class SimulationRobot {
     private final int sizeY;
     private int[] position;
 
-    private SimulationRobot(int robotPixelX, int robotPixelY, int[] position){
+    private SimulationRobot(int robotPixelX, int robotPixelY){
         roboName = prefixRoboName + (++numberOfRobots);
         roboNumber = numberOfRobots;
         this.sizeX = robotPixelX;
         this.sizeY = robotPixelY;
-        this.position = position;
     }
 
     public String getRoboName(){
@@ -61,8 +60,8 @@ public class SimulationRobot {
         return mazeRobotColor;
     }
 
-    public static ArrayList<SimulationRobot> addRobot(int robotPixelX, int robotPixelY, int[] position){
-        robots.add(new SimulationRobot(robotPixelX, robotPixelY, position));
+    public static ArrayList<SimulationRobot> addRobot(int robotPixelX, int robotPixelY){
+        robots.add(new SimulationRobot(robotPixelX, robotPixelY));
 
         return robots;
     }
