@@ -37,7 +37,7 @@ public class Controller_MainGUI implements Initializable {
     private static final File DIRECTORY_MAZE_FILES = new File((System.getProperty("user.dir") + "\\src\\gui_simulation\\mazeFiles"));
     private final String MAZE_LABEL_PREFIX = "Labyrinth: ";
 
-    ArrayList<Rectangle> mazeFields = new ArrayList<>();
+    private ObservableList<Rectangle> mazeFields = FXCollections.observableArrayList();
     private int mazePixelX = 0;
     private int mazePixelY = 0;
 
@@ -111,6 +111,16 @@ public class Controller_MainGUI implements Initializable {
 
     @FXML
     void addNewRobot(ActionEvent event) {
+        System.out.println("x <" + mazePixelX + "> y <" + mazePixelY + ">");
+        int[] position = {30,31,32};
+        SimulationRobot.addRobot(4, 3, position);
+
+        // Setze Roboter ins Labyrinth
+        for(int i = 0; i < position.length; i++){
+            Rectangle newRobotField = mazeFields.get(position[i]);
+            newRobotField.setFill(SimulationRobot.getColor());
+            mazeFields.set(position[i], newRobotField);
+        }
 
     }
 
@@ -170,6 +180,7 @@ public class Controller_MainGUI implements Initializable {
     }
 
     private void drawMaze(String filePath){
+        mazeFields.clear();
         BufferedReader br;
         try{
             br = new BufferedReader(new FileReader(filePath));
