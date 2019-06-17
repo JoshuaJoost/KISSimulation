@@ -25,7 +25,7 @@ import java.util.ResourceBundle;
 // TODO
 // - Sortieralgorithmus für MazefileTable schreiben
 
-public class Controller implements Initializable {
+public class Controller_MainGUI implements Initializable {
 
     private final char mazeWallSymbol = '#';
     private final char mazeVoidSymbol = ' ';
@@ -37,7 +37,7 @@ public class Controller implements Initializable {
     private static final File DIRECTORY_MAZE_FILES = new File((System.getProperty("user.dir") + "\\src\\gui_simulation\\mazeFiles"));
     private final String MAZE_LABEL_PREFIX = "Labyrinth: ";
 
-    private int[][] mazefileIntArray;
+    ArrayList<Rectangle> mazeFields = new ArrayList<>();
     private int mazePixelX = 0;
     private int mazePixelY = 0;
 
@@ -194,8 +194,6 @@ public class Controller implements Initializable {
             String newMazeLabelText = mazeLable.getText() + " Größe: " + mazeStringParts[0].length() + "x" + mazeStringParts.length;
             mazeLable.setText(newMazeLabelText);
 
-            ArrayList<Rectangle> mazeFields = new ArrayList<>();
-
             System.out.println("x: " + mazePixelX + " y: " + mazePixelY);
             for(int y = 0; y < mazeStringParts.length; y++){
                 System.out.print(y + ": ");
@@ -262,4 +260,5 @@ public class Controller implements Initializable {
         }
 
     }
+
 }
