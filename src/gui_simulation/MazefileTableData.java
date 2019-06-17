@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class MazefileTableData {
     private static int numberOfMazeFiles = 0;
-    private static ArrayList<MazefileTableData> mazeFiles = new ArrayList<MazefileTableData>();
+    private static ArrayList<MazefileTableData> mazeFiles = new ArrayList<>();
     private static Integer indexPositionOfActualSelectedMazeFile = null;
     private static final SimpleStringProperty SELECTED = new SimpleStringProperty("yep");
 
@@ -27,7 +27,7 @@ public class MazefileTableData {
 
     public static ArrayList<MazefileTableData> selectMaze(int rowNumber){
         if(rowNumber <= mazeFiles.size()) {
-            if (indexPositionOfActualSelectedMazeFile != null) {
+            if (indexPositionOfActualSelectedMazeFile == null) {
                 MazefileTableData updatedData = mazeFiles.get(rowNumber);
                 updatedData.setSelected(true);
                 mazeFiles.set(rowNumber, updatedData);
@@ -56,6 +56,10 @@ public class MazefileTableData {
         else{
             this.selected = new SimpleStringProperty("");
         }
+    }
+
+    public static MazefileTableData getMazefileTableDataN (int index){
+        return mazeFiles.get(index);
     }
 
     public static ArrayList<MazefileTableData> getMazefileTableData(){

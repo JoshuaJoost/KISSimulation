@@ -21,6 +21,7 @@ import java.util.ResourceBundle;
 public class Controller implements Initializable {
 
     private static final File DIRECTORY_MAZE_FILES = new File((System.getProperty("user.dir") + "\\src\\gui_simulation\\mazeFiles"));
+    private final String MAZE_LABEL_PREFIX = "Labyrinth: ";
 
     @FXML
     private Label mazeLable;
@@ -85,6 +86,8 @@ public class Controller implements Initializable {
     @FXML
     private TableColumn<MazefileTableData, String> mazefileTableSelected;
 
+    private ObservableList<MazefileTableData> mazefileTableData = FXCollections.observableArrayList();
+
     @FXML
     private Label mazeLableSelectedFile;
 
@@ -136,21 +139,33 @@ public class Controller implements Initializable {
     @FXML
     void mazefileTableSelectRow(MouseEvent event) {
         // TODO ausgewählte Reihe selectieren -> entspr. Befehl in MazefileTableData
-        System.out.println("Table klicked");
+        // Line number one smaller than index position
+        int selectedRowIndexNumber = mazefileTable.getSelectionModel().getSelectedItem().getNr() - 1;
+        MazefileTableData.selectMaze(selectedRowIndexNumber);
+
+        mazefileTableData.set(selectedRowIndexNumber, MazefileTableData.getMazefileTableDataN(selectedRowIndexNumber));
+        mazeLable.setText(MAZE_LABEL_PREFIX + mazefileTable.getSelectionModel().getSelectedItem().getFILE_NAME());
+
+        // TODO Labyrinth einfügen
+    }
+
+    private static void convertFileToIntArray(String filePath){
+
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        getMazeFiles(DIRECTORY_MAZE_FILES);
+
         mazefileTableNr.setCellValueFactory(new PropertyValueFactory<>("nr"));
         mazefileTableFilename.setCellValueFactory(new PropertyValueFactory<>("FILE_NAME"));
         mazefileTableSelected.setCellValueFactory(new PropertyValueFactory<>("selected"));
 
-        mazefileTable.setItems(getMazeFiles(DIRECTORY_MAZE_FILES));
+        mazefileTable.setItems(mazefileTableData);
     }
 
-    private static ObservableList<MazefileTableData> getMazeFiles(File dir) {
+    private void getMazeFiles(File dir) {
         File files[] = dir.listFiles();
-        ObservableList<MazefileTableData> mazeFiles = FXCollections.observableArrayList();
 
         for (int i = 0; i < files.length; i++) {
             if (files[i].isFile() && files[i].getName().startsWith("maze")) {
@@ -158,22 +173,16 @@ public class Controller implements Initializable {
             }
         }
 
-        mazeFiles.addAll(MazefileTableData.getMazefileTableData());
+        mazefileTableData.addAll(MazefileTableData.getMazefileTableData());
 
-        for(MazefileTableData i : mazeFiles){
-            System.out.println(i.toString());
-        }
-
-        // TODO DebuggCode zeige Mazefiles auf Konsole an
-//        for (int i = 0; i < mazeFiles.size(); i++) {
-//            System.out.println(mazeFiles.get(i).getName());
+        // Debugg-Code: Zeige Mazefiles auf Konsole an
+//        for(MazefileTableData i : mazefileTableData){
+//            System.out.println(i.toString());
 //        }
-        // TODO END
 
-        if(mazeFiles.size() == 0){
+        if(mazefileTableData.size() == 0){
             throw new IllegalArgumentException("Keine gültigen Labyrinthdateien bei " + DIRECTORY_MAZE_FILES + " gefunden");
         }
 
-        return mazeFiles;
     }
 }
