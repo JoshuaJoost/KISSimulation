@@ -13,15 +13,29 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.event.ActionEvent;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
-import java.io.File;
+import java.io.*;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
 
+    private final char mazeWallSymbol = '#';
+    private final char mazeVoidSymbol = ' ';
+
+    private final Color mazeWallColor = Color.rgb(0,0,0);
+    private final Color mazeVoidColor = Color.rgb(255,255,255);
+    private final Color mazeErrorColor = Color.rgb(255,0,0);
+
     private static final File DIRECTORY_MAZE_FILES = new File((System.getProperty("user.dir") + "\\src\\gui_simulation\\mazeFiles"));
     private final String MAZE_LABEL_PREFIX = "Labyrinth: ";
+
+    private int[][] mazefileIntArray;
+    private int mazePixelX = 0;
+    private int mazePixelY = 0;
 
     @FXML
     private Label mazeLable;
@@ -138,7 +152,7 @@ public class Controller implements Initializable {
 
     @FXML
     void mazefileTableSelectRow(MouseEvent event) {
-        // TODO ausgewählte Reihe selectieren -> entspr. Befehl in MazefileTableData
+        // TODO BUGG! Bei Sortieren
         // Line number one smaller than index position
         int selectedRowIndexNumber = mazefileTable.getSelectionModel().getSelectedItem().getNr() - 1;
         MazefileTableData.selectMaze(selectedRowIndexNumber);
@@ -147,10 +161,58 @@ public class Controller implements Initializable {
         mazeLable.setText(MAZE_LABEL_PREFIX + mazefileTable.getSelectionModel().getSelectedItem().getFILE_NAME());
 
         // TODO Labyrinth einfügen
+        drawMaze(DIRECTORY_MAZE_FILES + "\\" + mazefileTable.getSelectionModel().getSelectedItem().getFILE_NAME());
     }
 
-    private static void convertFileToIntArray(String filePath){
+    private void drawMaze(String filePath){
+        BufferedReader br;
+        try{
+            br = new BufferedReader(new FileReader(filePath));
 
+            StringBuilder sb = new StringBuilder();
+            String line = "";
+
+            while((line = br.readLine()) != null){
+                sb.append(line);
+                sb.append(System.lineSeparator());
+            }
+            br.close();
+
+//          System.out.println(sb.toString());
+            String[] mazeStringParts = sb.toString().split(System.lineSeparator());
+
+            // Setze Pixelgröße einzelner Labyrinthbausteine
+            mazePixelX = (int) mazePane.getWidth() / mazeStringParts[0].length();
+            mazePixelY = (int) mazePane.getHeight() / mazeStringParts.length;
+
+            ArrayList<Rectangle> mazeFields = new ArrayList<>();
+
+            System.out.println("x: " + mazePixelX + " y: " + mazePixelY);
+            for(int y = 0; y < mazeStringParts.length; y++){
+                System.out.print(y + ": ");
+                for (int x = 0; x < mazeStringParts[0].length(); x++){
+                    Rectangle mazeField = new Rectangle(x * mazePixelX,y * mazePixelY, mazePixelX, mazePixelY);
+                    if(mazeStringParts[y].charAt(x) == mazeWallSymbol){
+                        mazeField.setFill(mazeWallColor);
+                    }
+                    else if(mazeStringParts[y].charAt(x) == mazeVoidSymbol){
+                        mazeField.setFill(mazeVoidColor);
+                    } else {
+                        mazeField.setFill(mazeErrorColor);
+                    }
+                    System.out.print(mazeStringParts[y].charAt(x));
+                    mazeFields.add(mazeField);
+                }
+                System.out.println();
+            }
+            mazePane.getChildren().setAll(mazeFields);
+
+        } catch (FileNotFoundException e){
+            System.err.println("Datei: " + filePath + " nicht gefunden!");
+            e.printStackTrace();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
     @Override
