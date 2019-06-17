@@ -15,11 +15,15 @@ import javafx.event.ActionEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import org.w3c.dom.css.Rect;
 
 import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+
+// TODO
+// - Sortieralgorithmus für MazefileTable schreiben
 
 public class Controller implements Initializable {
 
@@ -152,16 +156,17 @@ public class Controller implements Initializable {
 
     @FXML
     void mazefileTableSelectRow(MouseEvent event) {
-        // TODO BUGG! Bei Sortieren
         // Line number one smaller than index position
-        int selectedRowIndexNumber = mazefileTable.getSelectionModel().getSelectedItem().getNr() - 1;
-        MazefileTableData.selectMaze(selectedRowIndexNumber);
+        if(mazefileTable.getSelectionModel().getSelectedItem() != null) {
+            int selectedRowIndexNumber = mazefileTable.getSelectionModel().getSelectedItem().getNr() - 1;
+            MazefileTableData.selectMaze(selectedRowIndexNumber);
 
-        mazefileTableData.set(selectedRowIndexNumber, MazefileTableData.getMazefileTableDataN(selectedRowIndexNumber));
-        mazeLable.setText(MAZE_LABEL_PREFIX + mazefileTable.getSelectionModel().getSelectedItem().getFILE_NAME());
+            mazefileTableData.set(selectedRowIndexNumber, MazefileTableData.getMazefileTableDataN(selectedRowIndexNumber));
+            mazeLable.setText(MAZE_LABEL_PREFIX + mazefileTable.getSelectionModel().getSelectedItem().getFILE_NAME());
 
-        // TODO Labyrinth einfügen
-        drawMaze(DIRECTORY_MAZE_FILES + "\\" + mazefileTable.getSelectionModel().getSelectedItem().getFILE_NAME());
+            // TODO Labyrinth einfügen
+            drawMaze(DIRECTORY_MAZE_FILES + "\\" + mazefileTable.getSelectionModel().getSelectedItem().getFILE_NAME());
+        }
     }
 
     private void drawMaze(String filePath){
@@ -185,6 +190,10 @@ public class Controller implements Initializable {
             mazePixelX = (int) mazePane.getWidth() / mazeStringParts[0].length();
             mazePixelY = (int) mazePane.getHeight() / mazeStringParts.length;
 
+            // Setze Größenangabe in mazeLable
+            String newMazeLabelText = mazeLable.getText() + " Größe: " + mazeStringParts[0].length() + "x" + mazeStringParts.length;
+            mazeLable.setText(newMazeLabelText);
+
             ArrayList<Rectangle> mazeFields = new ArrayList<>();
 
             System.out.println("x: " + mazePixelX + " y: " + mazePixelY);
@@ -206,6 +215,12 @@ public class Controller implements Initializable {
                 System.out.println();
             }
             mazePane.getChildren().setAll(mazeFields);
+
+            // TODO: Code zeigt wie Maze manipulierbar ist
+//            Rectangle a = mazeFields.get(10);
+//            a.setFill(Color.rgb(255,0,0));
+//            mazeFields.set(10, a);
+//            mazePane.getChildren().setAll(mazeFields);
 
         } catch (FileNotFoundException e){
             System.err.println("Datei: " + filePath + " nicht gefunden!");
