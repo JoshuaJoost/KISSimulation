@@ -24,7 +24,12 @@ import java.util.ResourceBundle;
 
 // TODO
 // 0 - Sortieralgorithmus für MazefileTable schreiben
-// 9 - Klick Event: Roboter hinzufügen - Startposition in Maze selbst?
+// 9 - Klick Event: Roboter hinzufügen - Startposition in Maze selbst?#
+// Dokumentation: Overleaf -> Beide den selben Account (auch gleichzeitig zugreifen geht)
+// Nach wissenschaftlichen Arbeiten bezüglich Roboter und Labyrinth suchen
+// Wie wird Simulation und Realität aufeinander abgestimmt?
+// An Merkzettel für schriftliche Arbeiten orientieren
+// KIS Prüfung: 20-25min Projekt vorstellen, anschließend Fragen
 
 public class Controller_MainGUI implements Initializable {
 
@@ -33,7 +38,8 @@ public class Controller_MainGUI implements Initializable {
 
     private final Color mazeWallColor = Color.rgb(0,0,0);
     private final Color mazeVoidColor = Color.rgb(255,255,255);
-    private final Color mazeErrorColor = Color.rgb(255,0,0);
+    private final Color mazeGroundTarget = Color.rgb(255,0,0);
+    private final Color mazeErrorColor = Color.rgb(0,255,246);
 
     private static final File DIRECTORY_MAZE_FILES = new File((System.getProperty("user.dir") + "\\src\\gui_simulation\\mazeFiles"));
     private final String MAZE_LABEL_PREFIX = "Labyrinth: ";
@@ -114,9 +120,32 @@ public class Controller_MainGUI implements Initializable {
     void addNewRobot(ActionEvent event) {
         System.out.println("x <" + mazePixelX + "> y <" + mazePixelY + ">");
         SimulationRobot.addRobot(4, 3);
-        int[] position = {30,31,32};
+
+        int[] roboPositions;
+        ArrayList<Integer> foundPositions = new ArrayList<>();
+
+        // Suche nach zufälligem freiem Feld im Labyrinth
+        ArrayList<Rectangle> tmpFields = new ArrayList<>();
+        tmpFields.addAll(mazeFields);
+        int possibleRoboPosition = (int)(Math.random() * tmpFields.size()) + 1;
+        boolean foundFreeField = false;
+
+        while(foundPositions.size() == 0 && tmpFields.size() > 0){
+            if(tmpFields.get(possibleRoboPosition).getFill() == mazeVoidColor){
+                foundPositions.add(possibleRoboPosition);
+            } else {
+                tmpFields.remove(foundPositions);
+                possibleRoboPosition = (int)(Math.random() * tmpFields.size()) + 1;
+            }
+        }
+
+        roboPositions = new int[foundPositions.size()];
+        for(int i = 0; i < foundPositions.size(); i++){
+            roboPositions[i] = foundPositions.get(i);
+        }
+
         SimulationRobot robot1 = SimulationRobot.getRobots().get(0);
-        robot1.setPosition(position);
+        robot1.setPosition(roboPositions);
 
         // Setze Roboter ins Labyrinth
         for(int i = 0; i < robot1.getPosition().length; i++){
