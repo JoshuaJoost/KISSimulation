@@ -8,7 +8,7 @@ public class SimulationRobot {
     private static final String PREFIX_ROBO_NAME = "Robo_";
     private static final String SELECTED_TEXT = "yep";
     private static final String NOT_SELECTED_TEXT = "";
-    private static final Color MAZE_ROBOT_COLOR = Color.rgb(0,0,255);
+    private static final Color DEFAULT_ROBOT_COLOR = Color.rgb(0,0,255);
 
     private static ArrayList<SimulationRobot> robots = new ArrayList<>();
     private static int numberOfRobots = 0;
@@ -20,6 +20,7 @@ public class SimulationRobot {
     private final int sizeY;
     private int[] position;
     private String selected = "";
+    private Color robotColor = null;
 
     private SimulationRobot(int robotPixelX, int robotPixelY){
         roboName = PREFIX_ROBO_NAME + (++numberOfRobots);
@@ -28,8 +29,16 @@ public class SimulationRobot {
         this.sizeY = robotPixelY;
     }
 
-    public static Color getColor(){
-        return MAZE_ROBOT_COLOR;
+    private SimulationRobot(int robotPixelX, int robotPixelY, Color robotColor){
+        roboName = PREFIX_ROBO_NAME + (++numberOfRobots);
+        roboNumber = numberOfRobots;
+        this.sizeX = robotPixelX;
+        this.sizeY = robotPixelY;
+        this.robotColor = robotColor;
+    }
+
+    public static Color getDefaultRobotColor(){
+        return DEFAULT_ROBOT_COLOR;
     }
 
     public static ArrayList<SimulationRobot> addRobot(int robotPixelX, int robotPixelY){
@@ -67,12 +76,22 @@ public class SimulationRobot {
         return false;
     }
 
+    public static void deleteAllRobots(){
+        robots.clear();
+        numberOfRobots = 0;
+        indexSelectedRobot = null;
+    }
+
     public String getRoboName(){
         return roboName;
     }
 
-    public Color getMazeRobotColor(){
-        return MAZE_ROBOT_COLOR;
+    public Color getRobotColor(){
+        if(this.robotColor == null){
+            return DEFAULT_ROBOT_COLOR;
+        } else {
+            return this.robotColor;
+        }
     }
 
     public int getRoboNumber(){

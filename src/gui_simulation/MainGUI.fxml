@@ -62,7 +62,7 @@
          <children>
             <Pane layoutY="20.0" prefHeight="180.0" prefWidth="300.0">
                <children>
-                  <TableView fx:id="mazefileTable" onMouseClicked="#mazefileTableSelectRow" prefHeight="180.0" prefWidth="300.0">
+                  <TableView fx:id="mazefileTable" onMouseClicked="#selectNewMaze" prefHeight="180.0" prefWidth="300.0">
                     <columns>
                       <TableColumn fx:id="mazefileTableNr" editable="false" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" resizable="false" text="Nr" />
                       <TableColumn fx:id="mazefileTableFilename" editable="false" maxWidth="180.0" minWidth="180.0" prefWidth="180.0" resizable="false" text="Dateiname" />

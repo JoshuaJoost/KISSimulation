@@ -15,25 +15,25 @@ public class MazefileTableData {
     private final SimpleStringProperty FILE_NAME;
     private SimpleStringProperty selected;
 
-    private MazefileTableData(String filename){
+    private MazefileTableData(String filename) {
         nr = (++numberOfMazeFiles);
         FILE_NAME = new SimpleStringProperty(filename);
         selected = new SimpleStringProperty("");
     }
 
-    public static ArrayList<MazefileTableData> addMazefileTableData(String filename){
+    public static ArrayList<MazefileTableData> addMazefileTableData(String filename) {
         mazeFiles.add(new MazefileTableData(filename));
         return mazeFiles;
     }
 
-    public static boolean changeSelectedMaze(int indexNewSelectedMaze){
-        if(indexNewSelectedMaze <= mazeFiles.size() - 1){
-            if(selectedMaze == null){
+    public static boolean changeSelectedMaze(int indexNewSelectedMaze) {
+        if (indexNewSelectedMaze <= mazeFiles.size() - 1) {
+            if (selectedMaze == null) {
                 selectedMaze = indexNewSelectedMaze;
                 mazeFiles.get(selectedMaze).setSelected(SELECTED_TEXT);
                 return true;
             } else {
-                if(selectedMaze != indexNewSelectedMaze){
+                if (selectedMaze != indexNewSelectedMaze) {
                     mazeFiles.get(selectedMaze).setSelected(NOT_SELECTED_TEXT);
                     selectedMaze = indexNewSelectedMaze;
                     mazeFiles.get(selectedMaze).setSelected(SELECTED_TEXT);
@@ -47,32 +47,36 @@ public class MazefileTableData {
         return false;
     }
 
-    private void setSelected(SimpleStringProperty selectionText){
+    private void setSelected(SimpleStringProperty selectionText) {
         this.selected = selectionText;
     }
 
-    public static MazefileTableData getMazefileTableDataN (int index){
+    public static MazefileTableData getMazefileTableDataN(int index) {
         return mazeFiles.get(index);
     }
 
-    public static ArrayList<MazefileTableData> getMazefileTableData(){
+    public static MazefileTableData getSelectedMaze() {
+        return mazeFiles.get(selectedMaze);
+    }
+
+    public static ArrayList<MazefileTableData> getMazefileTableData() {
         return mazeFiles;
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return "Nr. <" + nr + "> Dateiname: <" + FILE_NAME.getValue() + "> Ausgewählt Text: <" + selected.getValue() + ">";
     }
 
-    public Integer getNr(){
+    public Integer getNr() {
         return nr;
     }
 
-    public String getFILE_NAME(){
+    public String getFILE_NAME() {
         return FILE_NAME.getValue();
     }
 
-    public String getSelected(){
+    public String getSelected() {
         return selected.getValue();
     }
 

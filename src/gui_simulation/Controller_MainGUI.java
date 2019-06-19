@@ -15,7 +15,6 @@ import javafx.event.ActionEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import org.w3c.dom.css.Rect;
 
 import java.io.*;
 import java.net.URL;
@@ -168,6 +167,7 @@ public class Controller_MainGUI implements Initializable {
 
     @FXML
     void addNewRobot(ActionEvent event) {
+        // TODO Roboter kann erst dann gesetzt werden, wenn ein Maze existiert!
         // Erstelle Roboter
         SimulationRobot.addRobot(4, 3);
         SimulationRobot.changeSelectedRobot(SimulationRobot.getRobots().size() - 1);
@@ -268,14 +268,12 @@ public class Controller_MainGUI implements Initializable {
         selectedRobot.setPosition(robotPositionsArray);
 
         // Setze Roboter aufs Feld
-        for (int i : selectedRobot.getPosition()) {
-            Rectangle newRobotField = mazeFields.get(i);
-            newRobotField.setFill(SimulationRobot.getColor());
-            mazeFields.set(i, newRobotField);
-        }
+        drawMaze(DIRECTORY_MAZE_FILES + "\\" + MazefileTableData.getSelectedMaze().getFILE_NAME());
 
-        for(int i = 0; i < SimulationRobot.getRobots().size(); i++){
-            System.out.println(SimulationRobot.getRobots().get(i).toString());
+        for (int robotPosition : selectedRobot.getPosition()) {
+            Rectangle newRobotField = mazeFields.get(robotPosition);
+            newRobotField.setFill(SimulationRobot.getSelectedRobot().getRobotColor());
+            mazeFields.set(robotPosition, newRobotField);
         }
     }
 
@@ -320,7 +318,7 @@ public class Controller_MainGUI implements Initializable {
     }
 
     @FXML
-    void mazefileTableSelectRow(MouseEvent event) {
+    void selectNewMaze(MouseEvent event) {
         if (mazefileTable.getSelectionModel().getSelectedItem() != null) {
             int selectedRowNumber = mazefileTable.getSelectionModel().getSelectedItem().getNr();
             // Index Position im mazefile Array eines geringer als mazefile
@@ -331,10 +329,13 @@ public class Controller_MainGUI implements Initializable {
                 mazefileTableData.addAll(MazefileTableData.getMazefileTableData());
                 mazefileTable.sort();
 
-                // TODO getSelectedRobot() hinzufügen und damit arbeiten
-                mazeLable.setText(MAZE_LABEL_PREFIX + MazefileTableData.getMazefileTableDataN(selectedRowNumber - 1).getFILE_NAME());
+                // Lösche Roboter
+                SimulationRobot.deleteAllRobots();
+                robotTableData.clear();
 
-                drawMaze(DIRECTORY_MAZE_FILES + "\\" + MazefileTableData.getMazefileTableDataN(selectedRowNumber - 1).getFILE_NAME());
+                mazeLable.setText(MAZE_LABEL_PREFIX + MazefileTableData.getSelectedMaze().getFILE_NAME());
+
+                drawMaze(DIRECTORY_MAZE_FILES + "\\" + MazefileTableData.getSelectedMaze().getFILE_NAME());
             }
         }
     }
@@ -352,6 +353,13 @@ public class Controller_MainGUI implements Initializable {
                 robotTable.sort();
 
                 robotSelectedLable.setText(ROBOT_LABEL_PREFIX + SimulationRobot.getSelectedRobot().getRoboName());
+
+                drawMaze(DIRECTORY_MAZE_FILES + "\\" + MazefileTableData.getSelectedMaze().getFILE_NAME());
+                for(int robotPosition : SimulationRobot.getSelectedRobot().getPosition()){
+                    Rectangle robotField = mazeFields.get(robotPosition);
+                    robotField.setFill(SimulationRobot.getSelectedRobot().getRobotColor());
+                    mazeFields.set(robotPosition, robotField);
+                }
             }
         }
     }
