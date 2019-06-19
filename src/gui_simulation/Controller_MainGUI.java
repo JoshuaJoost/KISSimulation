@@ -350,7 +350,6 @@ public class Controller_MainGUI implements Initializable {
                         int[] position = SimulationMaze.getSelectedMaze().getMazeRobots().get(i).getPosition();
                         SimulationRobot.addRobot(robotPixelX, robotPixelY, robotColor, position);
                     }
-                    System.out.println(SimulationMaze.getSelectedMaze().getChangeMazeSelectedRobot());
                     SimulationRobot.changeSelectedRobot(SimulationMaze.getSelectedMaze().getChangeMazeSelectedRobot());
                     robotTableData.addAll(SimulationRobot.getRobots());
                     robotTable.sort();
@@ -421,7 +420,7 @@ public class Controller_MainGUI implements Initializable {
             mazeHeight = mazeStringParts[0].length();
 
             // Setze Größenangabe in mazeLable
-            String newMazeLabelText = mazeLable.getText() + " Größe: " + mazeWidth + "x" + mazeHeight;
+            String newMazeLabelText = MAZE_LABEL_PREFIX + " Größe: " + mazeWidth + "x" + mazeHeight;
             mazeLable.setText(newMazeLabelText);
 
             // System.out.println("x: " + mazePixelX + " y: " + mazePixelY);
