@@ -21,7 +21,7 @@
             <Label fx:id="robotSelectedLable" layoutX="50.0" prefHeight="20.0" text="Roboter &lt;keiner ausgewählt&gt;" />
             <Pane fx:id="robotPane" layoutY="20.0" prefHeight="160.0" prefWidth="500.0">
                <children>
-                  <TableView fx:id="robotTable" prefHeight="160.0" prefWidth="290.0">
+                  <TableView fx:id="robotTable" onMouseClicked="#selectNewRobot" prefHeight="160.0" prefWidth="290.0">
                     <columns>
                       <TableColumn fx:id="robotTableNr" editable="false" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" resizable="false" text="Nr" />
                       <TableColumn fx:id="robotTableName" editable="false" maxWidth="170.0" minWidth="170.0" prefWidth="170.0" resizable="false" text="Name" />

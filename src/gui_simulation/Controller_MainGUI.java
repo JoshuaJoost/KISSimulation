@@ -316,16 +316,27 @@ public class Controller_MainGUI implements Initializable {
 
     @FXML
     void mazefileTableSelectRow(MouseEvent event) {
-        // Line number one smaller than index position
         if (mazefileTable.getSelectionModel().getSelectedItem() != null) {
             int selectedRowIndexNumber = mazefileTable.getSelectionModel().getSelectedItem().getNr() - 1;
             MazefileTableData.selectMaze(selectedRowIndexNumber);
 
             mazefileTableData.set(selectedRowIndexNumber, MazefileTableData.getMazefileTableDataN(selectedRowIndexNumber));
+            // TODO: Größe schon hier einfügen?
             mazeLable.setText(MAZE_LABEL_PREFIX + mazefileTable.getSelectionModel().getSelectedItem().getFILE_NAME());
 
-            // TODO Labyrinth einfügen
             drawMaze(DIRECTORY_MAZE_FILES + "\\" + mazefileTable.getSelectionModel().getSelectedItem().getFILE_NAME());
+        }
+    }
+
+    @FXML
+    void selectNewRobot(MouseEvent event) {
+        if(robotTable.getSelectionModel().getSelectedItem() != null){
+            int selectedRowNumber = robotTable.getSelectionModel().getSelectedItem().getRoboNumber();
+            // Index Position im robots Array eines geringer als RoboNumber
+            SimulationRobot.changeSelectedRobot(selectedRowNumber - 1);
+            robotTableData.clear();
+            robotTableData.addAll(SimulationRobot.getRobots());
+            robotTable.sort();
         }
     }
 
