@@ -173,7 +173,7 @@ public class Controller_MainGUI implements Initializable {
         SimulationRobot.changeSelectedRobot(SimulationRobot.getRobots().size() - 1);
         robotTableData.add(SimulationRobot.getRobots().get(SimulationRobot.getRobots().size() - 1));
         // TODO Selektierung des Roboters auf jeweils den letzt erstellten anpassen
-        SimulationRobot selectedRobot = SimulationRobot.getRobots().get(0);
+        SimulationRobot selectedRobot = SimulationRobot.getSelectedRobot();
 
         // Finde Zufällige Startposition
         ArrayList<Integer> robotPositions = new ArrayList<>();
@@ -273,6 +273,10 @@ public class Controller_MainGUI implements Initializable {
             newRobotField.setFill(SimulationRobot.getColor());
             mazeFields.set(i, newRobotField);
         }
+
+        for(int i = 0; i < SimulationRobot.getRobots().size(); i++){
+            System.out.println(SimulationRobot.getRobots().get(i).toString());
+        }
     }
 
     @FXML
@@ -327,6 +331,7 @@ public class Controller_MainGUI implements Initializable {
                 mazefileTableData.addAll(MazefileTableData.getMazefileTableData());
                 mazefileTable.sort();
 
+                // TODO getSelectedRobot() hinzufügen und damit arbeiten
                 mazeLable.setText(MAZE_LABEL_PREFIX + MazefileTableData.getMazefileTableDataN(selectedRowNumber - 1).getFILE_NAME());
 
                 drawMaze(DIRECTORY_MAZE_FILES + "\\" + MazefileTableData.getMazefileTableDataN(selectedRowNumber - 1).getFILE_NAME());

@@ -105,6 +105,16 @@ public class SimulationRobot {
 
     @Override
     public String toString(){
-        return "Nr. " + roboNumber + " Name: " + roboName;
+        String stringPosition = "";
+
+        for(int i = 0; i < position.length; i++){
+            stringPosition += position[i];
+
+            if(i < position.length - 1){
+                stringPosition += ", ";
+            }
+        }
+
+        return "Nr. " + roboNumber + " Name: " + roboName + " Pos: " + stringPosition;
     }
 }
