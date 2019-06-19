@@ -175,47 +175,87 @@ public class Controller_MainGUI implements Initializable {
         ArrayList<Integer> robotPositions = new ArrayList<>();
         ArrayList<Integer> freeMazeFields = getIndexPositionOfFreeMazeFields();
 
+        // Finde geeigenete Position um Breite des Roboters setzen zu können und speichere gefundene Felder in robotPositions
         boolean robotSuccessfullySet = false;
         while (freeMazeFields.size() > 0 && !robotSuccessfullySet) {
-            int startPosition = (int) (Math.random() * freeMazeFields.size());
-            robotPositions.add(freeMazeFields.get(startPosition));
 
-            if (robotPositions.size() == 0) {
-                // TODO in HistorieTabelle eintragen
-                throw new IllegalStateException("Keine gültige Startposition gefunden");
-            }
+            int startPosition = 0;
+            boolean robotSuccessfullySetXPosition = false;
+            while (freeMazeFields.size() > 0 && !robotSuccessfullySetXPosition) {
+                startPosition = (int) (Math.random() * freeMazeFields.size());
+                robotPositions.add(freeMazeFields.get(startPosition));
 
-            // Finde benachbarte freie Felder X Richtung
-
-            boolean lookRight = true;
-            boolean lookLeft = true;
-            for (int i = 1; i < selectedRobot.getSizeX() && robotPositions.size() < selectedRobot.getSizeX(); i++) {
-                if (mazeFields.get(robotPositions.get(0) + i).getFill() == mazeVoidColor && lookRight) {
-                    robotPositions.add(robotPositions.get(0) + i);
-                } else {
-                    lookRight = false;
+                if (robotPositions.size() == 0) {
+                    // TODO in HistorieTabelle eintragen
+                    throw new IllegalStateException("Keine gültige Startposition gefunden");
                 }
 
-                if (robotPositions.size() < selectedRobot.getSizeX()) {
-                    if (mazeFields.get(robotPositions.get(0) - i).getFill() == mazeVoidColor && lookLeft) {
-                        robotPositions.add(robotPositions.get(0) - i);
+                // Finde benachbarte freie Felder X Richtung
+
+                boolean lookRight = true;
+                boolean lookLeft = true;
+                for (int i = 1; i < selectedRobot.getSizeX() && robotPositions.size() < selectedRobot.getSizeX(); i++) {
+                    if (mazeFields.get(robotPositions.get(0) + i).getFill() == mazeVoidColor && lookRight) {
+                        robotPositions.add(robotPositions.get(0) + i);
                     } else {
-                        lookLeft = false;
+                        lookRight = false;
+                    }
+
+                    if (robotPositions.size() < selectedRobot.getSizeX()) {
+                        if (mazeFields.get(robotPositions.get(0) - i).getFill() == mazeVoidColor && lookLeft) {
+                            robotPositions.add(robotPositions.get(0) - i);
+                        } else {
+                            lookLeft = false;
+                        }
+                    }
+                }
+
+                // Prüfe ob Roboter gesetzt werden konnte
+                if (robotPositions.size() != selectedRobot.getSizeX()) {
+                    robotPositions.clear();
+                    freeMazeFields.remove(startPosition);
+                } else {
+                    robotSuccessfullySetXPosition = true;
+                }
+            }
+            if (robotPositions.size() < selectedRobot.getSizeX()) {
+                // TODO in Historie eintragen
+                throw new IllegalStateException("Roboter konnte nicht gesetzt werden. Kein geeigneter Platz gefunden");
+            }
+
+            // Finde benachbarte freie Felder Y Richtung
+            boolean lookAbove = true;
+            boolean lookBelow = true;
+            for (int y = 1; y < selectedRobot.getSizeY() && robotPositions.size() < (selectedRobot.getSizeX() * selectedRobot.getSizeY()) && (lookAbove || lookBelow); y++) {
+                for (int x = 0; x < selectedRobot.getSizeX(); x++) {
+                    if (lookAbove && !(mazeFields.get(robotPositions.get(x) + (y * mazeHeight)).getFill() == mazeVoidColor)) {
+                        lookAbove = false;
+                    }
+                    if (lookBelow && !(mazeFields.get(robotPositions.get(x) - (y * mazeHeight)).getFill() == mazeVoidColor)) {
+                        lookBelow = false;
+                    }
+                }
+                if (lookAbove && robotPositions.size() < (selectedRobot.getSizeX() * selectedRobot.getSizeY())) {
+                    for (int x = 0; x < selectedRobot.getSizeX(); x++) {
+                        robotPositions.add(robotPositions.get(x) + (y * mazeHeight));
+                    }
+                }
+                if (lookBelow && robotPositions.size() < (selectedRobot.getSizeX() * selectedRobot.getSizeY())) {
+                    for (int x = 0; x < selectedRobot.getSizeX(); x++) {
+                        robotPositions.add(robotPositions.get(x) - (y * mazeHeight));
                     }
                 }
             }
-
-            // Prüfe ob Roboter gesetzt werden konnte
-            if (robotPositions.size() != selectedRobot.getSizeX()) {
+            // Prüfe ob Roboter vollständig gesetzt werden konnte
+            if (robotPositions.size() != (selectedRobot.getSizeX() * selectedRobot.getSizeY())) {
                 robotPositions.clear();
                 freeMazeFields.remove(startPosition);
             } else {
                 robotSuccessfullySet = true;
             }
         }
-        if(robotPositions.size() < selectedRobot.getSizeX()){
-            // TODO in Historie eintragen
-            throw new IllegalStateException("Roboter konnte nicht gesetzt werden. Kein geeigneter Platz gefunden");
+        if(robotPositions.size() != (selectedRobot.getSizeX() * selectedRobot.getSizeY())){
+            throw new IllegalStateException("Roboter konnte nicht gesetzt werden");
         }
 
         // Übermittle Roboter seine Positionen
