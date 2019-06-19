@@ -79,8 +79,4 @@ public class SimRoboter implements Roboter {
 
     }
 
-    @Override
-    public void stop() {
-
-    }
 }

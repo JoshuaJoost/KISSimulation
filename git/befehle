@@ -9,6 +9,9 @@ Commit:
 Push:
 - [Ctrl] + [Shift] + [k]
 
+Pull:
+- [Ctrl] + [t]
+
 ----------------- IntelliJ: -------------------
 
 - Einrücken: [Ctrl] + [Alt] + [l]
