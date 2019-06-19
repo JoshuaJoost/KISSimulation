@@ -48,6 +48,9 @@ public class Controller_MainGUI implements Initializable {
     private final String MAZE_LABEL_PREFIX = "Labyrinth: ";
 
     private ObservableList<Rectangle> mazeFields = FXCollections.observableArrayList();
+    private ObservableList<MazefileTableData> mazefileTableData = FXCollections.observableArrayList();
+    private ObservableList<SimulationRobot> robotTableData = FXCollections.observableArrayList();
+
     private int mazePixelX = 0;
     private int mazePixelY = 0;
 
@@ -64,16 +67,16 @@ public class Controller_MainGUI implements Initializable {
     private Pane robotPane;
 
     @FXML
-    private TableView<?> robotTable;
+    private TableView<SimulationRobot> robotTable;
 
     @FXML
-    private TableColumn<?, ?> robotTableNr;
+    private TableColumn<SimulationRobot, Integer> robotTableNr;
 
     @FXML
-    private TableColumn<?, ?> robotTableName;
+    private TableColumn<SimulationRobot, String> robotTableName;
 
     @FXML
-    private TableColumn<?, ?> robotTableSelected;
+    private TableColumn<SimulationRobot, String> robotTableSelected;
 
     @FXML
     private Button robotStartStop;
@@ -113,8 +116,6 @@ public class Controller_MainGUI implements Initializable {
 
     @FXML
     private TableColumn<MazefileTableData, String> mazefileTableSelected;
-
-    private ObservableList<MazefileTableData> mazefileTableData = FXCollections.observableArrayList();
 
     @FXML
     private Label mazeLableSelectedFile;
@@ -168,6 +169,8 @@ public class Controller_MainGUI implements Initializable {
     void addNewRobot(ActionEvent event) {
         // Erstelle Roboter
         SimulationRobot.addRobot(4, 3);
+        SimulationRobot.changeSelectedRobot(SimulationRobot.getRobots().size() - 1);
+        robotTableData.add(SimulationRobot.getRobots().get(SimulationRobot.getRobots().size() - 1));
         // TODO Selektierung des Roboters auf jeweils den letzt erstellten anpassen
         SimulationRobot selectedRobot = SimulationRobot.getRobots().get(0);
 
@@ -268,111 +271,6 @@ public class Controller_MainGUI implements Initializable {
             Rectangle newRobotField = mazeFields.get(i);
             newRobotField.setFill(SimulationRobot.getColor());
             mazeFields.set(i, newRobotField);
-        }
-    }
-
-    //    @FXML
-    void BaddNewRobot(ActionEvent event) {
-//        System.out.println("x <" + mazePixelX + "> y <" + mazePixelY + ">");
-        SimulationRobot.addRobot(4, 3);
-
-        int[] roboPositions;
-        ArrayList<Integer> robotPosition = new ArrayList<>();
-
-        // Suche nach zufälligem freiem Feld im Labyrinth
-        ArrayList<Integer> freeFields = getIndexPositionOfFreeMazeFields();
-        int startPosition = (int) (Math.random() * freeFields.size());
-
-        robotPosition.add(startPosition);
-
-//        ArrayList<Rectangle> tmpFields = new ArrayList<>();
-//        ArrayList<Rectangle> removedFields = new ArrayList<>();
-//        ArrayList<Integer> indexPositionOfRemovedFields = new ArrayList<>();
-
-//        tmpFields.addAll(mazeFields);
-//        int startPosition = (int) (Math.random() * tmpFields.size()) + 1;
-
-        //
-//        while (robotPosition.size() == 0 && tmpFields.size() > 0) {
-//            if (tmpFields.get(startPosition).getFill() == mazeVoidColor) {
-//                // Finden der wahren Position des freien Feldes
-//                while (removedFields.size() > 0) {
-//                    // Vom Kleinsten zum Größten einfügen um Einfügfehler zu vermeiden
-//                    int smallest = 0;
-//                    for (int i = 0; i < removedFields.size(); i++) {
-//                        if (indexPositionOfRemovedFields.get(i) < indexPositionOfRemovedFields.get(smallest)) {
-//                            smallest = i;
-//                        }
-//                    }
-//
-//                    tmpFields.add(indexPositionOfRemovedFields.remove(smallest), removedFields.remove(smallest));
-//                }
-//
-//                robotPosition.add(startPosition);
-//            } else {
-//                removedFields.add(tmpFields.remove(startPosition));
-//                indexPositionOfRemovedFields.add(startPosition);
-//                startPosition = (int) (Math.random() * tmpFields.size()) + 1;
-//            }
-//        }
-//        if (robotPosition.size() == 0) {
-//            throw new IllegalArgumentException("Kein freies Feld gefunden");
-//        }
-
-        // Baue tmpFields neu auf um weiter darauf arbeiten zu können
-//        while(removedFields.size() > 0){
-//            // Vom Kleinsten zum Größten einfügen um Fehler zu vermeiden
-//            int smallest = 0;
-//            for(int i = 0; i < removedFields.size(); i++){
-//                if(indexPositionOfRemovedFields.get(i) < indexPositionOfRemovedFields.get(smallest)){
-//                    smallest = i;
-//                }
-//            }
-//
-//            tmpFields.add(indexPositionOfRemovedFields.remove(smallest),removedFields.remove(smallest));
-//        }
-
-//        System.out.println("tmp: " + tmpFields.size() + " maze: " + mazeFields.size());
-
-        roboPositions = new int[robotPosition.size()];
-        for (int i = 0; i < robotPosition.size(); i++) {
-            roboPositions[i] = robotPosition.get(i);
-        }
-
-        // Setzen der weiteren horizontalen Felder um die Startposition
-        // -1, da von bereits gefundender Startposition ausgegangen wird
-//        for(int i = 0; i < SimulationRobot.getRobots().get(0).getSizeX() - 1 || tmpFields.size() == 0; i++){
-//            if(tmpFields.get(robotPosition.get(0 + i)).getFill() == mazeVoidColor){
-//
-//            }
-//        }
-//        int neighbourPosition = 1;
-//        boolean lookRightSide = true;
-//        boolean notEnoughtFreeFields = false;
-//        while((robotPosition.size() < SimulationRobot.getRobots().get(0).getSizeX() || tmpFields.size() > 0) && !notEnoughtFreeFields){
-//            if(lookRightSide){
-//                if(tmpFields.get(robotPosition.get(0) + neighbourPosition).getFill() == mazeVoidColor){
-//                    robotPosition.add(robotPosition.get(0) + neighbourPosition);
-//                    neighbourPosition++;
-//                } else {
-//                    lookRightSide = false;
-//                    neighbourPosition = 1;
-//                    tmpFields.remove(robotPosition.get(0) + neighbourPosition);
-//                }
-//            }
-//            if(!lookRightSide){
-//
-//            }
-//        }
-
-        SimulationRobot robot1 = SimulationRobot.getRobots().get(0);
-//        robot1.setPosition(roboPositions);
-
-        // Setze Roboter ins Labyrinth
-        for (int i = 0; i < robotPosition.size(); i++) {
-            Rectangle newRobotField = mazeFields.get(robotPosition.get(i));
-            newRobotField.setFill(SimulationRobot.getColor());
-            mazeFields.set(robotPosition.get(i), newRobotField);
         }
     }
 
@@ -497,11 +395,17 @@ public class Controller_MainGUI implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         getMazeFiles(DIRECTORY_MAZE_FILES);
 
+        // Initialisiere MazeTable
         mazefileTableNr.setCellValueFactory(new PropertyValueFactory<>("nr"));
         mazefileTableFilename.setCellValueFactory(new PropertyValueFactory<>("FILE_NAME"));
         mazefileTableSelected.setCellValueFactory(new PropertyValueFactory<>("selected"));
-
         mazefileTable.setItems(mazefileTableData);
+
+        // Initialisiere RobotTable
+        robotTableNr.setCellValueFactory(new PropertyValueFactory<>("roboNumber"));
+        robotTableName.setCellValueFactory(new PropertyValueFactory<>("roboName"));
+        robotTableSelected.setCellValueFactory(new PropertyValueFactory<>("selected"));
+        robotTable.setItems(robotTableData);
     }
 
     private void getMazeFiles(File dir) {

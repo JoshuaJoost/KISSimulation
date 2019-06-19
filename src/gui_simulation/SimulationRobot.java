@@ -5,35 +5,68 @@ import javafx.scene.paint.Color;
 import java.util.ArrayList;
 
 public class SimulationRobot {
+    private static final String PREFIX_ROBO_NAME = "Robo_";
+    private static final String SELECTED_TEXT = "yep";
+    private static final String NOT_SELECTED_TEXT = "";
+    private static final Color MAZE_ROBOT_COLOR = Color.rgb(0,0,255);
 
     private static ArrayList<SimulationRobot> robots = new ArrayList<>();
-    private static final String prefixRoboName = "Robo";
     private static int numberOfRobots = 0;
-    private static final Color mazeRobotColor = Color.rgb(0,0,255);
+    private static Integer selectedRobot = null;
 
     private final String roboName;
     private final int roboNumber;
     private final int sizeX;
     private final int sizeY;
     private int[] position;
+    private String selected = "";
 
     private SimulationRobot(int robotPixelX, int robotPixelY){
-        roboName = prefixRoboName + (++numberOfRobots);
+        roboName = PREFIX_ROBO_NAME + (++numberOfRobots);
         roboNumber = numberOfRobots;
         this.sizeX = robotPixelX;
         this.sizeY = robotPixelY;
     }
 
-    public String getRoboName(){
-        return roboName;
+    public static Color getColor(){
+        return MAZE_ROBOT_COLOR;
+    }
+
+    public static ArrayList<SimulationRobot> addRobot(int robotPixelX, int robotPixelY){
+        robots.add(new SimulationRobot(robotPixelX, robotPixelY));
+
+        return robots;
     }
 
     public static ArrayList<SimulationRobot> getRobots(){
         return robots;
     }
 
+    public static int getSelectedRobot(){
+        return selectedRobot;
+    }
+
+    public static void changeSelectedRobot(int indexNewSelectedRobot){
+        if(indexNewSelectedRobot <= robots.size() - 1){
+            if(selectedRobot == null){
+                selectedRobot = indexNewSelectedRobot;
+                robots.get(indexNewSelectedRobot).setSelected(SELECTED_TEXT);
+            } else {
+                if(selectedRobot != indexNewSelectedRobot) {
+                    robots.get(selectedRobot).setSelected(NOT_SELECTED_TEXT);
+                    selectedRobot = indexNewSelectedRobot;
+                    robots.get(selectedRobot).setSelected(SELECTED_TEXT);
+                }
+            }
+        }
+    }
+
+    public String getRoboName(){
+        return roboName;
+    }
+
     public Color getMazeRobotColor(){
-        return mazeRobotColor;
+        return MAZE_ROBOT_COLOR;
     }
 
     public int getRoboNumber(){
@@ -56,14 +89,12 @@ public class SimulationRobot {
         return sizeY;
     }
 
-    public static Color getColor(){
-        return mazeRobotColor;
+    public String getSelected(){
+        return selected;
     }
 
-    public static ArrayList<SimulationRobot> addRobot(int robotPixelX, int robotPixelY){
-        robots.add(new SimulationRobot(robotPixelX, robotPixelY));
-
-        return robots;
+    public void setSelected(String selectionText){
+        this.selected = selectionText;
     }
 
     @Override

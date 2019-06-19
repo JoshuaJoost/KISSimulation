@@ -4,13 +4,16 @@ public class SimRoboter implements Roboter {
     private static int numberOfRoboters = 0;
 
     private final String roboName;
+    private final int roboNumber;
     private int[] position;
     private int headPosition;
+    private String selected = "";
 
     SimRoboter(int headPosition, int[] position){
         this.roboName = "SimRobo_" + (++this.numberOfRoboters);
         this.position = position;
         this.headPosition = headPosition;
+        this.roboNumber = numberOfRoboters;
     }
 
     public void setHeadPosition(int headPosition){
@@ -27,6 +30,18 @@ public class SimRoboter implements Roboter {
 
     public int[] getPosition(){
         return this.position;
+    }
+
+    public String getSelected(){
+        return this.selected;
+    }
+
+    public String getRoboName(){
+        return this.roboName;
+    }
+
+    public int getRoboNumber(){
+        return this.roboNumber;
     }
 
     @Override
