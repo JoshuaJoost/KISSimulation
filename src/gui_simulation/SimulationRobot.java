@@ -46,19 +46,25 @@ public class SimulationRobot {
         return selectedRobot;
     }
 
-    public static void changeSelectedRobot(int indexNewSelectedRobot){
+    public static boolean changeSelectedRobot(int indexNewSelectedRobot){
         if(indexNewSelectedRobot <= robots.size() - 1){
             if(selectedRobot == null){
                 selectedRobot = indexNewSelectedRobot;
-                robots.get(indexNewSelectedRobot).setSelected(SELECTED_TEXT);
+                robots.get(selectedRobot).setSelected(SELECTED_TEXT);
+                return true;
             } else {
                 if(selectedRobot != indexNewSelectedRobot) {
                     robots.get(selectedRobot).setSelected(NOT_SELECTED_TEXT);
                     selectedRobot = indexNewSelectedRobot;
                     robots.get(selectedRobot).setSelected(SELECTED_TEXT);
+                    return true;
+                } else{
+                    return false;
                 }
             }
         }
+
+        return false;
     }
 
     public String getRoboName(){

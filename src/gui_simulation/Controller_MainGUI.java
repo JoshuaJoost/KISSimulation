@@ -319,16 +319,17 @@ public class Controller_MainGUI implements Initializable {
         if (mazefileTable.getSelectionModel().getSelectedItem() != null) {
             int selectedRowNumber = mazefileTable.getSelectionModel().getSelectedItem().getNr();
             // Index Position im mazefile Array eines geringer als mazefile
-            MazefileTableData.selectMaze(selectedRowNumber - 1);
+            boolean tableDataChanged = MazefileTableData.changeSelectedMaze(selectedRowNumber - 1);
 
-            // mazefileTableData.set(selectedRowIndexNumber, MazefileTableData.getMazefileTableDataN(selectedRowIndexNumber));
-            mazefileTableData.clear();
-            mazefileTableData.addAll(MazefileTableData.getMazefileTableData());
-            mazefileTable.sort();
-            // TODO: Größe schon hier einfügen?
-            mazeLable.setText(MAZE_LABEL_PREFIX + MazefileTableData.getMazefileTableDataN(selectedRowNumber - 1).getFILE_NAME());
+            if(tableDataChanged) {
+                mazefileTableData.clear();
+                mazefileTableData.addAll(MazefileTableData.getMazefileTableData());
+                mazefileTable.sort();
 
-             drawMaze(DIRECTORY_MAZE_FILES + "\\" + MazefileTableData.getMazefileTableDataN(selectedRowNumber - 1).getFILE_NAME());
+                mazeLable.setText(MAZE_LABEL_PREFIX + MazefileTableData.getMazefileTableDataN(selectedRowNumber - 1).getFILE_NAME());
+
+                drawMaze(DIRECTORY_MAZE_FILES + "\\" + MazefileTableData.getMazefileTableDataN(selectedRowNumber - 1).getFILE_NAME());
+            }
         }
     }
 
@@ -337,10 +338,13 @@ public class Controller_MainGUI implements Initializable {
         if(robotTable.getSelectionModel().getSelectedItem() != null){
             int selectedRowNumber = robotTable.getSelectionModel().getSelectedItem().getRoboNumber();
             // Index Position im robots Array eines geringer als RoboNumber
-            SimulationRobot.changeSelectedRobot(selectedRowNumber - 1);
-            robotTableData.clear();
-            robotTableData.addAll(SimulationRobot.getRobots());
-            robotTable.sort();
+            boolean tableDataChanged = SimulationRobot.changeSelectedRobot(selectedRowNumber - 1);
+
+            if(tableDataChanged) {
+                robotTableData.clear();
+                robotTableData.addAll(SimulationRobot.getRobots());
+                robotTable.sort();
+            }
         }
     }
 

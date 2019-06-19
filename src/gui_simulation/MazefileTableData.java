@@ -7,8 +7,9 @@ import java.util.ArrayList;
 public class MazefileTableData {
     private static int numberOfMazeFiles = 0;
     private static ArrayList<MazefileTableData> mazeFiles = new ArrayList<>();
-    private static Integer indexPositionOfActualSelectedMazeFile = null;
-    private static final SimpleStringProperty SELECTED = new SimpleStringProperty("yep");
+    private static Integer selectedMaze = null;
+    private static final SimpleStringProperty SELECTED_TEXT = new SimpleStringProperty("yep");
+    private static final SimpleStringProperty NOT_SELECTED_TEXT = new SimpleStringProperty("");
 
     private final Integer nr;
     private final SimpleStringProperty FILE_NAME;
@@ -25,37 +26,29 @@ public class MazefileTableData {
         return mazeFiles;
     }
 
-    public static ArrayList<MazefileTableData> selectMaze(int rowNumber){
-        if(rowNumber <= mazeFiles.size()) {
-            if (indexPositionOfActualSelectedMazeFile == null) {
-                MazefileTableData updatedData = mazeFiles.get(rowNumber);
-                updatedData.setSelected(true);
-                mazeFiles.set(rowNumber, updatedData);
+    public static boolean changeSelectedMaze(int indexNewSelectedMaze){
+        if(indexNewSelectedMaze <= mazeFiles.size() - 1){
+            if(selectedMaze == null){
+                selectedMaze = indexNewSelectedMaze;
+                mazeFiles.get(selectedMaze).setSelected(SELECTED_TEXT);
+                return true;
             } else {
-                // deselect current selected row
-                MazefileTableData deselectCurrentSelected = mazeFiles.get(indexPositionOfActualSelectedMazeFile);
-                deselectCurrentSelected.setSelected(false);
-                mazeFiles.set(indexPositionOfActualSelectedMazeFile, deselectCurrentSelected);
-
-                // select new selected row
-                MazefileTableData selectNew = mazeFiles.get(rowNumber);
-                selectNew.setSelected(true);
-                mazeFiles.set(rowNumber, selectNew);
+                if(selectedMaze != indexNewSelectedMaze){
+                    mazeFiles.get(selectedMaze).setSelected(NOT_SELECTED_TEXT);
+                    selectedMaze = indexNewSelectedMaze;
+                    mazeFiles.get(selectedMaze).setSelected(SELECTED_TEXT);
+                    return true;
+                } else {
+                    return false;
+                }
             }
-
-            indexPositionOfActualSelectedMazeFile = rowNumber;
         }
 
-        return mazeFiles;
+        return false;
     }
 
-    private void setSelected(boolean select){
-        if(select){
-            this.selected = SELECTED;
-        }
-        else{
-            this.selected = new SimpleStringProperty("");
-        }
+    private void setSelected(SimpleStringProperty selectionText){
+        this.selected = selectionText;
     }
 
     public static MazefileTableData getMazefileTableDataN (int index){
