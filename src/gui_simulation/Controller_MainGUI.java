@@ -148,7 +148,7 @@ public class Controller_MainGUI implements Initializable {
             }
         }
 
-        if(mazeFreeFields != possibleFreeFields.size()){
+        if (mazeFreeFields != possibleFreeFields.size()) {
             System.err.println("Ungleiche Anzahl an freien Feldern!");
         }
         for (int i = 0, y = 0; i < mazeFields.size(); i++) {
@@ -166,19 +166,61 @@ public class Controller_MainGUI implements Initializable {
 
     @FXML
     void addNewRobot(ActionEvent event) {
+        // Erstelle Roboter
+        SimulationRobot.addRobot(4, 3);
+        // TODO Selektierung des Roboters auf jeweils den letzt erstellten anpassen
+        SimulationRobot selectedRobot = SimulationRobot.getRobots().get(0);
+
         // Finde Zufällige Startposition
         ArrayList<Integer> robotPositions = new ArrayList<>();
         ArrayList<Integer> freeMazeFields = getIndexPositionOfFreeMazeFields();
 
-        robotPositions.add(freeMazeFields.get((int) (Math.random() * freeMazeFields.size())));
+        boolean robotSuccessfullySet = false;
+        while (freeMazeFields.size() > 0 && !robotSuccessfullySet) {
+            int startPosition = (int) (Math.random() * freeMazeFields.size());
+            robotPositions.add(freeMazeFields.get(startPosition));
 
-        // Erstelle Roboter
-        SimulationRobot.addRobot(4, 3);
+            if (robotPositions.size() == 0) {
+                // TODO in HistorieTabelle eintragen
+                throw new IllegalStateException("Keine gültige Startposition gefunden");
+            }
+
+            // Finde benachbarte freie Felder X Richtung
+
+            boolean lookRight = true;
+            boolean lookLeft = true;
+            for (int i = 1; i < selectedRobot.getSizeX() && robotPositions.size() < selectedRobot.getSizeX(); i++) {
+                if (mazeFields.get(robotPositions.get(0) + i).getFill() == mazeVoidColor && lookRight) {
+                    robotPositions.add(robotPositions.get(0) + i);
+                } else {
+                    lookRight = false;
+                }
+
+                if (robotPositions.size() < selectedRobot.getSizeX()) {
+                    if (mazeFields.get(robotPositions.get(0) - i).getFill() == mazeVoidColor && lookLeft) {
+                        robotPositions.add(robotPositions.get(0) - i);
+                    } else {
+                        lookLeft = false;
+                    }
+                }
+            }
+
+            // Prüfe ob Roboter gesetzt werden konnte
+            if (robotPositions.size() != selectedRobot.getSizeX()) {
+                robotPositions.clear();
+                freeMazeFields.remove(startPosition);
+            } else {
+                robotSuccessfullySet = true;
+            }
+        }
+        if(robotPositions.size() < selectedRobot.getSizeX()){
+            // TODO in Historie eintragen
+            throw new IllegalStateException("Roboter konnte nicht gesetzt werden. Kein geeigneter Platz gefunden");
+        }
 
         // Übermittle Roboter seine Positionen
         int[] robotPositionsArray = OwnUtils.convertArrayListToIntArray(robotPositions);
 
-        SimulationRobot selectedRobot = SimulationRobot.getRobots().get(0);
         selectedRobot.setPosition(robotPositionsArray);
 
         // Setze Roboter aufs Feld
