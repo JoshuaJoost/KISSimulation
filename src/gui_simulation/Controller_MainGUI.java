@@ -317,14 +317,18 @@ public class Controller_MainGUI implements Initializable {
     @FXML
     void mazefileTableSelectRow(MouseEvent event) {
         if (mazefileTable.getSelectionModel().getSelectedItem() != null) {
-            int selectedRowIndexNumber = mazefileTable.getSelectionModel().getSelectedItem().getNr() - 1;
-            MazefileTableData.selectMaze(selectedRowIndexNumber);
+            int selectedRowNumber = mazefileTable.getSelectionModel().getSelectedItem().getNr();
+            // Index Position im mazefile Array eines geringer als mazefile
+            MazefileTableData.selectMaze(selectedRowNumber - 1);
 
-            mazefileTableData.set(selectedRowIndexNumber, MazefileTableData.getMazefileTableDataN(selectedRowIndexNumber));
+            // mazefileTableData.set(selectedRowIndexNumber, MazefileTableData.getMazefileTableDataN(selectedRowIndexNumber));
+            mazefileTableData.clear();
+            mazefileTableData.addAll(MazefileTableData.getMazefileTableData());
+            mazefileTable.sort();
             // TODO: Größe schon hier einfügen?
-            mazeLable.setText(MAZE_LABEL_PREFIX + mazefileTable.getSelectionModel().getSelectedItem().getFILE_NAME());
+            mazeLable.setText(MAZE_LABEL_PREFIX + MazefileTableData.getMazefileTableDataN(selectedRowNumber - 1).getFILE_NAME());
 
-            drawMaze(DIRECTORY_MAZE_FILES + "\\" + mazefileTable.getSelectionModel().getSelectedItem().getFILE_NAME());
+             drawMaze(DIRECTORY_MAZE_FILES + "\\" + MazefileTableData.getMazefileTableDataN(selectedRowNumber - 1).getFILE_NAME());
         }
     }
 

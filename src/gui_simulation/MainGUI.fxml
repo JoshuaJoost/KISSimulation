@@ -64,9 +64,9 @@
                <children>
                   <TableView fx:id="mazefileTable" onMouseClicked="#mazefileTableSelectRow" prefHeight="180.0" prefWidth="300.0">
                     <columns>
-                      <TableColumn fx:id="mazefileTableNr" editable="false" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" resizable="false" sortable="false" text="Nr" />
-                      <TableColumn fx:id="mazefileTableFilename" editable="false" maxWidth="180.0" minWidth="180.0" prefWidth="180.0" resizable="false" sortable="false" text="Dateiname" />
-                        <TableColumn fx:id="mazefileTableSelected" editable="false" maxWidth="90.0" minWidth="90.0" prefWidth="90.0" resizable="false" sortable="false" text="Ausgewählt" />
+                      <TableColumn fx:id="mazefileTableNr" editable="false" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" resizable="false" text="Nr" />
+                      <TableColumn fx:id="mazefileTableFilename" editable="false" maxWidth="180.0" minWidth="180.0" prefWidth="180.0" resizable="false" text="Dateiname" />
+                        <TableColumn fx:id="mazefileTableSelected" editable="false" maxWidth="90.0" minWidth="90.0" prefWidth="90.0" resizable="false" text="Ausgewählt" />
                     </columns>
                   </TableView>
                </children></Pane>
