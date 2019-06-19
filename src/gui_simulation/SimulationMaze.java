@@ -4,9 +4,9 @@ import javafx.beans.property.SimpleStringProperty;
 
 import java.util.ArrayList;
 
-public class MazefileTableData {
+public class SimulationMaze {
     private static int numberOfMazeFiles = 0;
-    private static ArrayList<MazefileTableData> mazeFiles = new ArrayList<>();
+    private static ArrayList<SimulationMaze> mazeFiles = new ArrayList<>();
     private static Integer selectedMaze = null;
     private static final SimpleStringProperty SELECTED_TEXT = new SimpleStringProperty("yep");
     private static final SimpleStringProperty NOT_SELECTED_TEXT = new SimpleStringProperty("");
@@ -14,15 +14,17 @@ public class MazefileTableData {
     private final Integer nr;
     private final SimpleStringProperty FILE_NAME;
     private SimpleStringProperty selected;
+    private ArrayList<SimulationRobot> mazeRobots = new ArrayList<>();
+    private int changeMazeSelectedRobot = 0;
 
-    private MazefileTableData(String filename) {
+    private SimulationMaze(String filename) {
         nr = (++numberOfMazeFiles);
         FILE_NAME = new SimpleStringProperty(filename);
         selected = new SimpleStringProperty("");
     }
 
-    public static ArrayList<MazefileTableData> addMazefileTableData(String filename) {
-        mazeFiles.add(new MazefileTableData(filename));
+    public static ArrayList<SimulationMaze> addMazefileTableData(String filename) {
+        mazeFiles.add(new SimulationMaze(filename));
         return mazeFiles;
     }
 
@@ -51,15 +53,15 @@ public class MazefileTableData {
         this.selected = selectionText;
     }
 
-    public static MazefileTableData getMazefileTableDataN(int index) {
+    public static SimulationMaze getMazefileTableDataN(int index) {
         return mazeFiles.get(index);
     }
 
-    public static MazefileTableData getSelectedMaze() {
+    public static SimulationMaze getSelectedMaze() {
         return mazeFiles.get(selectedMaze);
     }
 
-    public static ArrayList<MazefileTableData> getMazefileTableData() {
+    public static ArrayList<SimulationMaze> getMazefileTableData() {
         return mazeFiles;
     }
 
@@ -78,6 +80,22 @@ public class MazefileTableData {
 
     public String getSelected() {
         return selected.getValue();
+    }
+
+    public void addRobotToMaze(SimulationRobot newMazeRobot){
+        this.mazeRobots.add(newMazeRobot);
+    }
+
+    public ArrayList<SimulationRobot> getMazeRobots(){
+        return mazeRobots;
+    }
+
+    public void setChangeMazeSelectedRobot(int newSelectedRobot){
+        this.changeMazeSelectedRobot = newSelectedRobot;
+    }
+
+    public int getChangeMazeSelectedRobot() {
+        return this.changeMazeSelectedRobot;
     }
 
 }
