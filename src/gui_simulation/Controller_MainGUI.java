@@ -46,6 +46,7 @@ public class Controller_MainGUI implements Initializable {
 
     private static final File DIRECTORY_MAZE_FILES = new File((System.getProperty("user.dir") + "\\src\\gui_simulation\\mazeFiles"));
     private final String MAZE_LABEL_PREFIX = "Labyrinth: ";
+    private final String ROBOT_LABEL_PREFIX = "Roboter: ";
 
     private ObservableList<Rectangle> mazeFields = FXCollections.observableArrayList();
     private ObservableList<MazefileTableData> mazefileTableData = FXCollections.observableArrayList();
@@ -344,6 +345,8 @@ public class Controller_MainGUI implements Initializable {
                 robotTableData.clear();
                 robotTableData.addAll(SimulationRobot.getRobots());
                 robotTable.sort();
+
+                robotSelectedLable.setText(ROBOT_LABEL_PREFIX + SimulationRobot.getSelectedRobot().getRoboName());
             }
         }
     }

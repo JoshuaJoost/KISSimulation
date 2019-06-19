@@ -12,7 +12,7 @@ public class SimulationRobot {
 
     private static ArrayList<SimulationRobot> robots = new ArrayList<>();
     private static int numberOfRobots = 0;
-    private static Integer selectedRobot = null;
+    private static Integer indexSelectedRobot = null;
 
     private final String roboName;
     private final int roboNumber;
@@ -42,21 +42,21 @@ public class SimulationRobot {
         return robots;
     }
 
-    public static int getSelectedRobot(){
-        return selectedRobot;
+    public static SimulationRobot getSelectedRobot(){
+        return robots.get(indexSelectedRobot);
     }
 
     public static boolean changeSelectedRobot(int indexNewSelectedRobot){
         if(indexNewSelectedRobot <= robots.size() - 1){
-            if(selectedRobot == null){
-                selectedRobot = indexNewSelectedRobot;
-                robots.get(selectedRobot).setSelected(SELECTED_TEXT);
+            if(indexSelectedRobot == null){
+                indexSelectedRobot = indexNewSelectedRobot;
+                robots.get(indexSelectedRobot).setSelected(SELECTED_TEXT);
                 return true;
             } else {
-                if(selectedRobot != indexNewSelectedRobot) {
-                    robots.get(selectedRobot).setSelected(NOT_SELECTED_TEXT);
-                    selectedRobot = indexNewSelectedRobot;
-                    robots.get(selectedRobot).setSelected(SELECTED_TEXT);
+                if(indexSelectedRobot != indexNewSelectedRobot) {
+                    robots.get(indexSelectedRobot).setSelected(NOT_SELECTED_TEXT);
+                    indexSelectedRobot = indexNewSelectedRobot;
+                    robots.get(indexSelectedRobot).setSelected(SELECTED_TEXT);
                     return true;
                 } else{
                     return false;
