@@ -138,10 +138,39 @@ public class Controller_MainGUI implements Initializable {
                 possibleRoboPosition = (int)(Math.random() * tmpFields.size()) + 1;
             }
         }
+        if(foundPositions.size() == 0){
+            throw new IllegalArgumentException("Kein freies Feld gefunden");
+        }
 
         roboPositions = new int[foundPositions.size()];
         for(int i = 0; i < foundPositions.size(); i++){
             roboPositions[i] = foundPositions.get(i);
+        }
+
+        // Setzen der weiteren horizontalen Felder um die Startposition
+        // -1, da von bereits gefundender Startposition ausgegangen wird
+//        for(int i = 0; i < SimulationRobot.getRobots().get(0).getSizeX() - 1 || tmpFields.size() == 0; i++){
+//            if(tmpFields.get(foundPositions.get(0 + i)).getFill() == mazeVoidColor){
+//
+//            }
+//        }
+        int neighbourPosition = 1;
+        boolean lookRightSide = true;
+        boolean notEnoughtFreeFields = false;
+        while((foundPositions.size() < SimulationRobot.getRobots().get(0).getSizeX() || tmpFields.size() > 0) && !notEnoughtFreeFields){
+            if(lookRightSide){
+                if(tmpFields.get(foundPositions.get(0) + neighbourPosition).getFill() == mazeVoidColor){
+                    foundPositions.add(foundPositions.get(0) + neighbourPosition);
+                    neighbourPosition++;
+                } else {
+                    lookRightSide = false;
+                    neighbourPosition = 1;
+                    tmpFields.remove(foundPositions.get(0) + neighbourPosition);
+                }
+            }
+            if(!lookRightSide){
+
+            }
         }
 
         SimulationRobot robot1 = SimulationRobot.getRobots().get(0);
