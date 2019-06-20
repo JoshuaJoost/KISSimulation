@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class SimulationMaze {
     private static int numberOfMazeFiles = 0;
     private static ArrayList<SimulationMaze> mazeFiles = new ArrayList<>();
-    private static Integer selectedMaze = null;
+    private static Integer selectedMazeNumber = null;
     private static final SimpleStringProperty SELECTED_TEXT = new SimpleStringProperty("yep");
     private static final SimpleStringProperty NOT_SELECTED_TEXT = new SimpleStringProperty("");
 
@@ -30,15 +30,15 @@ public class SimulationMaze {
 
     public static boolean changeSelectedMaze(int indexNewSelectedMaze) {
         if (indexNewSelectedMaze <= mazeFiles.size() - 1) {
-            if (selectedMaze == null) {
-                selectedMaze = indexNewSelectedMaze;
-                mazeFiles.get(selectedMaze).setSelected(SELECTED_TEXT);
+            if (selectedMazeNumber == null) {
+                selectedMazeNumber = indexNewSelectedMaze;
+                mazeFiles.get(selectedMazeNumber).setSelected(SELECTED_TEXT);
                 return true;
             } else {
-                if (selectedMaze != indexNewSelectedMaze) {
-                    mazeFiles.get(selectedMaze).setSelected(NOT_SELECTED_TEXT);
-                    selectedMaze = indexNewSelectedMaze;
-                    mazeFiles.get(selectedMaze).setSelected(SELECTED_TEXT);
+                if (selectedMazeNumber != indexNewSelectedMaze) {
+                    mazeFiles.get(selectedMazeNumber).setSelected(NOT_SELECTED_TEXT);
+                    selectedMazeNumber = indexNewSelectedMaze;
+                    mazeFiles.get(selectedMazeNumber).setSelected(SELECTED_TEXT);
                     return true;
                 } else {
                     return false;
@@ -58,10 +58,14 @@ public class SimulationMaze {
     }
 
     public static SimulationMaze getSelectedMaze() {
-        return mazeFiles.get(selectedMaze);
+        return mazeFiles.get(selectedMazeNumber);
     }
 
-    public static ArrayList<SimulationMaze> getMazefileTableData() {
+    public static Integer getSelectedMazeNumber(){
+        return selectedMazeNumber;
+    }
+
+    public static ArrayList<SimulationMaze> getMazeFiles() {
         return mazeFiles;
     }
 
