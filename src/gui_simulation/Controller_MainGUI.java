@@ -17,13 +17,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 
 // TODO
-// 0 - Sortieralgorithmus für MazefileTable schreiben
-// 9 - Klick Event: Roboter hinzufügen - Startposition in Maze selbst?#
 // Dokumentation: Overleaf -> Beide den selben Account (auch gleichzeitig zugreifen geht)
 // Nach wissenschaftlichen Arbeiten bezüglich Roboter und Labyrinth suchen
 // Wie wird Simulation und Realität aufeinander abgestimmt?
@@ -35,14 +35,12 @@ public class Controller_MainGUI implements Initializable {
     private final char mazeWallSymbol = '#';
     private final char mazeVoidSymbol = ' ';
 
-    private Integer mazeWidth;
-    private Integer mazeHeight;
-
     private final Color mazeWallColor = Color.rgb(0, 0, 0);
     private final Color mazeVoidColor = Color.rgb(255, 255, 255);
     private final Color mazeGroundTarget = Color.rgb(255, 0, 0);
     private final Color mazeErrorColor = Color.rgb(0, 255, 246);
 
+    // TODO in Maze bzw. Robot verlagern?
     private static final File DIRECTORY_MAZE_FILES = new File((System.getProperty("user.dir") + "\\src\\gui_simulation\\mazeFiles"));
     private final String MAZE_LABEL_PREFIX = "Labyrinth: ";
     private final String ROBOT_LABEL_PREFIX = "Roboter: ";
@@ -231,21 +229,21 @@ public class Controller_MainGUI implements Initializable {
                 boolean lookBelow = true;
                 for (int y = 1; y < selectedRobot.getSizeY() && robotPositions.size() < (selectedRobot.getSizeX() * selectedRobot.getSizeY()) && (lookAbove || lookBelow); y++) {
                     for (int x = 0; x < selectedRobot.getSizeX(); x++) {
-                        if (lookAbove && !(mazeFields.get(robotPositions.get(x) + (y * mazeHeight)).getFill() == mazeVoidColor)) {
+                        if (lookAbove && !(mazeFields.get(robotPositions.get(x) + (y * SimulationMaze.getSelectedMaze().getMazeSizeY())).getFill() == mazeVoidColor)) {
                             lookAbove = false;
                         }
-                        if (lookBelow && !(mazeFields.get(robotPositions.get(x) - (y * mazeHeight)).getFill() == mazeVoidColor)) {
+                        if (lookBelow && !(mazeFields.get(robotPositions.get(x) - (y * SimulationMaze.getSelectedMaze().getMazeSizeY())).getFill() == mazeVoidColor)) {
                             lookBelow = false;
                         }
                     }
                     if (lookAbove && robotPositions.size() < (selectedRobot.getSizeX() * selectedRobot.getSizeY())) {
                         for (int x = 0; x < selectedRobot.getSizeX(); x++) {
-                            robotPositions.add(robotPositions.get(x) + (y * mazeHeight));
+                            robotPositions.add(robotPositions.get(x) + (y * SimulationMaze.getSelectedMaze().getMazeSizeY()));
                         }
                     }
                     if (lookBelow && robotPositions.size() < (selectedRobot.getSizeX() * selectedRobot.getSizeY())) {
                         for (int x = 0; x < selectedRobot.getSizeX(); x++) {
-                            robotPositions.add(robotPositions.get(x) - (y * mazeHeight));
+                            robotPositions.add(robotPositions.get(x) - (y * SimulationMaze.getSelectedMaze().getMazeSizeY()));
                         }
                     }
                 }
@@ -280,25 +278,39 @@ public class Controller_MainGUI implements Initializable {
     @FXML
     void mazeMoveRobot(KeyEvent event) {
         System.out.println(":" + event.getCode());
-        switch (event.getCode().toString()) {
-            case "RIGHT":
-                // TODO Roboter nach rechts bewegen
-                System.out.println("Right");
-                break;
-            case "LEFT":
-                // TODO Roboter nach links bewegen
-                System.out.println("left");
-                break;
-            case "DOWN":
-                // TODO Roboter nach oben bewegen
-                System.out.println("down");
-                break;
-            case "UP":
-                // TODO Roboter nach unten bewegen
-                System.out.println("up");
-                break;
-            default: // TODO noch auf andere Tastatureingaben reagieren? z.B. zum Drehen
-                break;
+        if(SimulationRobot.getIndexSelectedRobot() != null) {
+            // TODO switch Kopfteil
+            switch (event.getCode().toString()) {
+                case "RIGHT":
+                    // TODO Roboter nach rechts bewegen
+                    System.out.println("Right");
+                    break;
+                case "LEFT":
+                    // TODO Roboter nach links bewegen
+                    System.out.println("left");
+                    break;
+                case "DOWN":
+                    // TODO Roboter nach oben bewegen
+                    break;
+                case "UP":
+                    boolean freeFields = true;
+                    // TODO an Position des Kopfes anpassen
+                    int[] sortedPositions = SimulationRobot.getSelectedRobot().getPosition();
+                    Arrays.sort(sortedPositions);
+                    for(int x = 0; x < SimulationRobot.getSelectedRobot().getSizeX(); x++){
+                        if(!(mazeFields.get(sortedPositions[x]).getFill() == mazeVoidColor)){
+                            freeFields = false;
+                        }
+                    }
+                    if(freeFields){
+                        SimulationRobot.getSelectedRobot().forward();
+                    } else {
+                        SimulationRobot.getSelectedRobot().isBumped();
+                    }
+                    break;
+                default: // TODO noch auf andere Tastatureingaben reagieren? z.B. zum Drehen
+                    break;
+            }
         }
     }
 
@@ -355,7 +367,9 @@ public class Controller_MainGUI implements Initializable {
                     robotTable.sort();
                 }
 
-                mazeLable.setText(MAZE_LABEL_PREFIX + SimulationMaze.getSelectedMaze().getFILE_NAME());
+                // Setze Label
+                mazeLable.setText(MAZE_LABEL_PREFIX + SimulationMaze.getSelectedMaze().getFILE_NAME() + " Größe: " + SimulationMaze.getSelectedMaze().getMazeSizeX() + "x" + SimulationMaze.getSelectedMaze().getMazeSizeY());
+
 
                 drawMaze(DIRECTORY_MAZE_FILES + "\\" + SimulationMaze.getSelectedMaze().getFILE_NAME());
 
@@ -416,12 +430,17 @@ public class Controller_MainGUI implements Initializable {
             mazePixelX = (int) mazePane.getWidth() / mazeStringParts[0].length();
             mazePixelY = (int) mazePane.getHeight() / mazeStringParts.length;
 
-            mazeWidth = mazeStringParts.length;
-            mazeHeight = mazeStringParts[0].length();
+
+//            mazeWidth = mazeStringParts.length;
+//            mazeHeight = mazeStringParts[0].length();
+            // Setzt die Größe des Labyrinths
+            SimulationMaze.getSelectedMaze().setMazeSizeX(mazeStringParts.length);
+            SimulationMaze.getSelectedMaze().setMazeSizeY(mazeStringParts[0].length());
 
             // Setze Größenangabe in mazeLable
-            String newMazeLabelText = MAZE_LABEL_PREFIX + " Größe: " + mazeWidth + "x" + mazeHeight;
-            mazeLable.setText(newMazeLabelText);
+            // TODO setzt MazeLabelText
+//            String newMazeLabelText = MAZE_LABEL_PREFIX + " Größe: " + mazeWidth + "x" + mazeHeight;
+//            mazeLable.setText(newMazeLabelText);
 
             // System.out.println("x: " + mazePixelX + " y: " + mazePixelY);
             for (int y = 0; y < mazeStringParts.length; y++) {

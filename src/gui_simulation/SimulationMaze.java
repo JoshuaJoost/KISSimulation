@@ -16,6 +16,8 @@ public class SimulationMaze {
     private SimpleStringProperty selected;
     private ArrayList<SimulationRobot> mazeRobots = new ArrayList<>();
     private int changeMazeSelectedRobot = 0;
+    private Integer mazeSizeX = null;
+    private Integer mazeSizeY = null;
 
     private SimulationMaze(String filename) {
         nr = (++numberOfMazeFiles);
@@ -100,6 +102,22 @@ public class SimulationMaze {
 
     public int getChangeMazeSelectedRobot() {
         return this.changeMazeSelectedRobot;
+    }
+
+    public void setMazeSizeX(int mazeSizeX){
+        this.mazeSizeX = mazeSizeX;
+    }
+
+    public Integer getMazeSizeX(){
+        return this.mazeSizeX;
+    }
+
+    public void setMazeSizeY(int mazeSizeY){
+        this.mazeSizeY = mazeSizeY;
+    }
+
+    public Integer getMazeSizeY(){
+        return this.mazeSizeY;
     }
 
 }

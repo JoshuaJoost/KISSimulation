@@ -3,8 +3,9 @@ package gui_simulation;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
-public class SimulationRobot {
+public class SimulationRobot implements Roboter {
     private static final String PREFIX_ROBO_NAME = "Robo_";
     private static final String SELECTED_TEXT = "yep";
     private static final String NOT_SELECTED_TEXT = "";
@@ -56,7 +57,7 @@ public class SimulationRobot {
         return robots;
     }
 
-    public static ArrayList<SimulationRobot> addRobot(int robotPixelX, int robotPixelY, Color robotColor, int[] position){
+    public static ArrayList<SimulationRobot> addRobot(int robotPixelX, int robotPixelY, Color robotColor, int[] position) {
         robots.add(new SimulationRobot(robotPixelX, robotPixelY, robotColor, position));
         return robots;
     }
@@ -95,10 +96,10 @@ public class SimulationRobot {
         indexSelectedRobot = null;
     }
 
-    public static Integer getIndexSelectedRobot(){
-        if(indexSelectedRobot == null) {
-            return 0;
-        }
+    public static Integer getIndexSelectedRobot() {
+//        if(indexSelectedRobot == null) {
+//            return 0;
+//        }
 
         return indexSelectedRobot;
     }
@@ -156,5 +157,64 @@ public class SimulationRobot {
         }
 
         return "Nr. " + roboNumber + " Name: " + roboName + " Pos: " + stringPosition;
+    }
+
+    // Roboter Interface Methods
+    @Override
+    public void doAction(int action) {
+
+    }
+
+    @Override
+    public void fetchData(int pos) {
+
+    }
+
+    @Override
+    public int findBarrier() {
+        return 0;
+    }
+
+    @Override
+    public void look() {
+
+    }
+
+    @Override
+    public boolean isBumped() {
+        System.out.println("bumped");
+        return false;
+    }
+
+    @Override
+    public boolean isGoal() {
+        return false;
+    }
+
+    @Override
+    public void forward() {
+        // TODO an Headposition anpassen
+        int[] sortedPosition = this.position;
+        Arrays.sort(sortedPosition);
+//        for(int y = 1; y < this.getSizeY(); y++){
+//            for(int x = 0; x < this.getSizeX(); x++){
+//                sortedPosition[x + (y - 1)]
+//            }
+//        }
+    }
+
+    @Override
+    public void backward() {
+
+    }
+
+    @Override
+    public void left() {
+
+    }
+
+    @Override
+    public void right() {
+
     }
 }
