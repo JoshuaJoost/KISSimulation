@@ -276,7 +276,6 @@ public class Controller_MainGUI implements Initializable {
             mazeFields.set(robotPosition, newRobotField);
         }
 
-        SimulationMaze.getSelectedMaze().addRobotToMaze(selectedRobot);
     }
 
     @FXML
@@ -326,6 +325,8 @@ public class Controller_MainGUI implements Initializable {
 
             // setzte selectedRobot in SimulationMaze
             if(SimulationRobot.getRobots().size() > 0){
+                SimulationMaze.getSelectedMaze().getMazeRobots().clear();
+                SimulationMaze.getSelectedMaze().getMazeRobots().addAll(SimulationRobot.getRobots());
                 SimulationMaze.getSelectedMaze().setChangeMazeSelectedRobot(SimulationRobot.getIndexSelectedRobot());
             }
 
