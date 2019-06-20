@@ -22,6 +22,9 @@ public class SimulationRobot implements Roboter {
     private int[] position;
     private String selected = "";
     private Color robotColor = null;
+    // TODO Headposition setzen
+    // 0 = Nord, im Uhrzeigersinn
+    private Integer headPosition = 0;
 
     private SimulationRobot(int robotPixelX, int robotPixelY) {
         roboName = PREFIX_ROBO_NAME + (++numberOfRobots);
@@ -97,10 +100,6 @@ public class SimulationRobot implements Roboter {
     }
 
     public static Integer getIndexSelectedRobot() {
-//        if(indexSelectedRobot == null) {
-//            return 0;
-//        }
-
         return indexSelectedRobot;
     }
 
@@ -159,6 +158,36 @@ public class SimulationRobot implements Roboter {
         return "Nr. " + roboNumber + " Name: " + roboName + " Pos: " + stringPosition;
     }
 
+    private void moveUp(){
+        System.out.println("UP");
+        for(int i = 0; i < this.position.length; i++){
+            this.position[i] = this.position[i] - SimulationMaze.getSelectedMaze().getMazeSizeY();
+        }
+    }
+
+    private void moveRight(){
+        System.out.println("RIGHT");
+    }
+
+    private void moveDown(){
+        System.out.println("DOWN");
+        for(int i = 0; i < this.position.length; i++){
+            this.position[i] = this.position[i] + SimulationMaze.getSelectedMaze().getMazeSizeY();
+        }
+    }
+
+    private void moveLeft(){
+        System.out.println("LEFT");
+    }
+
+    public void keyboardMoveUp(){
+        moveUp();
+    }
+
+    public void keyboardMoveDown(){
+        moveDown();
+    }
+
     // Roboter Interface Methods
     @Override
     public void doAction(int action) {
@@ -193,22 +222,24 @@ public class SimulationRobot implements Roboter {
 
     @Override
     public void forward() {
-        // TODO an Headposition anpassen
-        for(int i = 0; i < this.position.length; i++){
-            this.position[i] = this.position[i] - SimulationMaze.getSelectedMaze().getMazeSizeY();
+        // TODO in Historie eintragen
+        switch(this.headPosition){
+            case 0: moveUp(); break;
+            case 1: moveRight(); break;
+            case 2: moveDown(); break;
+            case 3: moveLeft(); break;
         }
-//        int[] sortedPosition = this.position;
-//        Arrays.sort(sortedPosition);
-//        for(int y = 1; y < this.getSizeY(); y++){
-//            for(int x = 0; x < this.getSizeX(); x++){
-//                sortedPosition[x + (y - 1)]
-//            }
-//        }
     }
 
     @Override
     public void backward() {
-
+        // TODO in Historie eintragen
+        switch(this.headPosition){
+            case 0: moveDown(); break;
+            case 1: moveLeft(); break;
+            case 2: moveUp(); break;
+            case 3: moveRight(); break;
+        }
     }
 
     @Override

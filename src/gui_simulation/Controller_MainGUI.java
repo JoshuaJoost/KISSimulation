@@ -265,13 +265,7 @@ public class Controller_MainGUI implements Initializable {
             selectedRobot.setPosition(robotPositionsArray);
 
             // Setze Roboter aufs Feld
-            drawMaze(DIRECTORY_MAZE_FILES + "\\" + SimulationMaze.getSelectedMaze().getFILE_NAME());
-
-            for (int robotPosition : selectedRobot.getPosition()) {
-                Rectangle newRobotField = mazeFields.get(robotPosition);
-                newRobotField.setFill(SimulationRobot.getSelectedRobot().getRobotColor());
-                mazeFields.set(robotPosition, newRobotField);
-            }
+            updateMaze(true);
         }
     }
 
@@ -280,6 +274,9 @@ public class Controller_MainGUI implements Initializable {
         System.out.println(":" + event.getCode());
         if(SimulationRobot.getIndexSelectedRobot() != null) {
             // TODO switch Kopfteil
+            boolean freeFields = true;
+            int[] sortedPositions = SimulationRobot.getSelectedRobot().getPosition();
+            Arrays.sort(sortedPositions);
             switch (event.getCode().toString()) {
                 case "RIGHT":
                     // TODO Roboter nach rechts bewegen
@@ -290,28 +287,30 @@ public class Controller_MainGUI implements Initializable {
                     System.out.println("left");
                     break;
                 case "DOWN":
-                    // TODO Roboter nach oben bewegen
+                    for(int x = 0; x < SimulationRobot.getSelectedRobot().getSizeX(); x++){
+                        if(!(mazeFields.get(sortedPositions[sortedPositions.length - 1 - x] + SimulationMaze.getSelectedMaze().getMazeSizeY()).getFill() == mazeVoidColor)){
+                            freeFields = false;
+                        }
+                    }
+                    if(freeFields){
+                        SimulationRobot.getSelectedRobot().keyboardMoveDown();
+                        updateMaze(true);
+                    } else {
+                        SimulationRobot.getSelectedRobot().isBumped();
+                    }
                     break;
                 case "UP":
-                    boolean freeFields = true;
                     // TODO an Position des Kopfes anpassen
-                    int[] sortedPositions = SimulationRobot.getSelectedRobot().getPosition();
-                    Arrays.sort(sortedPositions);
                     for(int x = 0; x < SimulationRobot.getSelectedRobot().getSizeX(); x++){
                         if(!(mazeFields.get(sortedPositions[x] - SimulationMaze.getSelectedMaze().getMazeSizeY()).getFill() == mazeVoidColor)){
                             freeFields = false;
                         }
                     }
                     if(freeFields){
-                        SimulationRobot.getSelectedRobot().forward();
-                        drawMaze(DIRECTORY_MAZE_FILES + "\\" + SimulationMaze.getSelectedMaze().getFILE_NAME());
-                        for (int robotPosition : SimulationRobot.getSelectedRobot().getPosition()) {
-                            Rectangle robotField = mazeFields.get(robotPosition);
-                            robotField.setFill(SimulationRobot.getSelectedRobot().getRobotColor());
-                            mazeFields.set(robotPosition, robotField);
-                        }
-
+                        SimulationRobot.getSelectedRobot().keyboardMoveUp();
+                        updateMaze(true);
                     } else {
+                        // TODO in Historie eintragen
                         SimulationRobot.getSelectedRobot().isBumped();
                     }
                     break;
@@ -377,16 +376,7 @@ public class Controller_MainGUI implements Initializable {
                 // Setze Label
                 mazeLable.setText(MAZE_LABEL_PREFIX + SimulationMaze.getSelectedMaze().getFILE_NAME() + " Größe: " + SimulationMaze.getSelectedMaze().getMazeSizeX() + "x" + SimulationMaze.getSelectedMaze().getMazeSizeY());
 
-
-                drawMaze(DIRECTORY_MAZE_FILES + "\\" + SimulationMaze.getSelectedMaze().getFILE_NAME());
-
-                if(SimulationMaze.getSelectedMaze().getMazeRobots().size() > 0) {
-                    for (int robotPosition : SimulationRobot.getSelectedRobot().getPosition()) {
-                        Rectangle robotField = mazeFields.get(robotPosition);
-                        robotField.setFill(SimulationRobot.getSelectedRobot().getRobotColor());
-                        mazeFields.set(robotPosition, robotField);
-                    }
-                }
+                updateMaze(SimulationMaze.getSelectedMaze().getMazeRobots().size() > 0);
             }
         }
     }
@@ -405,12 +395,19 @@ public class Controller_MainGUI implements Initializable {
 
                 robotSelectedLable.setText(ROBOT_LABEL_PREFIX + SimulationRobot.getSelectedRobot().getRoboName());
 
-                drawMaze(DIRECTORY_MAZE_FILES + "\\" + SimulationMaze.getSelectedMaze().getFILE_NAME());
-                for(int robotPosition : SimulationRobot.getSelectedRobot().getPosition()){
-                    Rectangle robotField = mazeFields.get(robotPosition);
-                    robotField.setFill(SimulationRobot.getSelectedRobot().getRobotColor());
-                    mazeFields.set(robotPosition, robotField);
-                }
+                updateMaze(true);
+            }
+        }
+    }
+
+    private void updateMaze(boolean drawRobot){
+        drawMaze(DIRECTORY_MAZE_FILES + "\\" + SimulationMaze.getSelectedMaze().getFILE_NAME());
+
+        if(drawRobot) {
+            for (int robotPosition : SimulationRobot.getSelectedRobot().getPosition()) {
+                Rectangle robotField = mazeFields.get(robotPosition);
+                robotField.setFill(SimulationRobot.getSelectedRobot().getRobotColor());
+                mazeFields.set(robotPosition, robotField);
             }
         }
     }
