@@ -45,7 +45,8 @@ public class Controller_MainGUI implements Initializable {
     private final String MAZE_LABEL_PREFIX = "Labyrinth: ";
     private final String ROBOT_LABEL_PREFIX = "Roboter: ";
 
-    private ObservableList<Rectangle> mazeFields = FXCollections.observableArrayList();
+    // TODO not static
+    private static ObservableList<Rectangle> mazeFields = FXCollections.observableArrayList();
     private ObservableList<SimulationMaze> mazefileTableData = FXCollections.observableArrayList();
     private ObservableList<SimulationRobot> robotTableData = FXCollections.observableArrayList();
 
@@ -516,6 +517,8 @@ public class Controller_MainGUI implements Initializable {
             if(!(maze.getMazeFreeFields().contains(sortedPositions[x] - maze.getMazeSizeY()))){
                 freeFields = false;
             }
+
+            // mazeFields.get(sortedPositions[x] - maze.getMazeSizeY()).setFill(Color.rgb(238, 244, 66));
         }
 
         return freeFields;
@@ -530,9 +533,11 @@ public class Controller_MainGUI implements Initializable {
 
         boolean freeFields = true;
         for(int x = 0; x < robo.getSizeX(); x++){
-            if(!(maze.getMazeFreeFields().contains(sortedPositions[x] + maze.getMazeSizeY()))){
+            if(!(maze.getMazeFreeFields().contains(sortedPositions[sortedPositions.length - 1 - x] + maze.getMazeSizeY()))){
                 freeFields = false;
             }
+
+            // mazeFields.get(sortedPositions[sortedPositions.length - 1 - x] + maze.getMazeSizeY()).setFill(Color.rgb(238, 244, 66));
         }
 
         return freeFields;
@@ -546,7 +551,7 @@ public class Controller_MainGUI implements Initializable {
         Arrays.sort(sortedPositions);
 
         boolean freeFields = true;
-        for(int y = 0, x = 1; y < robot.getSizeY(); y++, x += 2){
+        for(int y = 0, x = robot.getSizeY(); y < robot.getSizeY(); y++, x += robot.getSizeY() + 1){
             if(!(maze.getMazeFreeFields().contains(sortedPositions[x] + 1))){
                 freeFields = false;
             }
@@ -563,7 +568,7 @@ public class Controller_MainGUI implements Initializable {
         Arrays.sort(sortedPositions);
 
         boolean freeFields = true;
-        for(int y = 0, x = 0; y < robot.getSizeY(); y++, x += 2){
+        for(int y = 0, x = 0; y < robot.getSizeY(); y++, x += robot.getSizeX()){
             if(!(maze.getMazeFreeFields().contains(sortedPositions[x] - 1))){
                 freeFields = false;
             }

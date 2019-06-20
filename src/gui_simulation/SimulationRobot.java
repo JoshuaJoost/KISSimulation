@@ -195,7 +195,7 @@ public class SimulationRobot implements Roboter {
 
     private void moveLeft(){
         System.out.println("LEFT");
-        if(Controller_MainGUI.mazeFreeFieldsDown(whatLabyrinthDoIBelongTo(this.roboNumber).getNr() - 1, this.getRobotNumber() - 1)) {
+        if(Controller_MainGUI.mazeFreeFieldsLeft(whatLabyrinthDoIBelongTo(this.roboNumber).getNr() - 1, this.getRobotNumber() - 1)) {
             for (int i = 0; i < this.position.length; i++) {
                 this.position[i] = this.position[i] - 1;
             }
