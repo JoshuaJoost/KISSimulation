@@ -74,6 +74,18 @@ public class SimulationMaze {
         return mazeFiles;
     }
 
+    public static SimulationMaze whatLabyrinthDoIBelongTo(int robotNumber){
+        for(int i = 0; i < mazeFiles.size(); i++){
+            for(int j = 0; j < mazeFiles.get(i).getMazeRobots().size(); j++){
+                if(mazeFiles.get(i).getMazeRobots().get(j).getRobotNumber() == robotNumber){
+                    return mazeFiles.get(i);
+                }
+            }
+        }
+        // Roboter gehört keinem Labyrinth an
+        return null;
+    }
+
     @Override
     public String toString() {
         return "Nr. <" + nr + "> Dateiname: <" + FILE_NAME.getValue() + "> Ausgewählt Text: <" + selected.getValue() + ">";

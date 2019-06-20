@@ -5,6 +5,8 @@ import javafx.scene.paint.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import static gui_simulation.SimulationMaze.whatLabyrinthDoIBelongTo;
+
 public class SimulationRobot implements Roboter {
     private static final String PREFIX_ROBO_NAME = "Robo_";
     private static final String SELECTED_TEXT = "yep";
@@ -160,32 +162,63 @@ public class SimulationRobot implements Roboter {
 
     private void moveUp(){
         System.out.println("UP");
-        for(int i = 0; i < this.position.length; i++){
-            this.position[i] = this.position[i] - SimulationMaze.getSelectedMaze().getMazeSizeY();
+        if(Controller_MainGUI.mazeFreeFieldsUp(whatLabyrinthDoIBelongTo(this.roboNumber).getNr() - 1, this.getRobotNumber() - 1)){
+            for(int i = 0; i < this.position.length; i++){
+                this.position[i] = this.position[i] - SimulationMaze.getSelectedMaze().getMazeSizeY();
+            }
+        } else {
+            isBumped();
         }
     }
 
     private void moveRight(){
         System.out.println("RIGHT");
+        if(Controller_MainGUI.mazeFreeFieldsRight(whatLabyrinthDoIBelongTo(this.roboNumber).getNr() - 1, this.getRobotNumber() - 1)){
+            for(int i = 0; i < this.position.length; i++){
+                this.position[i] = this.position[i] + 1;
+            }
+        } else {
+            isBumped();
+        }
     }
 
     private void moveDown(){
         System.out.println("DOWN");
-        for(int i = 0; i < this.position.length; i++){
-            this.position[i] = this.position[i] + SimulationMaze.getSelectedMaze().getMazeSizeY();
+        if(Controller_MainGUI.mazeFreeFieldsDown(whatLabyrinthDoIBelongTo(this.roboNumber).getNr() - 1, this.getRobotNumber() - 1)) {
+            for (int i = 0; i < this.position.length; i++) {
+                this.position[i] = this.position[i] + SimulationMaze.getSelectedMaze().getMazeSizeY();
+            }
+        } else {
+            isBumped();
         }
     }
 
     private void moveLeft(){
         System.out.println("LEFT");
+        if(Controller_MainGUI.mazeFreeFieldsDown(whatLabyrinthDoIBelongTo(this.roboNumber).getNr() - 1, this.getRobotNumber() - 1)) {
+            for (int i = 0; i < this.position.length; i++) {
+                this.position[i] = this.position[i] - 1;
+            }
+        } else {
+            isBumped();
+        }
     }
 
     public void keyboardMoveUp(){
+
         moveUp();
     }
 
     public void keyboardMoveDown(){
         moveDown();
+    }
+
+    public void keyboardMoveRight(){
+        moveRight();
+    }
+
+    public void keyboardMoveLeft(){
+        moveLeft();
     }
 
     // Roboter Interface Methods
