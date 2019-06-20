@@ -13,7 +13,7 @@
       <AnchorPane prefHeight="520.0" prefWidth="500.0">
          <children>
             <Label fx:id="mazeLable" prefHeight="20.0" text="Labyrinth: &lt;keines ausgewählt&gt;" />
-            <Pane fx:id="mazePane" layoutY="20.0" prefHeight="500.0" prefWidth="500.0" />
+            <Pane fx:id="mazePane" focusTraversable="true" layoutY="20.0" prefHeight="500.0" prefWidth="500.0" />
          </children>
       </AnchorPane>
       <AnchorPane layoutY="520.0" prefHeight="180.0" prefWidth="500.0">
@@ -21,7 +21,7 @@
             <Label fx:id="robotSelectedLable" layoutX="50.0" prefHeight="20.0" text="Roboter &lt;keiner ausgewählt&gt;" />
             <Pane fx:id="robotPane" layoutY="20.0" prefHeight="160.0" prefWidth="500.0">
                <children>
-                  <TableView fx:id="robotTable" onMouseClicked="#selectNewRobot" prefHeight="160.0" prefWidth="290.0">
+                  <TableView fx:id="robotTable" focusTraversable="false" onMouseClicked="#selectNewRobot" prefHeight="160.0" prefWidth="290.0">
                     <columns>
                       <TableColumn fx:id="robotTableNr" editable="false" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" resizable="false" text="Nr" />
                       <TableColumn fx:id="robotTableName" editable="false" maxWidth="170.0" minWidth="170.0" prefWidth="170.0" resizable="false" text="Name" />
@@ -30,13 +30,13 @@
                   </TableView>
                   <AnchorPane layoutX="290.0" prefHeight="160.0" prefWidth="210.0">
                      <children>
-                        <Button fx:id="robotStartStop" mnemonicParsing="false" onAction="#robotStartStop" text="Start/ Stopp" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" />
-                        <Button fx:id="robotGetMatrix" layoutY="50.0" mnemonicParsing="false" onAction="#robotGetMatrix" text="Runterladen" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" />
-                        <Button fx:id="robotDelete" layoutY="100.0" mnemonicParsing="false" onAction="#robotDelete" text="Löschen" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" />
+                        <Button fx:id="robotStartStop" focusTraversable="false" mnemonicParsing="false" onAction="#robotStartStop" text="Start/ Stopp" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" />
+                        <Button fx:id="robotGetMatrix" focusTraversable="false" layoutY="50.0" mnemonicParsing="false" onAction="#robotGetMatrix" text="Runterladen" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" />
+                        <Button fx:id="robotDelete" focusTraversable="false" layoutY="100.0" mnemonicParsing="false" onAction="#robotDelete" text="Löschen" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" />
                      </children>
                   </AnchorPane>
                </children></Pane>
-            <Button fx:id="addNewRobot" minHeight="20.0" minWidth="20.0" mnemonicParsing="false" onAction="#addNewRobot" prefHeight="20.0" prefWidth="20.0" text="+" textOverrun="CLIP">
+            <Button fx:id="addNewRobot" focusTraversable="false" minHeight="20.0" minWidth="20.0" mnemonicParsing="false" onAction="#addNewRobot" prefHeight="20.0" prefWidth="20.0" text="+" textOverrun="CLIP">
                <font>
                   <Font size="9.0" />
                </font>
@@ -48,7 +48,7 @@
             <Label prefHeight="20.0" text="Historie" />
             <Pane fx:id="historyPane" layoutY="20.0" prefHeight="480.0" prefWidth="300.0">
                <children>
-                  <TableView fx:id="historyTable" prefHeight="480.0" prefWidth="300.0">
+                  <TableView fx:id="historyTable" focusTraversable="false" prefHeight="480.0" prefWidth="300.0">
                     <columns>
                       <TableColumn fx:id="historyTableNr" editable="false" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" resizable="false" text="Nr" />
                       <TableColumn fx:id="historyTableAction" editable="false" maxWidth="135.0" minWidth="135.0" prefWidth="135.0" resizable="false" text="Action" />
@@ -62,7 +62,7 @@
          <children>
             <Pane layoutY="20.0" prefHeight="180.0" prefWidth="300.0">
                <children>
-                  <TableView fx:id="mazefileTable" onMouseClicked="#selectNewMaze" prefHeight="180.0" prefWidth="300.0">
+                  <TableView fx:id="mazefileTable" focusTraversable="false" onMouseClicked="#selectNewMaze" prefHeight="180.0" prefWidth="300.0">
                     <columns>
                       <TableColumn fx:id="mazefileTableNr" editable="false" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" resizable="false" text="Nr" />
                       <TableColumn fx:id="mazefileTableFilename" editable="false" maxWidth="180.0" minWidth="180.0" prefWidth="180.0" resizable="false" text="Dateiname" />

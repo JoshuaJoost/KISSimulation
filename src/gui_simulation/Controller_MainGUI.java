@@ -167,13 +167,11 @@ public class Controller_MainGUI implements Initializable {
 
     @FXML
     void addNewRobot(ActionEvent event) {
-        // TODO Roboter kann erst dann gesetzt werden, wenn ein Maze existiert!
         // Erstelle Roboter
         if(SimulationMaze.getSelectedMazeNumber() != null) {
             SimulationRobot.addRobot(4, 3);
             SimulationRobot.changeSelectedRobot(SimulationRobot.getRobots().size() - 1);
             robotTableData.add(SimulationRobot.getRobots().get(SimulationRobot.getRobots().size() - 1));
-            // TODO Selektierung des Roboters auf jeweils den letzt erstellten anpassen
             SimulationRobot selectedRobot = SimulationRobot.getSelectedRobot();
 
             // Finde Zufällige Startposition
