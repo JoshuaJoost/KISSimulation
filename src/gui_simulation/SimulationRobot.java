@@ -3,7 +3,6 @@ package gui_simulation;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import static gui_simulation.SimulationMaze.whatLabyrinthDoIBelongTo;
 
@@ -19,8 +18,8 @@ public class SimulationRobot implements Roboter {
 
     private final String roboName;
     private final int roboNumber;
-    private final int sizeX;
-    private final int sizeY;
+    private int sizeX;
+    private int sizeY;
     private int[] position;
     private String selected = "";
     private Color robotColor = null;
@@ -205,7 +204,6 @@ public class SimulationRobot implements Roboter {
     }
 
     public void keyboardMoveUp(){
-
         moveUp();
     }
 
@@ -219,6 +217,10 @@ public class SimulationRobot implements Roboter {
 
     public void keyboardMoveLeft(){
         moveLeft();
+    }
+
+    public void keyboardRotateLeft(){
+        left();
     }
 
     // Roboter Interface Methods
@@ -277,7 +279,22 @@ public class SimulationRobot implements Roboter {
 
     @Override
     public void left() {
+        System.out.println("ROTATE LEFT");
+        int mazeNumber = whatLabyrinthDoIBelongTo(this.roboNumber).getNr() - 1;
+        if(Controller_MainGUI.mazeFreeFieldsRotateLeftForward(mazeNumber, this.getRobotNumber() - 1)){
+            int x = - 2;
+            int y = 2;
+            for(int i = 0; i < position.length; i++, x++, y--){
+                this.position[i] = this.position[i] - this.getSizeX() - x + y * SimulationMaze.getMazeFiles().get(mazeNumber).getMazeSizeY();
 
+                if(i > 0 && (i + 1) % this.getSizeX() == 0){
+                    x = x - this.getSizeX() - 1;
+                    y = y + this.getSizeY();
+                }
+            }
+        } else {
+            isBumped();
+        }
     }
 
     @Override

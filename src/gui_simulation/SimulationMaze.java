@@ -1,7 +1,9 @@
 package gui_simulation;
 
 import javafx.beans.property.SimpleStringProperty;
+import javafx.scene.paint.Color;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 public class SimulationMaze {
@@ -10,6 +12,8 @@ public class SimulationMaze {
     // TODO Controller umbauen, soll nur noch hier drauf zugreifen
     public static final String mazeWallSymbol = "#";
     public static final String mazeVoidSymbol = " ";
+
+    public static final Color mazeVoidColor = Color.rgb(255, 255, 255);
 
     private static int numberOfMazeFiles = 0;
     private static ArrayList<SimulationMaze> mazeFiles = new ArrayList<>();
