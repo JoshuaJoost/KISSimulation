@@ -378,6 +378,9 @@ public class Controller_MainGUI implements Initializable {
 
                 updateMaze(SimulationMaze.getSelectedMaze().getMazeRobots().size() > 0);
             }
+
+            // TODO gibt MazeFreeFields aus
+            System.out.println(SimulationMaze.getSelectedMaze().getMazeFreeFieldsToString());
         }
     }
 
@@ -446,17 +449,24 @@ public class Controller_MainGUI implements Initializable {
             // System.out.println("x: " + mazePixelX + " y: " + mazePixelY);
             for (int y = 0; y < mazeStringParts.length; y++) {
 //                System.out.print(y + ": ");
+                boolean isFreeField = false;
                 for (int x = 0; x < mazeStringParts[0].length(); x++) {
                     Rectangle mazeField = new Rectangle(x * mazePixelX, y * mazePixelY, mazePixelX, mazePixelY);
                     if (mazeStringParts[y].charAt(x) == mazeWallSymbol) {
                         mazeField.setFill(mazeWallColor);
+                        isFreeField = false;
                     } else if (mazeStringParts[y].charAt(x) == mazeVoidSymbol) {
                         mazeField.setFill(mazeVoidColor);
+                        isFreeField = true;
                     } else {
                         mazeField.setFill(mazeErrorColor);
+                        isFreeField = false;
                     }
 //                    System.out.print(mazeStringParts[y].charAt(x));
                     mazeFields.add(mazeField);
+                    if(isFreeField){
+                        SimulationMaze.getSelectedMaze().addFreeField(mazeFields.size() - 1);
+                    }
                 }
 //                System.out.println();
             }
@@ -507,6 +517,11 @@ public class Controller_MainGUI implements Initializable {
             throw new IllegalArgumentException("Keine gültigen Labyrinthdateien bei " + DIRECTORY_MAZE_FILES + " gefunden");
         }
 
+    }
+
+    public boolean mazeFreeFieldsUp(){
+
+        return true;
     }
 
 }
