@@ -194,8 +194,11 @@ public class SimulationRobot implements Roboter {
     @Override
     public void forward() {
         // TODO an Headposition anpassen
-        int[] sortedPosition = this.position;
-        Arrays.sort(sortedPosition);
+        for(int i = 0; i < this.position.length; i++){
+            this.position[i] = this.position[i] - SimulationMaze.getSelectedMaze().getMazeSizeY();
+        }
+//        int[] sortedPosition = this.position;
+//        Arrays.sort(sortedPosition);
 //        for(int y = 1; y < this.getSizeY(); y++){
 //            for(int x = 0; x < this.getSizeX(); x++){
 //                sortedPosition[x + (y - 1)]
