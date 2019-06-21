@@ -25,7 +25,7 @@ public class SimulationRobot implements Roboter {
     private Color robotColor = null;
     // TODO Headposition setzen
     // 0 = Nord, im Uhrzeigersinn
-    private Integer headPosition = 0;
+    private Integer headDirection = 1;
 
     private SimulationRobot(int robotPixelX, int robotPixelY) {
         roboName = PREFIX_ROBO_NAME + (++numberOfRobots);
@@ -258,7 +258,7 @@ public class SimulationRobot implements Roboter {
     @Override
     public void forward() {
         // TODO in Historie eintragen
-        switch (this.headPosition) {
+        switch (this.headDirection) {
             case 0:
                 moveUp();
                 break;
@@ -277,7 +277,7 @@ public class SimulationRobot implements Roboter {
     @Override
     public void backward() {
         // TODO in Historie eintragen
-        switch (this.headPosition) {
+        switch (this.headDirection) {
             case 0:
                 moveDown();
                 break;
@@ -297,23 +297,63 @@ public class SimulationRobot implements Roboter {
     public void left() {
         System.out.println("ROTATE LEFT");
         int mazeNumber = whatLabyrinthDoIBelongTo(this.roboNumber).getNr() - 1;
-        if (Controller_MainGUI.mazeFreeFieldsRotateLeftForward(mazeNumber, this.getRobotNumber() - 1)) {
-            int x = -2;
-            int y = 2;
-            for (int i = 0; i < position.length; i++, x++, y--) {
-                this.position[i] = this.position[i] - this.getSizeX() - x + y * SimulationMaze.getMazeFiles().get(mazeNumber).getMazeSizeY();
+//        if (Controller_MainGUI.mazeFreeFieldsRotateLeftForward(mazeNumber, this.getRobotNumber() - 1)) {
+//            int x = -2;
+//            int y = 2;
+//            for (int i = 0; i < position.length; i++, x++, y--) {
+//                this.position[i] = this.position[i] - this.getSizeX() - x + y * SimulationMaze.getMazeFiles().get(mazeNumber).getMazeSizeY();
+//
+//                if (i > 0 && (i + 1) % this.getSizeX() == 0) {
+//                    x = x - this.getSizeX() - 1;
+//                    y = y + this.getSizeY();
+//                }
+//            }
+//
+//
+//        } else {
+//            isBumped();
+//        }
+        if(Controller_MainGUI.mazeFreeFieldsRotateLeftForward(mazeNumber, this.getRobotNumber() - 1)){
+            int x = 0;
+            int y = 0;
+            switch(this.headDirection){
+                case 0:
+                    x = -4;
+                    y = 3;
+                    break;
+                case 1:
+                    x = 0;
+                    y = -1;
+                    break;
+                case 2:
+                    x = 3;
+                    y = 2;
+                    break;
+                case 3:
+                    x = 1;
+                    y = 6;
+                    break;
+            }
 
-                if (i > 0 && (i + 1) % this.getSizeX() == 0) {
-                    x = x - this.getSizeX() - 1;
-                    y = y + this.getSizeY();
+            this.headDirection--;
+            if(this.headDirection < 0){
+                this.headDirection = 3;
+            }
+
+            for(int i = 0; i < this.position.length; i++, x--, y--){
+                this.position[i] = this.position[i] + x + y * SimulationMaze.getMazeFiles().get(mazeNumber).getMazeSizeY();
+
+                if(i > 0 && (i + 1) % this.getSizeX() == 0){
+                    x = x + this.sizeX + 1;
+                    y = y + this.sizeX - 2 + 1;
                 }
             }
 
-            // TODO löst BUGG in Bewegung aus
+
             int tmpSizeX = this.sizeX;
             this.sizeX = sizeY;
             this.sizeY = tmpSizeX;
-        } else {
+        } else{
             isBumped();
         }
     }

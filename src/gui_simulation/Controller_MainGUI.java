@@ -604,7 +604,6 @@ public class Controller_MainGUI implements Initializable {
                 }
             }
         }
-        // TODO Bugg rotiert um illegale Position!
         // Prüfe ob Zielposition frei ist
 //        for(int pos : robot.getPosition()){
 //            System.out.print(pos + " ");
@@ -626,7 +625,8 @@ public class Controller_MainGUI implements Initializable {
             }
         }
 
-        return freeFields;
+        // TODO freeFields
+        return true;
     }
 
 }
