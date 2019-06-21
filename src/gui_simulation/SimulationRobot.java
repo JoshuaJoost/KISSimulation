@@ -206,7 +206,7 @@ public class SimulationRobot implements Roboter {
         }
     }
 
-    public Integer getHeadDirection(){
+    public Integer getHeadDirection() {
         return this.headDirection;
     }
 
@@ -228,6 +228,10 @@ public class SimulationRobot implements Roboter {
 
     public void keyboardRotateLeft() {
         left();
+    }
+
+    private void setPositionN(int position, int newValue) {
+        this.position[position] = newValue;
     }
 
     // Roboter Interface Methods
@@ -301,51 +305,57 @@ public class SimulationRobot implements Roboter {
     }
 
     @Override
-    // Nur für 3x4 oder 4x3 Roboter ausgelegt
     public void left() {
-        System.out.println("ROTATE LEFT");
+        System.out.println("Linksvorwärtsrotation");
         int mazeNumber = whatLabyrinthDoIBelongTo(this.roboNumber).getNr() - 1;
-        if(Controller_MainGUI.mazeFreeFieldsRotateLeftForward(mazeNumber, this.getRobotNumber() - 1)){
-            int x = 0;
-            int y = 0;
-            switch(this.headDirection){
+        if (Controller_MainGUI.mazeFreeFieldsRotateLeftForward(mazeNumber, this.getRobotNumber() - 1)) {
+
+            switch (headDirection) {
                 case 0:
-                    x = -4;
-                    y = 3;
+                    System.out.println("hp: " + headDirection);
+                    for (int y = this.sizeY, x = this.sizeX - 1, xv = -1, yv = 0; y > 0; y--, x = sizeX - 1, xv = xv + 2, yv = yv + this.sizeX + 1) {
+                        for (int xi = 0; xi < this.sizeX; xi++, x--, xv--, yv--) {
+                            System.out.println("y: " + y + " sizeX: " + this.sizeX + " x: " + x + " xv: " + xv + " yv: " + yv);
+                            this.position[y * this.sizeX - 1 - x] = this.position[y * this.sizeX - 1 - x] + xv + yv * SimulationMaze.getMazeFiles().get(mazeNumber).getMazeSizeY();
+                        }
+                    }
                     break;
                 case 1:
-                    x = 0;
-                    y = -1;
+                    System.out.println("hp: " + headDirection);
+                    for (int x = 1, y = 0, xv = 0, yv = -1; x < this.sizeX + 1; x++, y = 0, xv = xv - this.sizeY - 1, yv = yv + 2) {
+                        for (int yi = 0; yi < this.sizeY; yi++, y++, xv++, yv--) {
+                            this.position[y * this.sizeX - 1 + x] = this.position[y * this.sizeX - 1 + x] + xv + yv * SimulationMaze.getMazeFiles().get(mazeNumber).getMazeSizeY();
+                        }
+                    }
                     break;
                 case 2:
-                    x = 3;
-                    y = 2;
+                    System.out.println("hp: " + headDirection);
+                    for(int y = 1, x = 0, xv = 1, yv = 0; y < this.sizeY + 1; y++, x = 0, xv = xv - 2, yv = yv - this.sizeX - 1){
+                        for(int xi = 0; xi < this.sizeX; xi++, x--, xv++, yv++){
+                            this.position[y * this.sizeX - 1 + x] = this.position[y * this.sizeX - 1 + x] + xv + yv * SimulationMaze.getMazeFiles().get(mazeNumber).getMazeSizeY();
+                        }
+                    }
                     break;
                 case 3:
-                    x = 1;
-                    y = 6;
+                    System.out.println("hp: " + headDirection);
+                    for(int x = 0, y = this.sizeY, xv = 0, yv = 1; x < this.sizeX; x++, y = this.sizeY, xv = xv + this.sizeY + 1, yv = yv - 2){
+                        for(int yi = 0; yi < this.sizeY; yi++, y--, xv--, yv++){
+                            System.out.println("y: " + y + " sizeX: " + this.sizeX + " x: " + x + " xv: " + xv + " yv: " + yv);
+                            this.position[y * this.sizeX - 1 - x] = this.position[y * this.sizeX - 1 - x] + xv + yv * SimulationMaze.getMazeFiles().get(mazeNumber).getMazeSizeY();
+                        }
+                    }
                     break;
             }
 
             this.headDirection--;
-            if(this.headDirection < 0){
+            if (this.headDirection < 0) {
                 this.headDirection = 3;
             }
-
-            for(int i = 0; i < this.position.length; i++, x--, y--){
-                this.position[i] = this.position[i] + x + y * SimulationMaze.getMazeFiles().get(mazeNumber).getMazeSizeY();
-
-                if(i > 0 && (i + 1) % this.getSizeX() == 0){
-                    x = x + this.sizeX + 1;
-                    y = y + this.sizeX - 2 + 1;
-                }
-            }
-
 
             int tmpSizeX = this.sizeX;
             this.sizeX = sizeY;
             this.sizeY = tmpSizeX;
-        } else{
+        } else {
             isBumped();
         }
     }

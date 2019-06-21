@@ -167,10 +167,12 @@ public class Controller_MainGUI implements Initializable {
     @FXML
     void addNewRobot(ActionEvent event) {
         if (SimulationMaze.getSelectedMazeNumber() != null) {
-            // Rotation funktioniert nur bei einem 4 x 3, 3 x 4 Roboter
-            // Bei einem 4x3 Roboter ist die headDirection 1 oder 3, bei einem 3x4 Roboter 0 oder 2
             // Erstelle Roboter
-            SimulationRobot.addRobot(4, 3, 1);
+            // Start headDirection muss zu X Y Größe des Roboters passen:
+            // X bzw. Y müssen min. 3 groß sein
+            // X > Y hD: 3
+            // X < Y hD: 0
+            SimulationRobot.addRobot(4, 3, 0);
             SimulationRobot.changeSelectedRobot(SimulationRobot.getRobots().size() - 1);
             robotTableData.add(SimulationRobot.getRobots().get(SimulationRobot.getRobots().size() - 1));
             SimulationRobot selectedRobot = SimulationRobot.getSelectedRobot();
@@ -195,7 +197,6 @@ public class Controller_MainGUI implements Initializable {
                     }
 
                     // Finde benachbarte freie Felder X Richtung
-
                     boolean lookRight = true;
                     boolean lookLeft = true;
                     for (int i = 1; i < selectedRobot.getSizeX() && robotPositions.size() < selectedRobot.getSizeX(); i++) {
@@ -594,43 +595,43 @@ public class Controller_MainGUI implements Initializable {
 
         boolean freeFields = true;
 
-        // Prüfe ob Zielposition frei ist
-        int x = 0;
-        int y = 0;
-        switch (robot.getHeadDirection()) {
-            case 0:
-                x = -4;
-                y = 3;
-                break;
-            case 1:
-                x = 0;
-                y = -1;
-                break;
-            case 2:
-                x = 3;
-                y = 2;
-                break;
-            case 3:
-                x = 1;
-                y = 6;
-                break;
-        }
+//        // Prüfe ob Zielposition frei ist
+//        int x = 0;
+//        int y = 0;
+//        switch (robot.getHeadDirection()) {
+//            case 0:
+//                x = -4;
+//                y = 3;
+//                break;
+//            case 1:
+//                x = 0;
+//                y = -1;
+//                break;
+//            case 2:
+//                x = 3;
+//                y = 2;
+//                break;
+//            case 3:
+//                x = 1;
+//                y = 6;
+//                break;
+//        }
+//
+//        for (int i = 0; i < robot.getPosition().length && freeFields; i++, x--, y--) {
+//            if(!(maze.getMazeFreeFields().contains(sortedPositions[i] + x + y * maze.getMazeSizeY()))){
+//                freeFields = false;
+//            }
+//            mazeFields.get(sortedPositions[i] + x + y * maze.getMazeSizeY()).setFill(Color.rgb(255,255,0));
+//
+//            if (i > 0 && (i + 1) % robot.getSizeX() == 0) {
+//                x = x + robot.getSizeX() + 1;
+//                y = y + robot.getSizeX() - 2 + 1;
+//            }
+//        }
+//
+//        // TODO prüfe, ob Rotationsradius frei ist
 
-        for (int i = 0; i < robot.getPosition().length && freeFields; i++, x--, y--) {
-            if(!(maze.getMazeFreeFields().contains(sortedPositions[i] + x + y * maze.getMazeSizeY()))){
-                freeFields = false;
-            }
-            mazeFields.get(sortedPositions[i] + x + y * maze.getMazeSizeY()).setFill(Color.rgb(255,255,0));
-
-            if (i > 0 && (i + 1) % robot.getSizeX() == 0) {
-                x = x + robot.getSizeX() + 1;
-                y = y + robot.getSizeX() - 2 + 1;
-            }
-        }
-
-        // TODO prüfe, ob Rotationsradius frei ist
-
-        return freeFields;
+        return true;
 //        SimulationMaze maze = SimulationMaze.getMazeFiles().get(robotMaze);
 //        SimulationRobot robot = SimulationRobot.getRobots().get(mazeRobot);
 //
