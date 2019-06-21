@@ -301,6 +301,7 @@ public class SimulationRobot implements Roboter {
     }
 
     @Override
+    // Nur für 3x4 oder 4x3 Roboter ausgelegt
     public void left() {
         System.out.println("ROTATE LEFT");
         int mazeNumber = whatLabyrinthDoIBelongTo(this.roboNumber).getNr() - 1;
