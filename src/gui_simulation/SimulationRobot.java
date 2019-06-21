@@ -159,10 +159,10 @@ public class SimulationRobot implements Roboter {
         return "Nr. " + roboNumber + " Name: " + roboName + " Pos: " + stringPosition;
     }
 
-    private void moveUp(){
+    private void moveUp() {
         System.out.println("UP");
-        if(Controller_MainGUI.mazeFreeFieldsUp(whatLabyrinthDoIBelongTo(this.roboNumber).getNr() - 1, this.getRobotNumber() - 1)){
-            for(int i = 0; i < this.position.length; i++){
+        if (Controller_MainGUI.mazeFreeFieldsUp(whatLabyrinthDoIBelongTo(this.roboNumber).getNr() - 1, this.getRobotNumber() - 1)) {
+            for (int i = 0; i < this.position.length; i++) {
                 this.position[i] = this.position[i] - SimulationMaze.getSelectedMaze().getMazeSizeY();
             }
         } else {
@@ -170,10 +170,10 @@ public class SimulationRobot implements Roboter {
         }
     }
 
-    private void moveRight(){
+    private void moveRight() {
         System.out.println("RIGHT");
-        if(Controller_MainGUI.mazeFreeFieldsRight(whatLabyrinthDoIBelongTo(this.roboNumber).getNr() - 1, this.getRobotNumber() - 1)){
-            for(int i = 0; i < this.position.length; i++){
+        if (Controller_MainGUI.mazeFreeFieldsRight(whatLabyrinthDoIBelongTo(this.roboNumber).getNr() - 1, this.getRobotNumber() - 1)) {
+            for (int i = 0; i < this.position.length; i++) {
                 this.position[i] = this.position[i] + 1;
             }
         } else {
@@ -181,9 +181,9 @@ public class SimulationRobot implements Roboter {
         }
     }
 
-    private void moveDown(){
+    private void moveDown() {
         System.out.println("DOWN");
-        if(Controller_MainGUI.mazeFreeFieldsDown(whatLabyrinthDoIBelongTo(this.roboNumber).getNr() - 1, this.getRobotNumber() - 1)) {
+        if (Controller_MainGUI.mazeFreeFieldsDown(whatLabyrinthDoIBelongTo(this.roboNumber).getNr() - 1, this.getRobotNumber() - 1)) {
             for (int i = 0; i < this.position.length; i++) {
                 this.position[i] = this.position[i] + SimulationMaze.getSelectedMaze().getMazeSizeY();
             }
@@ -192,9 +192,9 @@ public class SimulationRobot implements Roboter {
         }
     }
 
-    private void moveLeft(){
+    private void moveLeft() {
         System.out.println("LEFT");
-        if(Controller_MainGUI.mazeFreeFieldsLeft(whatLabyrinthDoIBelongTo(this.roboNumber).getNr() - 1, this.getRobotNumber() - 1)) {
+        if (Controller_MainGUI.mazeFreeFieldsLeft(whatLabyrinthDoIBelongTo(this.roboNumber).getNr() - 1, this.getRobotNumber() - 1)) {
             for (int i = 0; i < this.position.length; i++) {
                 this.position[i] = this.position[i] - 1;
             }
@@ -203,23 +203,23 @@ public class SimulationRobot implements Roboter {
         }
     }
 
-    public void keyboardMoveUp(){
+    public void keyboardMoveUp() {
         moveUp();
     }
 
-    public void keyboardMoveDown(){
+    public void keyboardMoveDown() {
         moveDown();
     }
 
-    public void keyboardMoveRight(){
+    public void keyboardMoveRight() {
         moveRight();
     }
 
-    public void keyboardMoveLeft(){
+    public void keyboardMoveLeft() {
         moveLeft();
     }
 
-    public void keyboardRotateLeft(){
+    public void keyboardRotateLeft() {
         left();
     }
 
@@ -258,22 +258,38 @@ public class SimulationRobot implements Roboter {
     @Override
     public void forward() {
         // TODO in Historie eintragen
-        switch(this.headPosition){
-            case 0: moveUp(); break;
-            case 1: moveRight(); break;
-            case 2: moveDown(); break;
-            case 3: moveLeft(); break;
+        switch (this.headPosition) {
+            case 0:
+                moveUp();
+                break;
+            case 1:
+                moveRight();
+                break;
+            case 2:
+                moveDown();
+                break;
+            case 3:
+                moveLeft();
+                break;
         }
     }
 
     @Override
     public void backward() {
         // TODO in Historie eintragen
-        switch(this.headPosition){
-            case 0: moveDown(); break;
-            case 1: moveLeft(); break;
-            case 2: moveUp(); break;
-            case 3: moveRight(); break;
+        switch (this.headPosition) {
+            case 0:
+                moveDown();
+                break;
+            case 1:
+                moveLeft();
+                break;
+            case 2:
+                moveUp();
+                break;
+            case 3:
+                moveRight();
+                break;
         }
     }
 
@@ -281,22 +297,22 @@ public class SimulationRobot implements Roboter {
     public void left() {
         System.out.println("ROTATE LEFT");
         int mazeNumber = whatLabyrinthDoIBelongTo(this.roboNumber).getNr() - 1;
-        if(Controller_MainGUI.mazeFreeFieldsRotateLeftForward(mazeNumber, this.getRobotNumber() - 1)){
-            int x = - 2;
+        if (Controller_MainGUI.mazeFreeFieldsRotateLeftForward(mazeNumber, this.getRobotNumber() - 1)) {
+            int x = -2;
             int y = 2;
-            for(int i = 0; i < position.length; i++, x++, y--){
+            for (int i = 0; i < position.length; i++, x++, y--) {
                 this.position[i] = this.position[i] - this.getSizeX() - x + y * SimulationMaze.getMazeFiles().get(mazeNumber).getMazeSizeY();
 
-                if(i > 0 && (i + 1) % this.getSizeX() == 0){
+                if (i > 0 && (i + 1) % this.getSizeX() == 0) {
                     x = x - this.getSizeX() - 1;
                     y = y + this.getSizeY();
                 }
             }
 
             // TODO löst BUGG in Bewegung aus
-//        int tmpSizeX = this.sizeX;
-//        this.sizeX = sizeY;
-//        this.sizeY = tmpSizeX;
+            int tmpSizeX = this.sizeX;
+            this.sizeX = sizeY;
+            this.sizeY = tmpSizeX;
         } else {
             isBumped();
         }

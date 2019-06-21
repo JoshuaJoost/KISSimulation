@@ -555,10 +555,11 @@ public class Controller_MainGUI implements Initializable {
         Arrays.sort(sortedPositions);
 
         boolean freeFields = true;
-        for (int y = 0, x = robot.getSizeY(); y < robot.getSizeY(); y++, x += robot.getSizeY() + 1) {
-            if (!(maze.getMazeFreeFields().contains(sortedPositions[x] + 1))) {
+        for(int x = robot.getSizeX() - 1, y = 0; y < robot.getSizeY(); y++, x += robot.getSizeX()){
+            if(!(maze.getMazeFreeFields().contains(sortedPositions[x] + 1))){
                 freeFields = false;
             }
+            // mazeFields.get(sortedPositions[x] + 1).setFill(Color.rgb(255,255,0));
         }
 
         return freeFields;
