@@ -25,28 +25,31 @@ public class SimulationRobot implements Roboter {
     private Color robotColor = null;
     // TODO Headposition setzen
     // 0 = Nord, im Uhrzeigersinn
-    private Integer headDirection = 1;
+    private Integer headDirection = null; //1
 
-    private SimulationRobot(int robotPixelX, int robotPixelY) {
+    private SimulationRobot(int robotPixelX, int robotPixelY, int headDirection) {
         roboName = PREFIX_ROBO_NAME + (++numberOfRobots);
         roboNumber = numberOfRobots;
         this.sizeX = robotPixelX;
         this.sizeY = robotPixelY;
+        this.headDirection = headDirection;
     }
 
-    private SimulationRobot(int robotPixelX, int robotPixelY, Color robotColor) {
+    private SimulationRobot(int robotPixelX, int robotPixelY, int headDirection, Color robotColor) {
         roboName = PREFIX_ROBO_NAME + (++numberOfRobots);
         roboNumber = numberOfRobots;
         this.sizeX = robotPixelX;
         this.sizeY = robotPixelY;
+        this.headDirection = headDirection;
         this.robotColor = robotColor;
     }
 
-    private SimulationRobot(int robotPixelX, int robotPixelY, Color robotColor, int[] position) {
+    private SimulationRobot(int robotPixelX, int robotPixelY, int headDirection, Color robotColor, int[] position) {
         roboName = PREFIX_ROBO_NAME + (++numberOfRobots);
         roboNumber = numberOfRobots;
         this.sizeX = robotPixelX;
         this.sizeY = robotPixelY;
+        this.headDirection = headDirection;
         this.robotColor = robotColor;
         this.position = position;
     }
@@ -55,14 +58,14 @@ public class SimulationRobot implements Roboter {
         return DEFAULT_ROBOT_COLOR;
     }
 
-    public static ArrayList<SimulationRobot> addRobot(int robotPixelX, int robotPixelY) {
-        robots.add(new SimulationRobot(robotPixelX, robotPixelY));
+    public static ArrayList<SimulationRobot> addRobot(int robotPixelX, int robotPixelY, int headDirection) {
+        robots.add(new SimulationRobot(robotPixelX, robotPixelY, headDirection));
 
         return robots;
     }
 
-    public static ArrayList<SimulationRobot> addRobot(int robotPixelX, int robotPixelY, Color robotColor, int[] position) {
-        robots.add(new SimulationRobot(robotPixelX, robotPixelY, robotColor, position));
+    public static ArrayList<SimulationRobot> addRobot(int robotPixelX, int robotPixelY, int headDirection, Color robotColor, int[] position) {
+        robots.add(new SimulationRobot(robotPixelX, robotPixelY, headDirection, robotColor, position));
         return robots;
     }
 
@@ -203,6 +206,10 @@ public class SimulationRobot implements Roboter {
         }
     }
 
+    public Integer getHeadDirection(){
+        return this.headDirection;
+    }
+
     public void keyboardMoveUp() {
         moveUp();
     }
@@ -297,22 +304,6 @@ public class SimulationRobot implements Roboter {
     public void left() {
         System.out.println("ROTATE LEFT");
         int mazeNumber = whatLabyrinthDoIBelongTo(this.roboNumber).getNr() - 1;
-//        if (Controller_MainGUI.mazeFreeFieldsRotateLeftForward(mazeNumber, this.getRobotNumber() - 1)) {
-//            int x = -2;
-//            int y = 2;
-//            for (int i = 0; i < position.length; i++, x++, y--) {
-//                this.position[i] = this.position[i] - this.getSizeX() - x + y * SimulationMaze.getMazeFiles().get(mazeNumber).getMazeSizeY();
-//
-//                if (i > 0 && (i + 1) % this.getSizeX() == 0) {
-//                    x = x - this.getSizeX() - 1;
-//                    y = y + this.getSizeY();
-//                }
-//            }
-//
-//
-//        } else {
-//            isBumped();
-//        }
         if(Controller_MainGUI.mazeFreeFieldsRotateLeftForward(mazeNumber, this.getRobotNumber() - 1)){
             int x = 0;
             int y = 0;

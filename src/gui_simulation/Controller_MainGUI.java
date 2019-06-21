@@ -166,9 +166,11 @@ public class Controller_MainGUI implements Initializable {
 
     @FXML
     void addNewRobot(ActionEvent event) {
-        // Erstelle Roboter
         if (SimulationMaze.getSelectedMazeNumber() != null) {
-            SimulationRobot.addRobot(4, 3);
+            // Rotation funktioniert nur bei einem 4 x 3, 3 x 4 Roboter
+            // Bei einem 4x3 Roboter ist die headDirection 1 oder 3, bei einem 3x4 Roboter 0 oder 2
+            // Erstelle Roboter
+            SimulationRobot.addRobot(4, 3, 1);
             SimulationRobot.changeSelectedRobot(SimulationRobot.getRobots().size() - 1);
             robotTableData.add(SimulationRobot.getRobots().get(SimulationRobot.getRobots().size() - 1));
             SimulationRobot selectedRobot = SimulationRobot.getSelectedRobot();
@@ -357,9 +359,10 @@ public class Controller_MainGUI implements Initializable {
                     for (int i = 0; i < SimulationMaze.getSelectedMaze().getMazeRobots().size(); i++) {
                         int robotPixelX = SimulationMaze.getSelectedMaze().getMazeRobots().get(i).getSizeX();
                         int robotPixelY = SimulationMaze.getSelectedMaze().getMazeRobots().get(i).getSizeY();
+                        int headDirection = SimulationMaze.getSelectedMaze().getMazeRobots().get(i).getHeadDirection();
                         Color robotColor = SimulationMaze.getSelectedMaze().getMazeRobots().get(i).getRobotColor();
                         int[] position = SimulationMaze.getSelectedMaze().getMazeRobots().get(i).getPosition();
-                        SimulationRobot.addRobot(robotPixelX, robotPixelY, robotColor, position);
+                        SimulationRobot.addRobot(robotPixelX, robotPixelY, headDirection, robotColor, position);
                     }
                     SimulationRobot.changeSelectedRobot(SimulationMaze.getSelectedMaze().getChangeMazeSelectedRobot());
                     robotTableData.addAll(SimulationRobot.getRobots());
@@ -583,50 +586,53 @@ public class Controller_MainGUI implements Initializable {
     }
 
     public static boolean mazeFreeFieldsRotateLeftForward(int robotMaze, int mazeRobot) {
-        SimulationMaze maze = SimulationMaze.getMazeFiles().get(robotMaze);
-        SimulationRobot robot = SimulationRobot.getRobots().get(mazeRobot);
 
-        int[] sortedPositions = robot.getPosition();
-        Arrays.sort(sortedPositions);
 
-        boolean freeFields = true;
-        System.out.println("RotateLeft");
-        // Prüfe ob Rotationsradius frei ist
-        for (int x = 0; x < robot.getSizeX() && freeFields; x++) {
-            for (int y = 0; y < robot.getSizeY() && freeFields; y++) {
-                // Oberste rechte Kante wird bei Radialbewegung nicht durchkreuzt
-                if (!(x == robot.getSizeX() - 1 && y == robot.getSizeY() - 1)) {
-                    if (!(maze.getMazeFreeFields().contains(sortedPositions[x] - maze.getMazeSizeY() - y * maze.getMazeSizeY()))) {
-                        // TODO Historie Bumped on Position: sortedPositions[x] - maze.getMazeSizeY() - y * maze.getMazeSizeY()
-                        freeFields = false;
-                        mazeFields.get(sortedPositions[x] - maze.getMazeSizeY() - y * maze.getMazeSizeY()).setFill(Color.rgb(255, 255, 0));
-                    }
-                }
-            }
-        }
-        // Prüfe ob Zielposition frei ist
-//        for(int pos : robot.getPosition()){
-//            System.out.print(pos + " ");
-//        }
-//        System.out.println();
-//        for(int free : maze.getMazeFreeFields()){
-//            System.out.print(free + " ");
-//        }
-//        System.out.println();
-//        System.out.println(maze.getMazeFreeFieldsToString());
-
-        for (int x = 0; x < robot.getSizeX() - 2 && freeFields; x++) {
-            for (int y = 0; y < robot.getSizeY() && freeFields; y++) {
-                if (!(maze.getMazeFreeFields().contains(sortedPositions[robot.getSizeX() * robot.getSizeY() - 1 - robot.getSizeY()] - x - 1 - y * maze.getMazeSizeY()))) {
-                    freeFields = false;
-                    //mazeFields.get(sortedPositions[robot.getSizeX() * robot.getSizeY() - 1 - robot.getSizeY()] - x - 1 - y * maze.getMazeSizeY()).setFill(Color.rgb(255, 255, 0));
-                }
-                //mazeFields.get(sortedPositions[robot.getSizeX() * robot.getSizeY() - 1 - robot.getSizeY()] - x - 1 - y * maze.getMazeSizeY()).setFill(Color.rgb(255, 255, 0));
-            }
-        }
-
-        // TODO freeFields
         return true;
+//        SimulationMaze maze = SimulationMaze.getMazeFiles().get(robotMaze);
+//        SimulationRobot robot = SimulationRobot.getRobots().get(mazeRobot);
+//
+//        int[] sortedPositions = robot.getPosition();
+//        Arrays.sort(sortedPositions);
+//
+//        boolean freeFields = true;
+//        System.out.println("RotateLeft");
+//        // Prüfe ob Rotationsradius frei ist
+//        for (int x = 0; x < robot.getSizeX() && freeFields; x++) {
+//            for (int y = 0; y < robot.getSizeY() && freeFields; y++) {
+//                // Oberste rechte Kante wird bei Radialbewegung nicht durchkreuzt
+//                if (!(x == robot.getSizeX() - 1 && y == robot.getSizeY() - 1)) {
+//                    if (!(maze.getMazeFreeFields().contains(sortedPositions[x] - maze.getMazeSizeY() - y * maze.getMazeSizeY()))) {
+//                        // TODO Historie Bumped on Position: sortedPositions[x] - maze.getMazeSizeY() - y * maze.getMazeSizeY()
+//                        freeFields = false;
+//                        mazeFields.get(sortedPositions[x] - maze.getMazeSizeY() - y * maze.getMazeSizeY()).setFill(Color.rgb(255, 255, 0));
+//                    }
+//                }
+//            }
+//        }
+//        // Prüfe ob Zielposition frei ist
+////        for(int pos : robot.getPosition()){
+////            System.out.print(pos + " ");
+////        }
+////        System.out.println();
+////        for(int free : maze.getMazeFreeFields()){
+////            System.out.print(free + " ");
+////        }
+////        System.out.println();
+////        System.out.println(maze.getMazeFreeFieldsToString());
+//
+//        for (int x = 0; x < robot.getSizeX() - 2 && freeFields; x++) {
+//            for (int y = 0; y < robot.getSizeY() && freeFields; y++) {
+//                if (!(maze.getMazeFreeFields().contains(sortedPositions[robot.getSizeX() * robot.getSizeY() - 1 - robot.getSizeY()] - x - 1 - y * maze.getMazeSizeY()))) {
+//                    freeFields = false;
+//                    //mazeFields.get(sortedPositions[robot.getSizeX() * robot.getSizeY() - 1 - robot.getSizeY()] - x - 1 - y * maze.getMazeSizeY()).setFill(Color.rgb(255, 255, 0));
+//                }
+//                //mazeFields.get(sortedPositions[robot.getSizeX() * robot.getSizeY() - 1 - robot.getSizeY()] - x - 1 - y * maze.getMazeSizeY()).setFill(Color.rgb(255, 255, 0));
+//            }
+//        }
+//
+//        // TODO freeFields
+//        return true;
     }
 
 }
