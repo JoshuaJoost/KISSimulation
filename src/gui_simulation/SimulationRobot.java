@@ -10,7 +10,7 @@ public class SimulationRobot implements Roboter {
     private static final String PREFIX_ROBO_NAME = "Robo_";
     private static final String SELECTED_TEXT = "yep";
     private static final String NOT_SELECTED_TEXT = "";
-    private static final Color DEFAULT_ROBOT_COLOR = Color.rgb(0, 0, 255);
+    private static final Color DEFAULT_ROBOT_COLOR = Color.rgb(55, 109, 19);
 
     private static ArrayList<SimulationRobot> robots = new ArrayList<>();
     private static int numberOfRobots = 0;
@@ -292,6 +292,11 @@ public class SimulationRobot implements Roboter {
                     y = y + this.getSizeY();
                 }
             }
+
+            // TODO löst BUGG in Bewegung aus
+//        int tmpSizeX = this.sizeX;
+//        this.sizeX = sizeY;
+//        this.sizeY = tmpSizeX;
         } else {
             isBumped();
         }

@@ -603,13 +603,25 @@ public class Controller_MainGUI implements Initializable {
                 }
             }
         }
+        // TODO Bugg rotiert um illegale Position!
         // Prüfe ob Zielposition frei ist
+//        for(int pos : robot.getPosition()){
+//            System.out.print(pos + " ");
+//        }
+//        System.out.println();
+//        for(int free : maze.getMazeFreeFields()){
+//            System.out.print(free + " ");
+//        }
+//        System.out.println();
+//        System.out.println(maze.getMazeFreeFieldsToString());
+
         for (int x = 0; x < robot.getSizeX() - 2 && freeFields; x++) {
             for (int y = 0; y < robot.getSizeY() && freeFields; y++) {
                 if (!(maze.getMazeFreeFields().contains(sortedPositions[robot.getSizeX() * robot.getSizeY() - 1 - robot.getSizeY()] - x - 1 - y * maze.getMazeSizeY()))) {
                     freeFields = false;
-                    mazeFields.get(sortedPositions[robot.getSizeX() * robot.getSizeY() - 1 - robot.getSizeY()] - x - 1 - y * maze.getMazeSizeY()).setFill(Color.rgb(255, 255, 0));
+                    //mazeFields.get(sortedPositions[robot.getSizeX() * robot.getSizeY() - 1 - robot.getSizeY()] - x - 1 - y * maze.getMazeSizeY()).setFill(Color.rgb(255, 255, 0));
                 }
+                //mazeFields.get(sortedPositions[robot.getSizeX() * robot.getSizeY() - 1 - robot.getSizeY()] - x - 1 - y * maze.getMazeSizeY()).setFill(Color.rgb(255, 255, 0));
             }
         }
 
