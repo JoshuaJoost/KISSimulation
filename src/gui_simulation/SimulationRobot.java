@@ -27,7 +27,7 @@ public class SimulationRobot implements Roboter {
     // 0 = Nord, im Uhrzeigersinn
     private Integer headDirection = null; //1
 
-    private SimulationRobot(int robotPixelX, int robotPixelY, int headDirection) {
+    private SimulationRobot(int robotPixelX, int robotPixelY) {
         roboName = PREFIX_ROBO_NAME + (++numberOfRobots);
         roboNumber = numberOfRobots;
         this.sizeX = robotPixelX;
@@ -36,7 +36,7 @@ public class SimulationRobot implements Roboter {
         this.headDirection = robotPixelX > robotPixelY ? 1 : 0;
     }
 
-    private SimulationRobot(int robotPixelX, int robotPixelY, int headDirection, Color robotColor) {
+    private SimulationRobot(int robotPixelX, int robotPixelY, Color robotColor) {
         roboName = PREFIX_ROBO_NAME + (++numberOfRobots);
         roboNumber = numberOfRobots;
         this.sizeX = robotPixelX;
@@ -46,7 +46,7 @@ public class SimulationRobot implements Roboter {
         this.robotColor = robotColor;
     }
 
-    private SimulationRobot(int robotPixelX, int robotPixelY, int headDirection, Color robotColor, int[] position) {
+    private SimulationRobot(int robotPixelX, int robotPixelY, Color robotColor, int[] position) {
         roboName = PREFIX_ROBO_NAME + (++numberOfRobots);
         roboNumber = numberOfRobots;
         this.sizeX = robotPixelX;
@@ -61,14 +61,14 @@ public class SimulationRobot implements Roboter {
         return DEFAULT_ROBOT_COLOR;
     }
 
-    public static ArrayList<SimulationRobot> addRobot(int robotPixelX, int robotPixelY, int headDirection) {
-        robots.add(new SimulationRobot(robotPixelX, robotPixelY, headDirection));
+    public static ArrayList<SimulationRobot> addRobot(int robotPixelX, int robotPixelY) {
+        robots.add(new SimulationRobot(robotPixelX, robotPixelY));
 
         return robots;
     }
 
-    public static ArrayList<SimulationRobot> addRobot(int robotPixelX, int robotPixelY, int headDirection, Color robotColor, int[] position) {
-        robots.add(new SimulationRobot(robotPixelX, robotPixelY, headDirection, robotColor, position));
+    public static ArrayList<SimulationRobot> addRobot(int robotPixelX, int robotPixelY, Color robotColor, int[] position) {
+        robots.add(new SimulationRobot(robotPixelX, robotPixelY, robotColor, position));
         return robots;
     }
 
