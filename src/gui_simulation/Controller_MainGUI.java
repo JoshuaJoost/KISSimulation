@@ -18,6 +18,7 @@ import javafx.scene.shape.Rectangle;
 
 import java.io.*;
 import java.lang.reflect.Array;
+import java.net.SocketImpl;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -172,7 +173,7 @@ public class Controller_MainGUI implements Initializable {
             // X bzw. Y müssen min. 3 groß sein
             // X > Y hD: 3
             // X < Y hD: 0
-            SimulationRobot.addRobot(4, 3, 0);
+            SimulationRobot.addRobot(5, 4, 3);
             SimulationRobot.changeSelectedRobot(SimulationRobot.getRobots().size() - 1);
             robotTableData.add(SimulationRobot.getRobots().get(SimulationRobot.getRobots().size() - 1));
             SimulationRobot selectedRobot = SimulationRobot.getSelectedRobot();
@@ -352,7 +353,8 @@ public class Controller_MainGUI implements Initializable {
                 mazefileTable.sort();
 
                 // Lösche Roboter
-                SimulationRobot.deleteAllRobots();
+//                SimulationRobot.deleteAllRobots();
+                // TODO Maze Table nur Mazeeigene Roboter laden!
                 robotTableData.clear();
 
                 // Füge Maze eigene Roboter hinzu
@@ -588,6 +590,11 @@ public class Controller_MainGUI implements Initializable {
 
     public static boolean mazeFreeFieldsRotateLeftForward(int robotMaze, int mazeRobot) {
         SimulationMaze maze = SimulationMaze.getMazeFiles().get(robotMaze);
+
+        for(SimulationRobot i : SimulationRobot.getRobots()){
+            System.out.println(i.toString());
+        }
+
         SimulationRobot robot = SimulationRobot.getRobots().get(mazeRobot);
 
         int[] sortedPositions = robot.getPosition();
