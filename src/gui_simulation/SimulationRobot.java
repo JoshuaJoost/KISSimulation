@@ -4,8 +4,6 @@ import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 
-import static gui_simulation.SimulationMaze.whatLabyrinthDoIBelongTo;
-
 public class SimulationRobot implements Roboter {
     private static final String PREFIX_ROBO_NAME = "Robo_";
     private static final String SELECTED_TEXT = "yep";
