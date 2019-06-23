@@ -1,10 +1,14 @@
 package gui_simulation;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Main extends Application {
 
@@ -16,11 +20,11 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("MainGUI.fxml"));
         primaryStage.setTitle("KIS Simulation Roboter");
         primaryStage.setScene(new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT));
-        primaryStage.show(); // TODO erst nach initialiseGUI?
+        primaryStage.show();
     }
-
 
     public static void main(String[] args) {
         launch(args);
     }
+
 }

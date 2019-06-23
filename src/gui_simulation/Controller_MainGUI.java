@@ -17,8 +17,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 import java.io.*;
-import java.lang.reflect.Array;
-import java.net.SocketImpl;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,9 +30,9 @@ import java.util.ResourceBundle;
 // KIS Prüfung: 20-25min Projekt vorstellen, anschließend Fragen
 
 public class Controller_MainGUI implements Initializable {
-
-    private final char mazeWallSymbol = '#';
-    private final char mazeVoidSymbol = ' ';
+    // Initialisierungprobleme
+    private static final int mazePaneX = 500;
+    private static final int mazePaneY = 500;
 
     private final Color mazeWallColor = Color.rgb(0, 0, 0);
     private final Color mazeVoidColor = Color.rgb(255, 255, 255);
@@ -42,11 +40,11 @@ public class Controller_MainGUI implements Initializable {
     private final Color mazeErrorColor = Color.rgb(0, 255, 246);
 
     // TODO in Maze bzw. Robot verlagern?
-    private static final File DIRECTORY_MAZE_FILES = new File((System.getProperty("user.dir") + "\\src\\gui_simulation\\mazeFiles"));
+    public static final File DIRECTORY_MAZE_FILES = new File((System.getProperty("user.dir") + "\\src\\gui_simulation\\mazeFiles"));
     private final String MAZE_LABEL_PREFIX = "Labyrinth: ";
     private final String ROBOT_LABEL_PREFIX = "Roboter: ";
+    private final String ROBOT_LABEL_NO_ROBOT_SELECTED = "<keiner ausgewählt>";
 
-    // TODO not static
     private static ObservableList<Rectangle> mazeFields = FXCollections.observableArrayList();
     private ObservableList<SimulationMaze> mazefileTableData = FXCollections.observableArrayList();
     private ObservableList<SimulationRobot> robotTableData = FXCollections.observableArrayList();
@@ -118,13 +116,51 @@ public class Controller_MainGUI implements Initializable {
     private TableColumn<SimulationMaze, String> mazefileTableSelected;
 
     @FXML
-    private Label mazeLableSelectedFile;
+    private Label mazeSelectedLabel;
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        // Initialisiere MazeTable
+        mazefileTableNr.setCellValueFactory(new PropertyValueFactory<>("nr"));
+        mazefileTableFilename.setCellValueFactory(new PropertyValueFactory<>("FILE_NAME"));
+        mazefileTableSelected.setCellValueFactory(new PropertyValueFactory<>("selectedMazeText"));
+        mazefileTable.setItems(mazefileTableData);
+
+        // Initialisiere RobotTable
+        robotTableNr.setCellValueFactory(new PropertyValueFactory<>("robotNumber"));
+        robotTableName.setCellValueFactory(new PropertyValueFactory<>("roboName"));
+        robotTableSelected.setCellValueFactory(new PropertyValueFactory<>("selectedText"));
+        robotTable.setItems(robotTableData);
+
+        getMazeFiles(DIRECTORY_MAZE_FILES);
+    }
+
+    private void updateRobotTableDataAndLabel() {
+        robotTableData.clear();
+        robotTableData.addAll(SimulationMaze.getSelectedMaze().getMazeRobots());
+        robotTable.sort();
+
+        if (SimulationMaze.getSelectedMaze().getMazeRobots().size() > 0) {
+            robotSelectedLable.setText(ROBOT_LABEL_PREFIX + SimulationMaze.getSelectedMaze().getSelectedRobot().getRoboName());
+        } else {
+            robotSelectedLable.setText(ROBOT_LABEL_PREFIX + ROBOT_LABEL_NO_ROBOT_SELECTED);
+        }
+    }
+
+    private void updateMazeTableDataAndLabel() {
+        mazefileTableData.clear();
+        mazefileTableData.addAll(SimulationMaze.getMazeFiles());
+        mazefileTable.sort();
+
+        mazeSelectedLabel.setText(MAZE_LABEL_PREFIX + SimulationMaze.getSelectedMaze().getFILE_NAME());
+        mazeLable.setText(MAZE_LABEL_PREFIX + SimulationMaze.getSelectedMaze().getFILE_NAME() + " Größe: " + SimulationMaze.getSelectedMaze().getMazeSizeX() + "x" + SimulationMaze.getSelectedMaze().getMazeSizeY());
+    }
 
     private ArrayList<Integer> getIndexPositionOfFreeMazeFields() {
         ArrayList<Integer> indexPositon = new ArrayList<>();
 
-        for (int i = 0; i < mazeFields.size(); i++) {
-            if (mazeFields.get(i).getFill() == mazeVoidColor) {
+        for (int i = 0; i < SimulationMaze.getSelectedMaze().getMazeDrawFields().size(); i++) {
+            if (SimulationMaze.getSelectedMaze().getMazeDrawFields().get(i).getFill() == SimulationMaze.mazeVoidColor) {
                 indexPositon.add(i);
             }
         }
@@ -132,6 +168,422 @@ public class Controller_MainGUI implements Initializable {
         return indexPositon;
     }
 
+    @FXML
+    void addNewRobot(ActionEvent event) {
+        if (SimulationMaze.getSelectedMazeNumber() != null) {
+            // Definiere Roboterwerte
+            int robotSizeX = 3;
+            int robotSizeY = 4;
+
+            // Roboter versuchen auf das Labyrinth zu setzen
+            ArrayList<Integer> robotPositions = new ArrayList<>();
+            ArrayList<Integer> freeMazeFields = getIndexPositionOfFreeMazeFields();
+
+            boolean robotSuccessfullySet = false;
+            while (freeMazeFields.size() > 0 && !robotSuccessfullySet) {
+
+                //// Versuche X-Werte des Roboters zu setzen
+                int indexStartPosition = 0;
+                boolean robotSuccessfullySetX = false;
+                while (freeMazeFields.size() > 0 && !robotSuccessfullySetX) {
+                    indexStartPosition = (int) (Math.random() * freeMazeFields.size());
+                    robotPositions.add(freeMazeFields.get(indexStartPosition));
+
+                    boolean lookRight = true;
+                    boolean lookLeft = true;
+                    for (int x = 1; x < robotSizeX && robotPositions.size() < robotSizeX && (lookRight || lookLeft); x++) {
+                        if (lookRight && freeMazeFields.contains(robotPositions.get(0) + x)) {
+                            robotPositions.add(robotPositions.get(0) + x);
+                        } else {
+                            lookRight = false;
+                        }
+
+                        if (robotPositions.size() < robotSizeX) {
+                            if (lookLeft && freeMazeFields.contains(robotPositions.get(0) - x)) {
+                                robotPositions.add(robotPositions.get(0) - x);
+                            } else {
+                                lookLeft = false;
+                            }
+                        }
+                    }
+                    System.out.println();
+                    if (freeMazeFields.size() - 1 == 0) {
+                        if (robotPositions.size() < robotSizeX && robotPositions.size() > 0) {
+                            throw new IllegalStateException("Roboter konnte nicht gesetzt werden, keinen freien Platz der Größe " + robotSizeX + " gefunden");
+                        } else if (robotPositions.size() == 0) {
+                            throw new IllegalStateException("Roboter konnte nicht gesetzt werden, kein einziges freies Feld gefunden");
+                        }
+                    }
+
+                    // Prüfe, ob Roboter gesetzt werden konnte
+                    if (robotPositions.size() == robotSizeX) {
+                        robotSuccessfullySetX = true;
+                    } else {
+                        robotPositions.clear();
+                        freeMazeFields.remove(indexStartPosition);
+                    }
+                }
+
+                //// Versuche Y-Werte des Roboters zu setzen
+                boolean lookAbove = true;
+                boolean lookBelow = true;
+                for (int y = 1; y < robotSizeY && robotPositions.size() < (robotSizeX * robotSizeY) && (lookAbove || lookBelow); y++) {
+                    for (int x = 0; x < robotSizeX; x++) {
+                        if (lookAbove && !(freeMazeFields.contains(robotPositions.get(x) - y * SimulationMaze.getSelectedMaze().getMazeSizeY()))) {
+                            lookAbove = false;
+                        }
+                        if (lookBelow && !(freeMazeFields.contains(robotPositions.get(x) + y * SimulationMaze.getSelectedMaze().getMazeSizeY()))) {
+                            lookBelow = false;
+                        }
+                    }
+                    if (lookAbove && robotPositions.size() < robotSizeX * robotSizeY) {
+                        for (int x = 0; x < robotSizeX; x++) {
+                            robotPositions.add(robotPositions.get(x) - y * SimulationMaze.getSelectedMaze().getMazeSizeY());
+                        }
+                    }
+                    if (lookBelow && robotPositions.size() < robotSizeX * robotSizeY) {
+                        for (int x = 0; x < robotSizeX; x++) {
+                            robotPositions.add(robotPositions.get(x) + y * SimulationMaze.getSelectedMaze().getMazeSizeY());
+                        }
+                    }
+                }
+
+                // Prüfe, ob Roboter vollständig gesetzt werden konnte
+                if (robotPositions.size() == robotSizeX * robotSizeY) {
+                    robotSuccessfullySet = true;
+                } else {
+                    robotPositions.clear();
+                    freeMazeFields.remove(indexStartPosition);
+                }
+            }
+
+            if (robotSuccessfullySet) {
+                // Erstelle Roboter und füge ihm aktuell selektiertem Labyrinth zu, zeige ihn anschließend an
+                SimulationRobot newRobot = SimulationRobot.addRobot(robotSizeX, robotSizeY);
+                SimulationMaze.getSelectedMaze().addRobotToMaze(newRobot);
+                SimulationMaze.getSelectedMaze().changeSelectedRobot(SimulationMaze.getSelectedMaze().getMazeRobots().size() - 1);
+                SimulationMaze.getSelectedMaze().getSelectedRobot().setPosition(OwnUtils.convertArrayListToIntArray(robotPositions));
+                updateMaze(true);
+                updateRobotTableDataAndLabel();
+            } else {
+                throw new IllegalStateException("Roboter konnte nicht gesetzt werden, keinen freien Platz der Größe " + robotSizeX + "x" + robotSizeY + " gefunden.");
+            }
+        }
+    }
+
+    @FXML
+    void mazeMoveRobotKeyboard(KeyEvent event) {
+        System.out.println(":" + event.getCode());
+
+        if (SimulationMaze.getMazeFiles().size() > 0 && SimulationMaze.getSelectedMazeNumber() != null && SimulationMaze.getSelectedMaze().getMazeRobots().size() > 0) {
+            switch (event.getCode().toString()) {
+                // TODO weitere Tastatureingaben einbinden: E rotataRight, W,A,S,D, Y Messen
+                case "RIGHT":
+                    SimulationMaze.getSelectedMaze().getSelectedRobot().keyboardMoveRight();
+                    updateMaze(true);
+                    break;
+                case "LEFT":
+                    SimulationMaze.getSelectedMaze().getSelectedRobot().keyboardMoveLeft();
+                    updateMaze(true);
+                    break;
+                case "DOWN":
+                    SimulationMaze.getSelectedMaze().getSelectedRobot().keyboardMoveDown();
+                    updateMaze(true);
+                    break;
+                case "UP":
+                    SimulationMaze.getSelectedMaze().getSelectedRobot().keyboardMoveUp();
+                    updateMaze(true);
+                    break;
+                case "Q":
+                    SimulationMaze.getSelectedMaze().getSelectedRobot().keyboardRotateLeft();
+                    updateMaze(true);
+                    break;
+            }
+        }
+    }
+
+//    @FXML
+//    void mazeMoveRobot(KeyEvent event) {
+//        System.out.println(":" + event.getCode());
+//        if (SimulationRobot.getIndexSelectedRobot() != null) {
+//            // TODO switch Kopfteil
+//            boolean freeFields = true;
+//            int[] sortedPositions = SimulationRobot.getSelectedRobot().getPosition();
+//            Arrays.sort(sortedPositions);
+//            switch (event.getCode().toString()) {
+//                case "RIGHT":
+//                    // TODO Roboter nach rechts bewegen
+//                    SimulationRobot.getSelectedRobot().keyboardMoveRight();
+//                    updateMaze(true);
+//                    break;
+//                case "LEFT":
+//                    // TODO Roboter nach links bewegen
+//                    SimulationRobot.getSelectedRobot().keyboardMoveLeft();
+//                    updateMaze(true);
+//                    break;
+//                case "DOWN":
+//                    SimulationRobot.getSelectedRobot().keyboardMoveDown();
+//                    updateMaze(true);
+//                    break;
+//                case "UP":
+//                    // TODO an Position des Kopfes anpassen
+//                    SimulationRobot.getSelectedRobot().keyboardMoveUp();
+//                    updateMaze(true);
+//                    break;
+//                case "Q": // Nach links drehen
+//                    SimulationRobot.getSelectedRobot().keyboardRotateLeft();
+//                    updateMaze(true);
+//                    break;
+//                default: // TODO noch auf andere Tastatureingaben reagieren? z.B. zum Drehen
+//                    break;
+//            }
+//        }
+//    }
+
+    @FXML
+    void robotDelete(ActionEvent event) {
+
+    }
+
+    @FXML
+    void robotGetMatrix(ActionEvent event) {
+
+    }
+
+    @FXML
+    void robotStartStop(ActionEvent event) {
+
+    }
+
+    @FXML
+    void selectNewMaze(MouseEvent event) {
+        if (mazefileTable.getSelectionModel().getSelectedItem() != null) {
+            int selectedRowNumber = mazefileTable.getSelectionModel().getSelectedItem().getNr();
+
+            boolean tableDataChanged = SimulationMaze.changeSelectedMaze(selectedRowNumber - 1);
+
+            if (tableDataChanged) {
+                updateMazeTableDataAndLabel();
+
+                if (SimulationMaze.getSelectedMaze().getMazeRobots().size() > 0) {
+                    updateMaze(true);
+                } else {
+                    updateMaze(false);
+                }
+
+                updateRobotTableDataAndLabel();
+            }
+        }
+    }
+
+    @FXML
+    void selectNewRobot(MouseEvent event) {
+        if (robotTable.getSelectionModel().getSelectedItem() != null) {
+            int selectedRowNumber = robotTable.getSelectionModel().getSelectedItem().getRobotNumber();
+            // Index Position im robots Array eines geringer als RoboNumber
+            boolean tableDataChanged = SimulationMaze.getSelectedMaze().changeSelectedRobot(selectedRowNumber - 1);//SimulationRobot.changeSelectedRobot(selectedRowNumber - 1);
+
+            if (tableDataChanged) {
+                updateRobotTableDataAndLabel();
+                updateMaze(true);
+            }
+        }
+    }
+
+    private void updateMaze(boolean drawRobot) {
+        drawMaze();
+
+        if (drawRobot) {
+            for (int robotPosition : SimulationMaze.getSelectedMaze().getSelectedRobot().getPosition()) {
+                Rectangle valueRect = SimulationMaze.getSelectedMaze().getMazeDrawFields().get(robotPosition);
+
+                Rectangle robotField = new Rectangle(valueRect.getX(), valueRect.getY(), valueRect.getWidth(), valueRect.getHeight());
+                robotField.setFill(SimulationMaze.getSelectedMaze().getSelectedRobot().getRobotColor());
+                mazePane.getChildren().set(robotPosition, robotField);
+            }
+        }
+    }
+
+    private void drawMaze() {
+        mazePane.getChildren().clear();
+        mazePane.getChildren().addAll(SimulationMaze.getSelectedMaze().getMazeDrawFields());
+    }
+//    private void drawMaze(String filePath) {
+//        mazeFields.clear();
+//        BufferedReader br;
+//        try {
+//            br = new BufferedReader(new FileReader(filePath));
+//
+//            StringBuilder sb = new StringBuilder();
+//            String line = "";
+//
+//            while ((line = br.readLine()) != null) {
+//                sb.append(line);
+//                sb.append(System.lineSeparator());
+//            }
+//            br.close();
+//
+////          System.out.println(sb.toString());
+//            String[] mazeStringParts = sb.toString().split(System.lineSeparator());
+//
+//            // Setze Pixelgröße einzelner Labyrinthbausteine
+//            mazePixelX = (int) mazePane.getWidth() / mazeStringParts[0].length();
+//            mazePixelY = (int) mazePane.getHeight() / mazeStringParts.length;
+//
+//            // Initialisiere MazeLabel, wenn Maze das erste mal geladen wird
+//            if (SimulationMaze.getSelectedMaze().getMazeSizeY() == null && SimulationMaze.getSelectedMaze().getMazeSizeX() == null) {
+//                mazeLable.setText(MAZE_LABEL_PREFIX + SimulationMaze.getSelectedMaze().getFILE_NAME() + " Größe: " + mazeStringParts.length + "x" + mazeStringParts[0].length());
+//            }
+//
+//            // Setzt die Größe des Labyrinths
+////            SimulationMaze.getSelectedMaze().setMazeSizeX(mazeStringParts.length);
+////            SimulationMaze.getSelectedMaze().setMazeSizeY(mazeStringParts[0].length());
+//
+//            // System.out.println("x: " + mazePixelX + " y: " + mazePixelY);
+//            for (int y = 0; y < mazeStringParts.length; y++) {
+////                System.out.print(y + ": ");
+//                boolean isFreeField = false;
+//                for (int x = 0; x < mazeStringParts[0].length(); x++) {
+//                    Rectangle mazeField = new Rectangle(x * mazePixelX, y * mazePixelY, mazePixelX, mazePixelY);
+//                    if (mazeStringParts[y].charAt(x) == mazeWallSymbol) {
+//                        mazeField.setFill(mazeWallColor);
+//                        isFreeField = false;
+//                    } else if (mazeStringParts[y].charAt(x) == mazeVoidSymbol) {
+//                        mazeField.setFill(mazeVoidColor);
+//                        isFreeField = true;
+//                    } else {
+//                        mazeField.setFill(mazeErrorColor);
+//                        isFreeField = false;
+//                    }
+////                    System.out.print(mazeStringParts[y].charAt(x));
+//                    mazeFields.add(mazeField);
+//                    if (isFreeField) {
+////                        SimulationMaze.getSelectedMaze().addFreeField(mazeFields.size() - 1);
+//                    }
+//                }
+////                System.out.println();
+//            }
+//            mazePane.getChildren().setAll(mazeFields);
+//
+//        } catch (FileNotFoundException e) {
+//            System.err.println("Datei: " + filePath + " nicht gefunden!");
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
+    public void getMazeFiles(File dir) {
+        File files[] = dir.listFiles();
+
+        for (int i = 0; i < files.length; i++) {
+            if (files[i].isFile() && files[i].getName().startsWith("maze")) {
+                SimulationMaze.addMazefileTableData(files[i].getName(), Controller_MainGUI.mazePaneX, Controller_MainGUI.mazePaneY);
+            }
+        }
+
+        mazefileTableData.addAll(SimulationMaze.getMazeFiles());
+
+        if (mazefileTableData.size() == 0) {
+            throw new IllegalArgumentException("Keine gültigen Labyrinthdateien bei " + DIRECTORY_MAZE_FILES + " gefunden");
+        }
+
+    }
+
+    public static boolean mazeFreeFieldsUp(int robotMaze, int mazeRobot) {
+        SimulationMaze maze = SimulationMaze.getMazeFiles().get(robotMaze);
+        SimulationRobot robo = SimulationRobot.getRobots().get(mazeRobot);
+
+        int[] sortedPositions = robo.getPosition();
+        Arrays.sort(sortedPositions);
+
+        boolean freeFields = true;
+        for (int x = 0; x < robo.getSizeX(); x++) {
+            if (!(maze.getIndexMazeFreeFields().contains(sortedPositions[x] - maze.getMazeSizeY()))) {
+                freeFields = false;
+            }
+
+            // mazeFields.get(sortedPositions[x] - maze.getMazeSizeY()).setFill(Color.rgb(238, 244, 66));
+        }
+
+        return freeFields;
+    }
+
+    public static boolean mazeFreeFieldsDown(int robotMaze, int mazeRobot) {
+        SimulationMaze maze = SimulationMaze.getMazeFiles().get(robotMaze);
+        SimulationRobot robo = SimulationRobot.getRobots().get(mazeRobot);
+
+        int[] sortedPositions = robo.getPosition();
+        Arrays.sort(sortedPositions);
+
+        boolean freeFields = true;
+        for (int x = 0; x < robo.getSizeX(); x++) {
+            if (!(maze.getIndexMazeFreeFields().contains(sortedPositions[sortedPositions.length - 1 - x] + maze.getMazeSizeY()))) {
+                freeFields = false;
+            }
+
+            // mazeFields.get(sortedPositions[sortedPositions.length - 1 - x] + maze.getMazeSizeY()).setFill(Color.rgb(238, 244, 66));
+        }
+
+        return freeFields;
+    }
+
+    public static boolean mazeFreeFieldsRight(int robotMaze, int mazeRobot) {
+        SimulationMaze maze = SimulationMaze.getMazeFiles().get(robotMaze);
+        SimulationRobot robot = SimulationRobot.getRobots().get(mazeRobot);
+
+        int[] sortedPositions = robot.getPosition();
+        Arrays.sort(sortedPositions);
+
+        boolean freeFields = true;
+        for (int x = robot.getSizeX() - 1, y = 0; y < robot.getSizeY(); y++, x += robot.getSizeX()) {
+            if (!(maze.getIndexMazeFreeFields().contains(sortedPositions[x] + 1))) {
+                freeFields = false;
+            }
+            // mazeFields.get(sortedPositions[x] + 1).setFill(Color.rgb(255,255,0));
+        }
+
+        return freeFields;
+    }
+
+    public static boolean mazeFreeFieldsLeft(int robotMaze, int mazeRobot) {
+        SimulationMaze maze = SimulationMaze.getMazeFiles().get(robotMaze);
+        SimulationRobot robot = SimulationRobot.getRobots().get(mazeRobot);
+
+        int[] sortedPositions = robot.getPosition();
+        Arrays.sort(sortedPositions);
+
+        boolean freeFields = true;
+        for (int y = 0, x = 0; y < robot.getSizeY(); y++, x += robot.getSizeX()) {
+            if (!(maze.getIndexMazeFreeFields().contains(sortedPositions[x] - 1))) {
+                freeFields = false;
+            }
+        }
+
+        return freeFields;
+    }
+
+    // TODO prüfe ob Zielposition frei ist, prüfe ob Rotationsradius frei ist
+    public static boolean mazeFreeFieldsRotateLeftForward(int robotMaze, int mazeRobot) {
+        SimulationMaze maze = SimulationMaze.getMazeFiles().get(robotMaze);
+
+        for (SimulationRobot i : SimulationRobot.getRobots()) {
+            System.out.println(i.toString());
+        }
+
+        SimulationRobot robot = SimulationRobot.getRobots().get(mazeRobot);
+
+        int[] sortedPositions = robot.getPosition();
+        Arrays.sort(sortedPositions);
+
+        boolean freeFields = true;
+
+        return true;
+    }
+
+    /*
+     * DEBUGG Funktionen
+     * */
     private void outMazeFreeFields() {
         for (int i = 0; i < mazeFields.size(); i++) {
             if (mazeFields.get(i).getFill() == mazeVoidColor) {
@@ -163,526 +615,6 @@ public class Controller_MainGUI implements Initializable {
             }
         }
 
-    }
-
-    @FXML
-    void addNewRobot(ActionEvent event) {
-
-//        if (SimulationMaze.getSelectedMazeNumber() != null) {
-//            // Erstelle Roboter
-//            // Start headDirection muss zu X Y Größe des Roboters passen:
-//            // X bzw. Y müssen min. 3 groß sein
-//            // X > Y hD: 3
-//            // X < Y hD: 0
-//            SimulationRobot.addRobot(7, 2, 3);
-//            SimulationRobot.changeSelectedRobot(SimulationRobot.getRobots().size() - 1);
-//            robotTableData.add(SimulationRobot.getRobots().get(SimulationRobot.getRobots().size() - 1));
-//            SimulationRobot selectedRobot = SimulationRobot.getSelectedRobot();
-//
-//            // Finde Zufällige Startposition
-//            ArrayList<Integer> robotPositions = new ArrayList<>();
-//            ArrayList<Integer> freeMazeFields = getIndexPositionOfFreeMazeFields();
-//
-//            // Finde geeigenete Position um Breite des Roboters setzen zu können und speichere gefundene Felder in robotPositions
-//            boolean robotSuccessfullySet = false;
-//            while (freeMazeFields.size() > 0 && !robotSuccessfullySet) {
-//
-//                int startPosition = 0;
-//                boolean robotSuccessfullySetXPosition = false;
-//                while (freeMazeFields.size() > 0 && !robotSuccessfullySetXPosition) {
-//                    startPosition = (int) (Math.random() * freeMazeFields.size());
-//                    robotPositions.add(freeMazeFields.get(startPosition));
-//
-//                    if (robotPositions.size() == 0) {
-//                        // TODO in HistorieTabelle eintragen
-//                        throw new IllegalStateException("Keine gültige Startposition gefunden");
-//                    }
-//
-//                    // Finde benachbarte freie Felder X Richtung
-//                    boolean lookRight = true;
-//                    boolean lookLeft = true;
-//                    for (int i = 1; i < selectedRobot.getSizeX() && robotPositions.size() < selectedRobot.getSizeX(); i++) {
-//                        if (mazeFields.get(robotPositions.get(0) + i).getFill() == mazeVoidColor && lookRight) {
-//                            robotPositions.add(robotPositions.get(0) + i);
-//                        } else {
-//                            lookRight = false;
-//                        }
-//
-//                        if (robotPositions.size() < selectedRobot.getSizeX()) {
-//                            if (mazeFields.get(robotPositions.get(0) - i).getFill() == mazeVoidColor && lookLeft) {
-//                                robotPositions.add(robotPositions.get(0) - i);
-//                            } else {
-//                                lookLeft = false;
-//                            }
-//                        }
-//                    }
-//
-//                    // Prüfe ob Roboter gesetzt werden konnte
-//                    if (robotPositions.size() != selectedRobot.getSizeX()) {
-//                        robotPositions.clear();
-//                        freeMazeFields.remove(startPosition);
-//                    } else {
-//                        robotSuccessfullySetXPosition = true;
-//                    }
-//                }
-//                if (robotPositions.size() < selectedRobot.getSizeX()) {
-//                    // TODO in Historie eintragen
-//                    throw new IllegalStateException("Roboter konnte nicht gesetzt werden. Kein geeigneter Platz gefunden");
-//                }
-//
-//                // Finde benachbarte freie Felder Y Richtung
-//                boolean lookAbove = true;
-//                boolean lookBelow = true;
-//                for (int y = 1; y < selectedRobot.getSizeY() && robotPositions.size() < (selectedRobot.getSizeX() * selectedRobot.getSizeY()) && (lookAbove || lookBelow); y++) {
-//                    for (int x = 0; x < selectedRobot.getSizeX(); x++) {
-//                        if (lookAbove && !(mazeFields.get(robotPositions.get(x) + (y * SimulationMaze.getSelectedMaze().getMazeSizeY())).getFill() == mazeVoidColor)) {
-//                            lookAbove = false;
-//                        }
-//                        if (lookBelow && !(mazeFields.get(robotPositions.get(x) - (y * SimulationMaze.getSelectedMaze().getMazeSizeY())).getFill() == mazeVoidColor)) {
-//                            lookBelow = false;
-//                        }
-//                    }
-//                    if (lookAbove && robotPositions.size() < (selectedRobot.getSizeX() * selectedRobot.getSizeY())) {
-//                        for (int x = 0; x < selectedRobot.getSizeX(); x++) {
-//                            robotPositions.add(robotPositions.get(x) + (y * SimulationMaze.getSelectedMaze().getMazeSizeY()));
-//                        }
-//                    }
-//                    if (lookBelow && robotPositions.size() < (selectedRobot.getSizeX() * selectedRobot.getSizeY())) {
-//                        for (int x = 0; x < selectedRobot.getSizeX(); x++) {
-//                            robotPositions.add(robotPositions.get(x) - (y * SimulationMaze.getSelectedMaze().getMazeSizeY()));
-//                        }
-//                    }
-//                }
-//                // Prüfe ob Roboter vollständig gesetzt werden konnte
-//                if (robotPositions.size() != (selectedRobot.getSizeX() * selectedRobot.getSizeY())) {
-//                    robotPositions.clear();
-//                    freeMazeFields.remove(startPosition);
-//                } else {
-//                    robotSuccessfullySet = true;
-//                }
-//            }
-//            if (robotPositions.size() != (selectedRobot.getSizeX() * selectedRobot.getSizeY())) {
-//                throw new IllegalStateException("Roboter konnte nicht gesetzt werden");
-//            }
-//
-//            // Übermittle Roboter seine Positionen
-//            int[] robotPositionsArray = OwnUtils.convertArrayListToIntArray(robotPositions);
-//
-//            selectedRobot.setPosition(robotPositionsArray);
-//
-//            // Setze Roboter aufs Feld
-//            updateMaze(true);
-//
-//            // Füge Roboter in MazeRobots
-//            SimulationMaze.getSelectedMaze().getMazeRobots().clear();
-//            SimulationMaze.getSelectedMaze().getMazeRobots().addAll(SimulationRobot.getRobots());
-//            SimulationMaze.getSelectedMaze().setChangeMazeSelectedRobot(SimulationRobot.getIndexSelectedRobot());
-//        }
-    }
-
-    @FXML
-    void mazeMoveRobot(KeyEvent event) {
-        System.out.println(":" + event.getCode());
-        if (SimulationRobot.getIndexSelectedRobot() != null) {
-            // TODO switch Kopfteil
-            boolean freeFields = true;
-            int[] sortedPositions = SimulationRobot.getSelectedRobot().getPosition();
-            Arrays.sort(sortedPositions);
-            switch (event.getCode().toString()) {
-                case "RIGHT":
-                    // TODO Roboter nach rechts bewegen
-                    SimulationRobot.getSelectedRobot().keyboardMoveRight();
-                    updateMaze(true);
-                    break;
-                case "LEFT":
-                    // TODO Roboter nach links bewegen
-                    SimulationRobot.getSelectedRobot().keyboardMoveLeft();
-                    updateMaze(true);
-                    break;
-                case "DOWN":
-                    SimulationRobot.getSelectedRobot().keyboardMoveDown();
-                    updateMaze(true);
-                    break;
-                case "UP":
-                    // TODO an Position des Kopfes anpassen
-                    SimulationRobot.getSelectedRobot().keyboardMoveUp();
-                    updateMaze(true);
-                    break;
-                case "Q": // Nach links drehen
-                    SimulationRobot.getSelectedRobot().keyboardRotateLeft();
-                    updateMaze(true);
-                    break;
-                default: // TODO noch auf andere Tastatureingaben reagieren? z.B. zum Drehen
-                    break;
-            }
-        }
-    }
-
-    @FXML
-    void robotDelete(ActionEvent event) {
-
-    }
-
-    @FXML
-    void robotGetMatrix(ActionEvent event) {
-
-    }
-
-    @FXML
-    void robotStartStop(ActionEvent event) {
-
-    }
-
-    @FXML
-    void selectNewMaze(MouseEvent event) {
-        if (mazefileTable.getSelectionModel().getSelectedItem() != null) {
-            int selectedRowNumber = mazefileTable.getSelectionModel().getSelectedItem().getNr();
-
-            // setzte selectedRobot in SimulationMaze
-            if (SimulationRobot.getRobots().size() > 0) {
-                SimulationMaze.getSelectedMaze().getMazeRobots().clear();
-                SimulationMaze.getSelectedMaze().getMazeRobots().addAll(SimulationRobot.getRobots());
-                SimulationMaze.getSelectedMaze().setChangeMazeSelectedRobot(SimulationRobot.getIndexSelectedRobot());
-            }
-
-            // Index Position im mazefile Array eines geringer als mazefile
-            boolean tableDataChanged = SimulationMaze.changeSelectedMaze(selectedRowNumber - 1);
-
-            if (tableDataChanged) {
-                mazefileTableData.clear();
-                mazefileTableData.addAll(SimulationMaze.getMazeFiles());
-                mazefileTable.sort();
-
-                // Lösche Roboter
-//                SimulationRobot.deleteAllRobots();
-                // TODO Maze Table nur Mazeeigene Roboter laden!
-                robotTableData.clear();
-
-                // Füge Maze eigene Roboter hinzu
-                if (SimulationMaze.getSelectedMaze().getMazeRobots().size() > 0) {
-                    for (int i = 0; i < SimulationMaze.getSelectedMaze().getMazeRobots().size(); i++) {
-                        int robotPixelX = SimulationMaze.getSelectedMaze().getMazeRobots().get(i).getSizeX();
-                        int robotPixelY = SimulationMaze.getSelectedMaze().getMazeRobots().get(i).getSizeY();
-                        Color robotColor = SimulationMaze.getSelectedMaze().getMazeRobots().get(i).getRobotColor();
-                        int[] position = SimulationMaze.getSelectedMaze().getMazeRobots().get(i).getPosition();
-                        SimulationRobot.addRobot(robotPixelX, robotPixelY, robotColor, position);
-                    }
-                    SimulationRobot.changeSelectedRobot(SimulationMaze.getSelectedMaze().getChangeMazeSelectedRobot());
-                    robotTableData.addAll(SimulationRobot.getRobots());
-                    robotTable.sort();
-                }
-
-                // Setze Label
-                mazeLable.setText(MAZE_LABEL_PREFIX + SimulationMaze.getSelectedMaze().getFILE_NAME() + " Größe: " + SimulationMaze.getSelectedMaze().getMazeSizeX() + "x" + SimulationMaze.getSelectedMaze().getMazeSizeY());
-
-                updateMaze(SimulationMaze.getSelectedMaze().getMazeRobots().size() > 0);
-            }
-        }
-    }
-
-    @FXML
-    void selectNewRobot(MouseEvent event) {
-        if (robotTable.getSelectionModel().getSelectedItem() != null) {
-            int selectedRowNumber = robotTable.getSelectionModel().getSelectedItem().getRobotNumber();
-            // Index Position im robots Array eines geringer als RoboNumber
-            boolean tableDataChanged = SimulationRobot.changeSelectedRobot(selectedRowNumber - 1);
-
-            if (tableDataChanged) {
-                robotTableData.clear();
-                robotTableData.addAll(SimulationRobot.getRobots());
-                robotTable.sort();
-
-                robotSelectedLable.setText(ROBOT_LABEL_PREFIX + SimulationRobot.getSelectedRobot().getRoboName());
-
-                updateMaze(true);
-            }
-        }
-    }
-
-    private void updateMaze(boolean drawRobot) {
-        drawMaze(DIRECTORY_MAZE_FILES + "\\" + SimulationMaze.getSelectedMaze().getFILE_NAME());
-
-        if (drawRobot) {
-            for (int robotPosition : SimulationRobot.getSelectedRobot().getPosition()) {
-                Rectangle robotField = mazeFields.get(robotPosition);
-                robotField.setFill(SimulationRobot.getSelectedRobot().getRobotColor());
-                mazeFields.set(robotPosition, robotField);
-            }
-        }
-    }
-
-    private void drawMaze(String filePath) {
-        mazeFields.clear();
-        BufferedReader br;
-        try {
-            br = new BufferedReader(new FileReader(filePath));
-
-            StringBuilder sb = new StringBuilder();
-            String line = "";
-
-            while ((line = br.readLine()) != null) {
-                sb.append(line);
-                sb.append(System.lineSeparator());
-            }
-            br.close();
-
-//          System.out.println(sb.toString());
-            String[] mazeStringParts = sb.toString().split(System.lineSeparator());
-
-            // Setze Pixelgröße einzelner Labyrinthbausteine
-            mazePixelX = (int) mazePane.getWidth() / mazeStringParts[0].length();
-            mazePixelY = (int) mazePane.getHeight() / mazeStringParts.length;
-
-            // Initialisiere MazeLabel, wenn Maze das erste mal geladen wird
-            if (SimulationMaze.getSelectedMaze().getMazeSizeY() == null && SimulationMaze.getSelectedMaze().getMazeSizeX() == null) {
-                mazeLable.setText(MAZE_LABEL_PREFIX + SimulationMaze.getSelectedMaze().getFILE_NAME() + " Größe: " + mazeStringParts.length + "x" + mazeStringParts[0].length());
-            }
-
-            // Setzt die Größe des Labyrinths
-            SimulationMaze.getSelectedMaze().setMazeSizeX(mazeStringParts.length);
-            SimulationMaze.getSelectedMaze().setMazeSizeY(mazeStringParts[0].length());
-
-            // System.out.println("x: " + mazePixelX + " y: " + mazePixelY);
-            for (int y = 0; y < mazeStringParts.length; y++) {
-//                System.out.print(y + ": ");
-                boolean isFreeField = false;
-                for (int x = 0; x < mazeStringParts[0].length(); x++) {
-                    Rectangle mazeField = new Rectangle(x * mazePixelX, y * mazePixelY, mazePixelX, mazePixelY);
-                    if (mazeStringParts[y].charAt(x) == mazeWallSymbol) {
-                        mazeField.setFill(mazeWallColor);
-                        isFreeField = false;
-                    } else if (mazeStringParts[y].charAt(x) == mazeVoidSymbol) {
-                        mazeField.setFill(mazeVoidColor);
-                        isFreeField = true;
-                    } else {
-                        mazeField.setFill(mazeErrorColor);
-                        isFreeField = false;
-                    }
-//                    System.out.print(mazeStringParts[y].charAt(x));
-                    mazeFields.add(mazeField);
-                    if (isFreeField) {
-                        SimulationMaze.getSelectedMaze().addFreeField(mazeFields.size() - 1);
-                    }
-                }
-//                System.out.println();
-            }
-            mazePane.getChildren().setAll(mazeFields);
-
-        } catch (FileNotFoundException e) {
-            System.err.println("Datei: " + filePath + " nicht gefunden!");
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        getMazeFiles(DIRECTORY_MAZE_FILES);
-
-        // Initialisiere MazeTable
-        mazefileTableNr.setCellValueFactory(new PropertyValueFactory<>("nr"));
-        mazefileTableFilename.setCellValueFactory(new PropertyValueFactory<>("FILE_NAME"));
-        mazefileTableSelected.setCellValueFactory(new PropertyValueFactory<>("selected"));
-        mazefileTable.setItems(mazefileTableData);
-
-        // Initialisiere RobotTable
-        robotTableNr.setCellValueFactory(new PropertyValueFactory<>("robotNumber"));
-        robotTableName.setCellValueFactory(new PropertyValueFactory<>("roboName"));
-        robotTableSelected.setCellValueFactory(new PropertyValueFactory<>("selected"));
-        robotTable.setItems(robotTableData);
-    }
-
-    private void getMazeFiles(File dir) {
-        File files[] = dir.listFiles();
-
-        for (int i = 0; i < files.length; i++) {
-            if (files[i].isFile() && files[i].getName().startsWith("maze")) {
-                SimulationMaze.addMazefileTableData(files[i].getName());
-            }
-        }
-
-        mazefileTableData.addAll(SimulationMaze.getMazeFiles());
-
-        // Debugg-Code: Zeige Mazefiles auf Konsole an
-//        for(SimulationMaze i : mazefileTableData){
-//            System.out.println(i.toString());
-//        }
-
-        if (mazefileTableData.size() == 0) {
-            throw new IllegalArgumentException("Keine gültigen Labyrinthdateien bei " + DIRECTORY_MAZE_FILES + " gefunden");
-        }
-
-    }
-
-    public static boolean mazeFreeFieldsUp(int robotMaze, int mazeRobot) {
-        SimulationMaze maze = SimulationMaze.getMazeFiles().get(robotMaze);
-        SimulationRobot robo = SimulationRobot.getRobots().get(mazeRobot);
-
-        int[] sortedPositions = robo.getPosition();
-        Arrays.sort(sortedPositions);
-
-        boolean freeFields = true;
-        for (int x = 0; x < robo.getSizeX(); x++) {
-            if (!(maze.getMazeFreeFields().contains(sortedPositions[x] - maze.getMazeSizeY()))) {
-                freeFields = false;
-            }
-
-            // mazeFields.get(sortedPositions[x] - maze.getMazeSizeY()).setFill(Color.rgb(238, 244, 66));
-        }
-
-        return freeFields;
-    }
-
-    public static boolean mazeFreeFieldsDown(int robotMaze, int mazeRobot) {
-        SimulationMaze maze = SimulationMaze.getMazeFiles().get(robotMaze);
-        SimulationRobot robo = SimulationRobot.getRobots().get(mazeRobot);
-
-        int[] sortedPositions = robo.getPosition();
-        Arrays.sort(sortedPositions);
-
-        boolean freeFields = true;
-        for (int x = 0; x < robo.getSizeX(); x++) {
-            if (!(maze.getMazeFreeFields().contains(sortedPositions[sortedPositions.length - 1 - x] + maze.getMazeSizeY()))) {
-                freeFields = false;
-            }
-
-            // mazeFields.get(sortedPositions[sortedPositions.length - 1 - x] + maze.getMazeSizeY()).setFill(Color.rgb(238, 244, 66));
-        }
-
-        return freeFields;
-    }
-
-    public static boolean mazeFreeFieldsRight(int robotMaze, int mazeRobot) {
-        SimulationMaze maze = SimulationMaze.getMazeFiles().get(robotMaze);
-        SimulationRobot robot = SimulationRobot.getRobots().get(mazeRobot);
-
-        int[] sortedPositions = robot.getPosition();
-        Arrays.sort(sortedPositions);
-
-        boolean freeFields = true;
-        for (int x = robot.getSizeX() - 1, y = 0; y < robot.getSizeY(); y++, x += robot.getSizeX()) {
-            if (!(maze.getMazeFreeFields().contains(sortedPositions[x] + 1))) {
-                freeFields = false;
-            }
-            // mazeFields.get(sortedPositions[x] + 1).setFill(Color.rgb(255,255,0));
-        }
-
-        return freeFields;
-    }
-
-    public static boolean mazeFreeFieldsLeft(int robotMaze, int mazeRobot) {
-        SimulationMaze maze = SimulationMaze.getMazeFiles().get(robotMaze);
-        SimulationRobot robot = SimulationRobot.getRobots().get(mazeRobot);
-
-        int[] sortedPositions = robot.getPosition();
-        Arrays.sort(sortedPositions);
-
-        boolean freeFields = true;
-        for (int y = 0, x = 0; y < robot.getSizeY(); y++, x += robot.getSizeX()) {
-            if (!(maze.getMazeFreeFields().contains(sortedPositions[x] - 1))) {
-                freeFields = false;
-            }
-        }
-
-        return freeFields;
-    }
-
-    public static boolean mazeFreeFieldsRotateLeftForward(int robotMaze, int mazeRobot) {
-        SimulationMaze maze = SimulationMaze.getMazeFiles().get(robotMaze);
-
-        for(SimulationRobot i : SimulationRobot.getRobots()){
-            System.out.println(i.toString());
-        }
-
-        SimulationRobot robot = SimulationRobot.getRobots().get(mazeRobot);
-
-        int[] sortedPositions = robot.getPosition();
-        Arrays.sort(sortedPositions);
-
-        boolean freeFields = true;
-
-//        // Prüfe ob Zielposition frei ist
-//        int x = 0;
-//        int y = 0;
-//        switch (robot.getHeadDirection()) {
-//            case 0:
-//                x = -4;
-//                y = 3;
-//                break;
-//            case 1:
-//                x = 0;
-//                y = -1;
-//                break;
-//            case 2:
-//                x = 3;
-//                y = 2;
-//                break;
-//            case 3:
-//                x = 1;
-//                y = 6;
-//                break;
-//        }
-//
-//        for (int i = 0; i < robot.getPosition().length && freeFields; i++, x--, y--) {
-//            if(!(maze.getMazeFreeFields().contains(sortedPositions[i] + x + y * maze.getMazeSizeY()))){
-//                freeFields = false;
-//            }
-//            mazeFields.get(sortedPositions[i] + x + y * maze.getMazeSizeY()).setFill(Color.rgb(255,255,0));
-//
-//            if (i > 0 && (i + 1) % robot.getSizeX() == 0) {
-//                x = x + robot.getSizeX() + 1;
-//                y = y + robot.getSizeX() - 2 + 1;
-//            }
-//        }
-//
-//        // TODO prüfe, ob Rotationsradius frei ist
-
-        return true;
-//        SimulationMaze maze = SimulationMaze.getMazeFiles().get(robotMaze);
-//        SimulationRobot robot = SimulationRobot.getRobots().get(mazeRobot);
-//
-//        int[] sortedPositions = robot.getPosition();
-//        Arrays.sort(sortedPositions);
-//
-//        boolean freeFields = true;
-//        System.out.println("RotateLeft");
-//        // Prüfe ob Rotationsradius frei ist
-//        for (int x = 0; x < robot.getSizeX() && freeFields; x++) {
-//            for (int y = 0; y < robot.getSizeY() && freeFields; y++) {
-//                // Oberste rechte Kante wird bei Radialbewegung nicht durchkreuzt
-//                if (!(x == robot.getSizeX() - 1 && y == robot.getSizeY() - 1)) {
-//                    if (!(maze.getMazeFreeFields().contains(sortedPositions[x] - maze.getMazeSizeY() - y * maze.getMazeSizeY()))) {
-//                        // TODO Historie Bumped on Position: sortedPositions[x] - maze.getMazeSizeY() - y * maze.getMazeSizeY()
-//                        freeFields = false;
-//                        mazeFields.get(sortedPositions[x] - maze.getMazeSizeY() - y * maze.getMazeSizeY()).setFill(Color.rgb(255, 255, 0));
-//                    }
-//                }
-//            }
-//        }
-//        // Prüfe ob Zielposition frei ist
-////        for(int pos : robot.getPosition()){
-////            System.out.print(pos + " ");
-////        }
-////        System.out.println();
-////        for(int free : maze.getMazeFreeFields()){
-////            System.out.print(free + " ");
-////        }
-////        System.out.println();
-////        System.out.println(maze.getMazeFreeFieldsToString());
-//
-//        for (int x = 0; x < robot.getSizeX() - 2 && freeFields; x++) {
-//            for (int y = 0; y < robot.getSizeY() && freeFields; y++) {
-//                if (!(maze.getMazeFreeFields().contains(sortedPositions[robot.getSizeX() * robot.getSizeY() - 1 - robot.getSizeY()] - x - 1 - y * maze.getMazeSizeY()))) {
-//                    freeFields = false;
-//                    //mazeFields.get(sortedPositions[robot.getSizeX() * robot.getSizeY() - 1 - robot.getSizeY()] - x - 1 - y * maze.getMazeSizeY()).setFill(Color.rgb(255, 255, 0));
-//                }
-//                //mazeFields.get(sortedPositions[robot.getSizeX() * robot.getSizeY() - 1 - robot.getSizeY()] - x - 1 - y * maze.getMazeSizeY()).setFill(Color.rgb(255, 255, 0));
-//            }
-//        }
-//
-//        // TODO freeFields
-//        return true;
     }
 
 }

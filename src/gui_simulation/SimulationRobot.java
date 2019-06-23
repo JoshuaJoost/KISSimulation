@@ -16,13 +16,16 @@ public class SimulationRobot implements Roboter {
     private static int numberOfRobots = 0;
     private static Integer indexSelectedRobot = null;
 
+    // Roboter Table
     private final String roboName;
     private final int roboNumber;
+    private String selectedText = "";
+    // Roboter Werte
     private int sizeX;
     private int sizeY;
     private int[] position;
-    private String selected = "";
     private Color robotColor = null;
+    private final int uniqueIndexMazeNumber;
     // TODO Headposition setzen
     // 0 = Nord, im Uhrzeigersinn
     private Integer headDirection = null; //1
@@ -34,6 +37,7 @@ public class SimulationRobot implements Roboter {
         this.sizeY = robotPixelY;
 //        this.headDirection = headDirection;
         this.headDirection = robotPixelX > robotPixelY ? 1 : 0;
+        this.uniqueIndexMazeNumber = SimulationMaze.getSelectedMaze().getAndSetUniqueIndexNumberOfMazeRobot();
     }
 
     private SimulationRobot(int robotPixelX, int robotPixelY, Color robotColor) {
@@ -44,6 +48,7 @@ public class SimulationRobot implements Roboter {
 //        this.headDirection = headDirection;
         this.headDirection = robotPixelX > robotPixelY ? 1 : 0;
         this.robotColor = robotColor;
+        this.uniqueIndexMazeNumber = SimulationMaze.getSelectedMaze().getAndSetUniqueIndexNumberOfMazeRobot();
     }
 
     private SimulationRobot(int robotPixelX, int robotPixelY, Color robotColor, int[] position) {
@@ -55,18 +60,21 @@ public class SimulationRobot implements Roboter {
         this.headDirection = robotPixelX > robotPixelY ? 1 : 0;
         this.robotColor = robotColor;
         this.position = position;
+        this.uniqueIndexMazeNumber = SimulationMaze.getSelectedMaze().getAndSetUniqueIndexNumberOfMazeRobot();
     }
 
     public static Color getDefaultRobotColor() {
         return DEFAULT_ROBOT_COLOR;
     }
 
-    public static ArrayList<SimulationRobot> addRobot(int robotPixelX, int robotPixelY) {
-        robots.add(new SimulationRobot(robotPixelX, robotPixelY));
+    public static SimulationRobot addRobot(int robotPixelX, int robotPixelY) {
+        SimulationRobot newRobot = new SimulationRobot(robotPixelX, robotPixelY);
+        robots.add(newRobot);
 
-        return robots;
+        return newRobot;
     }
 
+    // TODO soll deprecated werden
     public static ArrayList<SimulationRobot> addRobot(int robotPixelX, int robotPixelY, Color robotColor, int[] position) {
         robots.add(new SimulationRobot(robotPixelX, robotPixelY, robotColor, position));
         return robots;
@@ -84,13 +92,13 @@ public class SimulationRobot implements Roboter {
         if (indexNewSelectedRobot <= robots.size() - 1) {
             if (indexSelectedRobot == null) {
                 indexSelectedRobot = indexNewSelectedRobot;
-                robots.get(indexSelectedRobot).setSelected(SELECTED_TEXT);
+                robots.get(indexSelectedRobot).setSelectedText();
                 return true;
             } else {
                 if (indexSelectedRobot != indexNewSelectedRobot) {
-                    robots.get(indexSelectedRobot).setSelected(NOT_SELECTED_TEXT);
+                    robots.get(indexSelectedRobot).setDeselectedText();
                     indexSelectedRobot = indexNewSelectedRobot;
-                    robots.get(indexSelectedRobot).setSelected(SELECTED_TEXT);
+                    robots.get(indexSelectedRobot).setSelectedText();
                     return true;
                 } else {
                     return false;
@@ -141,12 +149,16 @@ public class SimulationRobot implements Roboter {
         return sizeY;
     }
 
-    public String getSelected() {
-        return selected;
+    public String getSelectedText() {
+        return selectedText;
     }
 
-    public void setSelected(String selectionText) {
-        this.selected = selectionText;
+    public void setSelectedText() {
+        this.selectedText = SELECTED_TEXT;
+    }
+
+    public void setDeselectedText() {
+        this.selectedText = NOT_SELECTED_TEXT;
     }
 
     @Override
@@ -318,70 +330,31 @@ public class SimulationRobot implements Roboter {
 
             switch (headDirection) {
                 case 0:
-                    System.out.println("hp: " + headDirection);
-                    System.out.println("SizeX: " + this.sizeX + " sizeY: " + this.sizeY + " x+y: " + (this.sizeX * this.sizeY));
-//                    for (int y = this.sizeY, x = this.sizeX - 1, xv = -1, yv = 0; y > 0; y--, x = sizeX - 1, xv = xv + 2, yv = yv + this.sizeX + 1) {
-//                        for (int xi = 0; xi < this.sizeX; xi++, x--, xv--, yv--) {
-//                            System.out.println("y: " + y + " sizeX: " + this.sizeX + " x: " + x + " xv: " + xv + " yv: " + yv);
-//                            this.position[y * this.sizeX - 1 - x] = this.position[y * this.sizeX - 1 - x] + xv + yv * SimulationMaze.getMazeFiles().get(mazeNumber).getMazeSizeY();
-//                        }
-//                    }
                     for(int y = 1, x = 0, xd = -1, yd = 0; y < this.sizeY + 1; y++, x = 0, xd = xd + this.sizeX - 2 + 1, yd = yd + this.sizeX + 2 - 1){
                         for(int xi = 0; xi < this.sizeX; xi++, x++, xd--, yd--){
-                            System.out.println("xi: " + xi + "y: " + y + " x: " + x + " xd: " + xd + " yd: " + yd + " \t Index:" + (this.sizeY * this.sizeX - y * this.sizeX + x) + " \t Value: " + this.position[this.sizeY * this.sizeX - y * this.sizeX + x] + " NValue: " + (this.position[this.sizeY * this.sizeX - y * this.sizeX + x] + xd + yd * SimulationMaze.getMazeFiles().get(mazeNumber).getMazeSizeY()));
                             this.position[this.sizeY * this.sizeX - y * this.sizeX + x] = this.position[this.sizeY * this.sizeX - y * this.sizeX + x] + xd + yd * SimulationMaze.getMazeFiles().get(mazeNumber).getMazeSizeY();
                         }
-                        System.out.println();
                     }
                     break;
                 case 1:
-                    System.out.println("hp: " + headDirection);
-//                    for (int x = 1, y = 0, xv = 0, yv = -1; x < this.sizeX + 1; x++, y = 0, xv = xv - this.sizeY - 1, yv = yv + 2) {
-//                        for (int yi = 0; yi < this.sizeY; yi++, y++, xv++, yv--) {
-//                            this.position[y * this.sizeX - 1 + x] = this.position[y * this.sizeX - 1 + x] + xv + yv * SimulationMaze.getMazeFiles().get(mazeNumber).getMazeSizeY();
-//                        }
-//                    }
                     for(int y = 0, x = 0, xd = 0, yd = -1; y < this.sizeY; y++, x = 0, xd = xd + this.sizeX + 1, yd = yd + this.sizeX - 1){
                         for(int xi = 0; xi < this.sizeX; xi++, x++, xd--, yd--){
-                            System.out.println("xi: " + xi + "y: " + y + " x: " + x + " xd: " + xd + " yd: " + yd + " \t Index:" + (y * (this.sizeY + 1) + x) + " \t Value: " + this.position[y * (this.sizeY + 1) + x] + " NValue: " + (this.position[y * (this.sizeY + 1) + x] + xd + yd * SimulationMaze.getMazeFiles().get(mazeNumber).getMazeSizeY()));
                             this.position[y * (this.sizeY + 1) + x] = this.position[y * (this.sizeY + 1) + x] + xd + yd * SimulationMaze.getMazeFiles().get(mazeNumber).getMazeSizeY();
                         }
-                        System.out.println();
                     }
                     break;
                 case 2:
-                    System.out.println("hp: " + headDirection);
-//                    for(int y = 1, x = 0, xv = 1, yv = 0; y < this.sizeY + 1; y++, x = 0, xv = xv - 2, yv = yv - this.sizeX - 1){
-//                        for(int xi = 0; xi < this.sizeX; xi++, x--, xv++, yv++){
-//                            this.position[y * this.sizeX - 1 + x] = this.position[y * this.sizeX - 1 + x] + xv + yv * SimulationMaze.getMazeFiles().get(mazeNumber).getMazeSizeY();
-//                        }
-//                    }
                     for(int y = 1, x = 0, xd = 1, yd = 0; y < this.sizeY + 1; y++, x = 0, xd = xd - this.sizeX + 2 - 1, yd = yd - this.sizeX - 1){
                         for(int xi = 0; xi < this.sizeX; xi++, x--, yd++, xd++){
-                            System.out.print("xi: " + xi + "y: " + y + " x: " + x + " xd: " + xd + " yd: " + yd );
-                            System.out.print(" \t Index:" + (y * this.sizeX - 1 + x) + " \t Value: " + this.position[y * this.sizeX - 1 + x] + " NValue: " + (this.position[y * this.sizeX - 1 + x] + xd + yd * SimulationMaze.getMazeFiles().get(mazeNumber).getMazeSizeY()));
-                            System.out.println();
                             this.position[y * this.sizeX - 1 + x] = this.position[y * this.sizeX - 1 + x] + xd + yd * SimulationMaze.getMazeFiles().get(mazeNumber).getMazeSizeY();
                         }
-                        System.out.println();
                     }
                     break;
                 case 3:
-                    System.out.println("hp: " + headDirection);
-//                    for(int x = 0, y = this.sizeY, xv = 0, yv = 1; x < this.sizeX; x++, y = this.sizeY, xv = xv + this.sizeY + 1, yv = yv - 2){
-//                        for(int yi = 0; yi < this.sizeY; yi++, y--, xv--, yv++){
-//                            System.out.println("y: " + y + " sizeX: " + this.sizeX + " x: " + x + " xv: " + xv + " yv: " + yv);
-//                            this.position[y * this.sizeX - 1 - x] = this.position[y * this.sizeX - 1 - x] + xv + yv * SimulationMaze.getMazeFiles().get(mazeNumber).getMazeSizeY();
-//                        }
-//                    }
                     for(int y = 0, x = 0, xd = 0, yd = 1; y < this.sizeY; y++, x = 0, xd = xd - this.sizeX - 1, yd = yd - this.sizeX + 1){
                         for(int xi = 0; xi < this.sizeX; xi++, x--, xd++, yd++){
-                            System.out.print("xi: " + xi + "y: " + y + " x: " + x + " xd: " + xd + " yd: " + yd );
-                            System.out.print(" \t Index:" + (this.sizeY * this.sizeX - 1 - y * this.sizeX + x) + " \t Value: " + this.position[this.sizeY * this.sizeX - 1 - y * this.sizeX + x] + " NValue: " + (this.position[this.sizeY * this.sizeX - 1 - y * this.sizeX + x] + xd - yd * SimulationMaze.getMazeFiles().get(mazeNumber).getMazeSizeY()));
-                            System.out.println();
                             this.position[this.sizeY * this.sizeX - 1 - y * this.sizeX + x] = this.position[this.sizeY * this.sizeX - 1 - y * this.sizeX + x] + xd + yd * SimulationMaze.getMazeFiles().get(mazeNumber).getMazeSizeY();
                         }
-                        System.out.println();
                     }
                     break;
             }
