@@ -187,7 +187,7 @@ public class SimulationRobot implements Roboter {
 
     private void moveUp() {
         System.out.println("UP");
-        if (Controller_MainGUI.mazeFreeFieldsUp(whatLabyrinthDoIBelongTo(this.robotNumber).getNr() - 1, this.getRobotNumber() - 1)) {
+        if (Controller_MainGUI.mazeFreeFieldsUp(SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber), SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeRobots().get(this.uniqueIndexNumberOfMazeRobot))) {
             for (int i = 0; i < this.position.length; i++) {
                 this.position[i] = this.position[i] - SimulationMaze.getSelectedMaze().getMazeSizeY();
             }
@@ -198,7 +198,7 @@ public class SimulationRobot implements Roboter {
 
     private void moveRight() {
         System.out.println("RIGHT");
-        if (Controller_MainGUI.mazeFreeFieldsRight(this.robotMazeIndexNumber, SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeRobots().get(this.uniqueIndexNumberOfMazeRobot))) {
+        if (Controller_MainGUI.mazeFreeFieldsRight(SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber), SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeRobots().get(this.uniqueIndexNumberOfMazeRobot))) {
             for (int i = 0; i < this.position.length; i++) {
                 this.position[i] = this.position[i] + 1;
             }
@@ -209,7 +209,7 @@ public class SimulationRobot implements Roboter {
 
     private void moveDown() {
         System.out.println("DOWN");
-        if (Controller_MainGUI.mazeFreeFieldsDown(whatLabyrinthDoIBelongTo(this.robotNumber).getNr() - 1, this.getRobotNumber() - 1)) {
+        if (Controller_MainGUI.mazeFreeFieldsDown(SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber), SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeRobots().get(this.uniqueIndexNumberOfMazeRobot))) {
             for (int i = 0; i < this.position.length; i++) {
                 this.position[i] = this.position[i] + SimulationMaze.getSelectedMaze().getMazeSizeY();
             }
@@ -220,7 +220,7 @@ public class SimulationRobot implements Roboter {
 
     private void moveLeft() {
         System.out.println("LEFT");
-        if (Controller_MainGUI.mazeFreeFieldsLeft(whatLabyrinthDoIBelongTo(this.robotNumber).getNr() - 1, this.getRobotNumber() - 1)) {
+        if (Controller_MainGUI.mazeFreeFieldsLeft(SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber), SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeRobots().get(this.uniqueIndexNumberOfMazeRobot))) {
             for (int i = 0; i < this.position.length; i++) {
                 this.position[i] = this.position[i] - 1;
             }
@@ -330,39 +330,34 @@ public class SimulationRobot implements Roboter {
     @Override
     public void left() {
         System.out.println("Linksvorwärtsrotation");
-        // TODO BUGGED
-        int mazeNumber = whatLabyrinthDoIBelongTo(this.robotNumber).getNr() - 1;
-
-        System.out.println("mazeNumber: " + mazeNumber + " robotNumber: " + (this.getRobotNumber() - 1));
-
-        if (Controller_MainGUI.mazeFreeFieldsRotateLeftForward(mazeNumber, this.getRobotNumber() - 1)) {
+        if (Controller_MainGUI.mazeFreeFieldsRotateLeftForward(SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber), SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeRobots().get(this.uniqueIndexNumberOfMazeRobot))) {
 
             switch (headDirection) {
                 case 0:
                     for(int y = 1, x = 0, xd = -1, yd = 0; y < this.sizeY + 1; y++, x = 0, xd = xd + this.sizeX - 2 + 1, yd = yd + this.sizeX + 2 - 1){
                         for(int xi = 0; xi < this.sizeX; xi++, x++, xd--, yd--){
-                            this.position[this.sizeY * this.sizeX - y * this.sizeX + x] = this.position[this.sizeY * this.sizeX - y * this.sizeX + x] + xd + yd * SimulationMaze.getMazeFiles().get(mazeNumber).getMazeSizeY();
+                            this.position[this.sizeY * this.sizeX - y * this.sizeX + x] = this.position[this.sizeY * this.sizeX - y * this.sizeX + x] + xd + yd * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY();
                         }
                     }
                     break;
                 case 1:
                     for(int y = 0, x = 0, xd = 0, yd = -1; y < this.sizeY; y++, x = 0, xd = xd + this.sizeX + 1, yd = yd + this.sizeX - 1){
                         for(int xi = 0; xi < this.sizeX; xi++, x++, xd--, yd--){
-                            this.position[y * (this.sizeY + 1) + x] = this.position[y * (this.sizeY + 1) + x] + xd + yd * SimulationMaze.getMazeFiles().get(mazeNumber).getMazeSizeY();
+                            this.position[y * (this.sizeY + 1) + x] = this.position[y * (this.sizeY + 1) + x] + xd + yd * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY();
                         }
                     }
                     break;
                 case 2:
                     for(int y = 1, x = 0, xd = 1, yd = 0; y < this.sizeY + 1; y++, x = 0, xd = xd - this.sizeX + 2 - 1, yd = yd - this.sizeX - 1){
                         for(int xi = 0; xi < this.sizeX; xi++, x--, yd++, xd++){
-                            this.position[y * this.sizeX - 1 + x] = this.position[y * this.sizeX - 1 + x] + xd + yd * SimulationMaze.getMazeFiles().get(mazeNumber).getMazeSizeY();
+                            this.position[y * this.sizeX - 1 + x] = this.position[y * this.sizeX - 1 + x] + xd + yd * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY();
                         }
                     }
                     break;
                 case 3:
                     for(int y = 0, x = 0, xd = 0, yd = 1; y < this.sizeY; y++, x = 0, xd = xd - this.sizeX - 1, yd = yd - this.sizeX + 1){
                         for(int xi = 0; xi < this.sizeX; xi++, x--, xd++, yd++){
-                            this.position[this.sizeY * this.sizeX - 1 - y * this.sizeX + x] = this.position[this.sizeY * this.sizeX - 1 - y * this.sizeX + x] + xd + yd * SimulationMaze.getMazeFiles().get(mazeNumber).getMazeSizeY();
+                            this.position[this.sizeY * this.sizeX - 1 - y * this.sizeX + x] = this.position[this.sizeY * this.sizeX - 1 - y * this.sizeX + x] + xd + yd * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY();
                         }
                     }
                     break;
