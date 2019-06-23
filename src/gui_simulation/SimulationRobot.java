@@ -1,6 +1,5 @@
 package gui_simulation;
 
-import javafx.scene.Parent;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
@@ -30,6 +29,7 @@ public class SimulationRobot implements Roboter {
     // 0 = Nord, im Uhrzeigersinn
     private Integer headDirection;
     private final int uniqueIndexNumberOfMazeRobot;
+    private final int robotMazeIndexNumber;
 
     private SimulationRobot(int robotPixelX, int robotPixelY) {
         this.sizeX = robotPixelX;
@@ -38,6 +38,7 @@ public class SimulationRobot implements Roboter {
         this.uniqueIndexNumberOfMazeRobot = SimulationMaze.getSelectedMaze().getAndSetUniqueIndexNumberOfMazeRobot();
         this.robotNumber = this.uniqueIndexNumberOfMazeRobot + 1;
         this.robotName = PREFIX_ROBO_NAME + this.robotNumber;
+        this.robotMazeIndexNumber = SimulationMaze.getSelectedMazeIndexNumber();
     }
 
     private SimulationRobot(int robotPixelX, int robotPixelY, Color robotColor) {
@@ -48,6 +49,7 @@ public class SimulationRobot implements Roboter {
         this.uniqueIndexNumberOfMazeRobot = SimulationMaze.getSelectedMaze().getAndSetUniqueIndexNumberOfMazeRobot();
         this.robotNumber = this.uniqueIndexNumberOfMazeRobot + 1;
         this.robotName = PREFIX_ROBO_NAME + this.robotNumber;
+        this.robotMazeIndexNumber = SimulationMaze.getSelectedMazeIndexNumber();
     }
 
     private SimulationRobot(int robotPixelX, int robotPixelY, Color robotColor, int[] position) {
@@ -59,6 +61,7 @@ public class SimulationRobot implements Roboter {
         this.uniqueIndexNumberOfMazeRobot = SimulationMaze.getSelectedMaze().getAndSetUniqueIndexNumberOfMazeRobot();
         this.robotNumber = this.uniqueIndexNumberOfMazeRobot + 1;
         this.robotName = PREFIX_ROBO_NAME + this.robotNumber;
+        this.robotMazeIndexNumber = SimulationMaze.getSelectedMazeIndexNumber();
     }
 
     public static Color getDefaultRobotColor() {
@@ -131,6 +134,10 @@ public class SimulationRobot implements Roboter {
         }
     }
 
+    public int getRobotMazeIndexNumber(){
+        return this.robotMazeIndexNumber;
+    }
+
     public int getRobotNumber() {
         return robotNumber;
     }
@@ -191,7 +198,7 @@ public class SimulationRobot implements Roboter {
 
     private void moveRight() {
         System.out.println("RIGHT");
-        if (Controller_MainGUI.mazeFreeFieldsRight(whatLabyrinthDoIBelongTo(this.robotNumber).getNr() - 1, this.getRobotNumber() - 1)) {
+        if (Controller_MainGUI.mazeFreeFieldsRight(this.robotMazeIndexNumber, SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeRobots().get(this.uniqueIndexNumberOfMazeRobot))) {
             for (int i = 0; i < this.position.length; i++) {
                 this.position[i] = this.position[i] + 1;
             }

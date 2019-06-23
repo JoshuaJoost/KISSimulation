@@ -23,7 +23,7 @@ public class SimulationMaze {
 
     private static int numberOfMazeFiles = 0;
     private static ArrayList<SimulationMaze> mazeFiles = new ArrayList<>();
-    private static Integer selectedMazeNumber = null;
+    private static Integer selectedMazeIndexNumber = null;
     private static final SimpleStringProperty SELECTED_TEXT = new SimpleStringProperty("yep");
     private static final SimpleStringProperty NOT_SELECTED_TEXT = new SimpleStringProperty("");
 
@@ -107,15 +107,15 @@ public class SimulationMaze {
 
     public static boolean changeSelectedMaze(int indexNewSelectedMaze) {
         if (indexNewSelectedMaze <= mazeFiles.size() - 1) {
-            if (selectedMazeNumber == null) {
-                selectedMazeNumber = indexNewSelectedMaze;
-                mazeFiles.get(selectedMazeNumber).setSelectedMaze(SELECTED_TEXT);
+            if (selectedMazeIndexNumber == null) {
+                selectedMazeIndexNumber = indexNewSelectedMaze;
+                mazeFiles.get(selectedMazeIndexNumber).setSelectedMaze(SELECTED_TEXT);
                 return true;
             } else {
-                if (selectedMazeNumber != indexNewSelectedMaze) {
-                    mazeFiles.get(selectedMazeNumber).setSelectedMaze(NOT_SELECTED_TEXT);
-                    selectedMazeNumber = indexNewSelectedMaze;
-                    mazeFiles.get(selectedMazeNumber).setSelectedMaze(SELECTED_TEXT);
+                if (selectedMazeIndexNumber != indexNewSelectedMaze) {
+                    mazeFiles.get(selectedMazeIndexNumber).setSelectedMaze(NOT_SELECTED_TEXT);
+                    selectedMazeIndexNumber = indexNewSelectedMaze;
+                    mazeFiles.get(selectedMazeIndexNumber).setSelectedMaze(SELECTED_TEXT);
                     return true;
                 } else {
                     return false;
@@ -127,11 +127,11 @@ public class SimulationMaze {
     }
 
     public static SimulationMaze getSelectedMaze() {
-        return mazeFiles.get(selectedMazeNumber);
+        return mazeFiles.get(selectedMazeIndexNumber);
     }
 
-    public static Integer getSelectedMazeNumber() {
-        return selectedMazeNumber;
+    public static Integer getSelectedMazeIndexNumber() {
+        return selectedMazeIndexNumber;
     }
 
     public static ArrayList<SimulationMaze> getMazeFiles() {
@@ -157,9 +157,7 @@ public class SimulationMaze {
     }
 
     public int getAndSetUniqueIndexNumberOfMazeRobot(){
-        int i = this.uniqueIndexNumberOfMazeRobot++;
-        System.out.println(i);
-        return i;
+        return this.uniqueIndexNumberOfMazeRobot++;
     }
 
     public ArrayList<Integer> getIndexMazeFreeFields() {
@@ -184,7 +182,6 @@ public class SimulationMaze {
 
     public SimulationRobot getSelectedRobot() {
         if(this.mazeRobots.size() > 0) {
-            System.out.println(selectedRobotNumber);
             return this.mazeRobots.get(selectedRobotNumber);
         }
 
@@ -192,7 +189,6 @@ public class SimulationMaze {
     }
 
     public boolean changeSelectedRobot(int indexNewSelectedRobot) {
-        System.out.println("tableIndex: " + indexNewSelectedRobot);
         if (this.mazeRobots.size() >= 1 && indexNewSelectedRobot <= this.mazeRobots.size()) {
             if (!(this.selectedRobotNumber == null)) {
                 if(indexNewSelectedRobot == this.selectedRobotNumber){

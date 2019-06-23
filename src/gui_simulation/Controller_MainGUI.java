@@ -170,7 +170,7 @@ public class Controller_MainGUI implements Initializable {
 
     @FXML
     void addNewRobot(ActionEvent event) {
-        if (SimulationMaze.getSelectedMazeNumber() != null) {
+        if (SimulationMaze.getSelectedMazeIndexNumber() != null) {
             // Definiere Roboterwerte
             int robotSizeX = 3;
             int robotSizeY = 4;
@@ -275,7 +275,7 @@ public class Controller_MainGUI implements Initializable {
     void mazeMoveRobotKeyboard(KeyEvent event) {
         System.out.println(":" + event.getCode());
 
-        if (SimulationMaze.getMazeFiles().size() > 0 && SimulationMaze.getSelectedMazeNumber() != null && SimulationMaze.getSelectedMaze().getMazeRobots().size() > 0) {
+        if (SimulationMaze.getMazeFiles().size() > 0 && SimulationMaze.getSelectedMazeIndexNumber() != null && SimulationMaze.getSelectedMaze().getMazeRobots().size() > 0) {
             switch (event.getCode().toString()) {
                 // TODO weitere Tastatureingaben einbinden: E rotataRight, W,A,S,D, Y Messen
                 case "RIGHT":
@@ -463,15 +463,17 @@ public class Controller_MainGUI implements Initializable {
         return freeFields;
     }
 
-    public static boolean mazeFreeFieldsRight(int robotMaze, int mazeRobot) {
+    public static boolean mazeFreeFieldsRight(int robotMaze, SimulationRobot mazeRobot) {
         SimulationMaze maze = SimulationMaze.getMazeFiles().get(robotMaze);
-        SimulationRobot robot = SimulationRobot.getRobots().get(mazeRobot);
+        // SimulationRobot robot = SimulationRobot.getRobots().get(mazeRobot);
 
-        int[] sortedPositions = robot.getPosition();
+        int[] sortedPositions = mazeRobot.getPosition();
         Arrays.sort(sortedPositions);
 
+        System.out.println("Maze: " + maze.getFILE_NAME() + " MazeX: " + maze.getMazeSizeX() + " MazeY: " + maze.getMazeSizeY());
+
         boolean freeFields = true;
-        for (int x = robot.getSizeX() - 1, y = 0; y < robot.getSizeY(); y++, x += robot.getSizeX()) {
+        for (int x = mazeRobot.getSizeX() - 1, y = 0; y < mazeRobot.getSizeY(); y++, x += mazeRobot.getSizeX()) {
             if (!(maze.getIndexMazeFreeFields().contains(sortedPositions[x] + 1))) {
                 freeFields = false;
             }
