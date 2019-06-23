@@ -295,7 +295,11 @@ public class Controller_MainGUI implements Initializable {
                     updateMaze(true);
                     break;
                 case "Q":
-                    SimulationMaze.getSelectedMaze().getSelectedRobot().keyboardRotateLeft();
+                    SimulationMaze.getSelectedMaze().getSelectedRobot().keyboardRotateForwardLeft();
+                    updateMaze(true);
+                    break;
+                case "E":
+                    SimulationMaze.getSelectedMaze().getSelectedRobot().keyboardRotateForwardRight();
                     updateMaze(true);
                     break;
             }
@@ -331,7 +335,7 @@ public class Controller_MainGUI implements Initializable {
 //                    updateMaze(true);
 //                    break;
 //                case "Q": // Nach links drehen
-//                    SimulationRobot.getSelectedRobot().keyboardRotateLeft();
+//                    SimulationRobot.getSelectedRobot().keyboardRotateForwardLeft();
 //                    updateMaze(true);
 //                    break;
 //                default: // TODO noch auf andere Tastatureingaben reagieren? z.B. zum Drehen
@@ -425,13 +429,13 @@ public class Controller_MainGUI implements Initializable {
 
     }
 
-    public static boolean mazeFreeFieldsUp(SimulationMaze robotMaze, SimulationRobot mazeRobot) {
-        int[] sortedPositions = mazeRobot.getPosition();
+    public static boolean mazeFreeFieldsUp(SimulationMaze maze, SimulationRobot robot) {
+        int[] sortedPositions = robot.getPosition();
         Arrays.sort(sortedPositions);
 
         boolean freeFields = true;
-        for (int x = 0; x < mazeRobot.getSizeX(); x++) {
-            if (!(robotMaze.getIndexMazeFreeFields().contains(sortedPositions[x] - robotMaze.getMazeSizeY()))) {
+        for (int x = 0; x < robot.getSizeX(); x++) {
+            if (!(maze.getIndexMazeFreeFields().contains(sortedPositions[x] - maze.getMazeSizeY()))) {
                 freeFields = false;
             }
 
@@ -441,13 +445,13 @@ public class Controller_MainGUI implements Initializable {
         return freeFields;
     }
 
-    public static boolean mazeFreeFieldsDown(SimulationMaze robotMaze, SimulationRobot mazeRobot) {
-        int[] sortedPositions = mazeRobot.getPosition();
+    public static boolean mazeFreeFieldsDown(SimulationMaze maze, SimulationRobot robot) {
+        int[] sortedPositions = robot.getPosition();
         Arrays.sort(sortedPositions);
 
         boolean freeFields = true;
-        for (int x = 0; x < mazeRobot.getSizeX(); x++) {
-            if (!(robotMaze.getIndexMazeFreeFields().contains(sortedPositions[sortedPositions.length - 1 - x] + robotMaze.getMazeSizeY()))) {
+        for (int x = 0; x < robot.getSizeX(); x++) {
+            if (!(maze.getIndexMazeFreeFields().contains(sortedPositions[sortedPositions.length - 1 - x] + maze.getMazeSizeY()))) {
                 freeFields = false;
             }
 
@@ -457,13 +461,13 @@ public class Controller_MainGUI implements Initializable {
         return freeFields;
     }
 
-    public static boolean mazeFreeFieldsRight(SimulationMaze robotMaze, SimulationRobot mazeRobot) {
-        int[] sortedPositions = mazeRobot.getPosition();
+    public static boolean mazeFreeFieldsRight(SimulationMaze maze, SimulationRobot robot) {
+        int[] sortedPositions = robot.getPosition();
         Arrays.sort(sortedPositions);
 
         boolean freeFields = true;
-        for (int x = mazeRobot.getSizeX() - 1, y = 0; y < mazeRobot.getSizeY(); y++, x += mazeRobot.getSizeX()) {
-            if (!(robotMaze.getIndexMazeFreeFields().contains(sortedPositions[x] + 1))) {
+        for (int x = robot.getSizeX() - 1, y = 0; y < robot.getSizeY(); y++, x += robot.getSizeX()) {
+            if (!(maze.getIndexMazeFreeFields().contains(sortedPositions[x] + 1))) {
                 freeFields = false;
             }
             // mazeFields.get(sortedPositions[x] + 1).setFill(Color.rgb(255,255,0));
@@ -472,13 +476,13 @@ public class Controller_MainGUI implements Initializable {
         return freeFields;
     }
 
-    public static boolean mazeFreeFieldsLeft(SimulationMaze robotMaze, SimulationRobot mazeRobot) {
-        int[] sortedPositions = mazeRobot.getPosition();
+    public static boolean mazeFreeFieldsLeft(SimulationMaze maze, SimulationRobot robot) {
+        int[] sortedPositions = robot.getPosition();
         Arrays.sort(sortedPositions);
 
         boolean freeFields = true;
-        for (int y = 0, x = 0; y < mazeRobot.getSizeY(); y++, x += mazeRobot.getSizeX()) {
-            if (!(robotMaze.getIndexMazeFreeFields().contains(sortedPositions[x] - 1))) {
+        for (int y = 0, x = 0; y < robot.getSizeY(); y++, x += robot.getSizeX()) {
+            if (!(maze.getIndexMazeFreeFields().contains(sortedPositions[x] - 1))) {
                 freeFields = false;
             }
         }
@@ -487,15 +491,26 @@ public class Controller_MainGUI implements Initializable {
     }
 
     // TODO prüfe ob Zielposition frei ist, prüfe ob Rotationsradius frei ist
-    public static boolean mazeFreeFieldsRotateLeftForward(SimulationMaze robotMaze, SimulationRobot mazeRobot) {
-        int[] sortedPositions = mazeRobot.getPosition();
+    public static boolean mazeFreeFieldsRotateLeftForward(SimulationMaze maze, SimulationRobot robot) {
+        int[] sortedPositions = robot.getPosition();
         Arrays.sort(sortedPositions);
 
-        System.out.println("Maze: " + robotMaze.getFILE_NAME() + " MazeX: " + robotMaze.getMazeSizeX() + " MazeY: " + robotMaze.getMazeSizeY());
+        System.out.println("Maze: " + maze.getFILE_NAME() + " MazeX: " + maze.getMazeSizeX() + " MazeY: " + maze.getMazeSizeY());
 
         boolean freeFields = true;
 
-        return true;
+        return freeFields;
+    }
+
+    public static boolean mazeFreeFieldsRotateRightForward(SimulationMaze maze, SimulationRobot robot){
+        int[] sortedPositions = robot.getPosition();
+        Arrays.sort(sortedPositions);
+
+        System.out.println("Maze: " + maze.getFILE_NAME() + " MazeX: " + maze.getMazeSizeX() + " MazeY: " + maze.getMazeSizeY());
+
+        boolean freeFields = true;
+
+        return freeFields;
     }
 
     /*

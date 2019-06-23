@@ -247,9 +247,11 @@ public class SimulationRobot implements Roboter {
         moveLeft();
     }
 
-    public void keyboardRotateLeft() {
+    public void keyboardRotateForwardLeft() {
         left();
     }
+
+    public void keyboardRotateForwardRight() { right(); }
 
     private void setPositionN(int position, int newValue) {
         this.position[position] = newValue;
@@ -329,8 +331,7 @@ public class SimulationRobot implements Roboter {
     public void left() {
         System.out.println("Linksvorwärtsrotation");
         if (Controller_MainGUI.mazeFreeFieldsRotateLeftForward(SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber), SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeRobots().get(this.uniqueIndexNumberOfMazeRobot))) {
-
-            switch (headDirection) {
+            switch (this.headDirection) {
                 case 0:
                     for(int y = 1, x = 0, xd = -1, yd = 0; y < this.sizeY + 1; y++, x = 0, xd = xd + this.sizeX - 2 + 1, yd = yd + this.sizeX + 2 - 1){
                         for(int xi = 0; xi < this.sizeX; xi++, x++, xd--, yd--){
@@ -376,6 +377,51 @@ public class SimulationRobot implements Roboter {
 
     @Override
     public void right() {
+        System.out.println("Rechtsvorwärtsrotation");
+        System.out.println(this.headDirection);
+        if(Controller_MainGUI.mazeFreeFieldsRotateRightForward(SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber), SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeRobots().get(this.uniqueIndexNumberOfMazeRobot))){
+            switch(this.headDirection){
+                case 0:
+                    for(int y = 0, x = -1, xv = 1, yv = 0; y < this.sizeY; y++, x = -1, xv = xv - this.sizeX + 2 - 1, yv = yv + this.sizeX + 1){
+                        for(int xi = 0; xi < this.sizeX; xi++, x--, xv++, yv--){
+                            this.position[this.sizeX * this.sizeY - y * this.sizeX + x] = this.position[this.sizeX * this.sizeY - y * this.sizeX + x] + xv + yv * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY();
+                        }
+                    }
+                    break;
+                case 1:
+                    for(int y = 1, x = 0, xv = 0, yv = 1; y < this.sizeY + 1; y++, x = 0, xv = xv + this.sizeX + 1, yv = yv - this.sizeX + 2 - 1){
+                        for(int xi = 0; xi < this.sizeX; xi++, x++, xv--, yv++){
+                            this.position[this.sizeX * this.sizeY - y * this.sizeX + x] = this.position[this.sizeX * this.sizeY - y * this.sizeX + x] + xv + yv * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY();
+                        }
+                    }
+                    break;
+                case 2:
+                    for(int y = 0, x = 0, xv = -1, yv = 0; y < this.sizeY; y++, x = 0, xv = xv + this.sizeX - 2 + 1, yv = yv - this.sizeX - 1){
+                        for(int xi = 0; xi < this.sizeX; xi++, x++, xv--, yv++){
+                            this.position[y * (this.sizeY - 1) + x] = this.position[y * (this.sizeY - 1) + x] + xv + yv * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY();
+                        }
+                    }
+                    break;
+                case 3:
+                    for(int y = 1, x = 0, xv = 0, yv = -1; y < this.sizeY + 1; y++, x = 0, xv = xv - this.sizeX - 1, yv = yv + this.sizeX - 2 + 1){
+                        for(int xi = 0; xi < this.sizeX; xi++, x--, xv++, yv--){
+                            this.position[y * this.sizeX - 1 + x] = this.position[y * this.sizeX - 1 + x] + xv + yv * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY();
+                        }
+                    }
+                    break;
+            }
 
+            this.headDirection++;
+            if(this.headDirection > 3){
+                this.headDirection = 0;
+            }
+
+            int tmpSizeX = this.sizeX;
+            this.sizeX = this.sizeY;
+            this.sizeY = tmpSizeX;
+
+        } else {
+            isBumped();
+        }
     }
 }

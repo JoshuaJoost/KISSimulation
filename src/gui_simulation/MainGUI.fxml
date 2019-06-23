@@ -8,12 +8,12 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui_simulation.Controller_MainGUI">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#mazeMoveRobotKeyboard" prefHeight="700.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui_simulation.Controller_MainGUI">
    <children>
       <AnchorPane prefHeight="520.0" prefWidth="500.0">
          <children>
             <Label fx:id="mazeLable" prefHeight="20.0" text="Labyrinth: &lt;keines ausgewählt&gt;" />
-            <Pane fx:id="mazePane" focusTraversable="true" layoutY="20.0" onKeyPressed="#mazeMoveRobotKeyboard" prefHeight="500.0" prefWidth="500.0" />
+            <Pane fx:id="mazePane" focusTraversable="true" layoutY="20.0" prefHeight="500.0" prefWidth="500.0" />
          </children>
       </AnchorPane>
       <AnchorPane layoutY="520.0" prefHeight="180.0" prefWidth="500.0">
