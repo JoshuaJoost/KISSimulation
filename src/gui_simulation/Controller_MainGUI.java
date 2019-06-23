@@ -128,7 +128,7 @@ public class Controller_MainGUI implements Initializable {
 
         // Initialisiere RobotTable
         robotTableNr.setCellValueFactory(new PropertyValueFactory<>("robotNumber"));
-        robotTableName.setCellValueFactory(new PropertyValueFactory<>("roboName"));
+        robotTableName.setCellValueFactory(new PropertyValueFactory<>("robotName"));
         robotTableSelected.setCellValueFactory(new PropertyValueFactory<>("selectedText"));
         robotTable.setItems(robotTableData);
 
@@ -141,7 +141,7 @@ public class Controller_MainGUI implements Initializable {
         robotTable.sort();
 
         if (SimulationMaze.getSelectedMaze().getMazeRobots().size() > 0) {
-            robotSelectedLable.setText(ROBOT_LABEL_PREFIX + SimulationMaze.getSelectedMaze().getSelectedRobot().getRoboName());
+            robotSelectedLable.setText(ROBOT_LABEL_PREFIX + SimulationMaze.getSelectedMaze().getSelectedRobot().getRobotName());
         } else {
             robotSelectedLable.setText(ROBOT_LABEL_PREFIX + ROBOT_LABEL_NO_ROBOT_SELECTED);
         }
@@ -379,9 +379,8 @@ public class Controller_MainGUI implements Initializable {
     @FXML
     void selectNewRobot(MouseEvent event) {
         if (robotTable.getSelectionModel().getSelectedItem() != null) {
-            int selectedRowNumber = robotTable.getSelectionModel().getSelectedItem().getRobotNumber();
-            // Index Position im robots Array eines geringer als RoboNumber
-            boolean tableDataChanged = SimulationMaze.getSelectedMaze().changeSelectedRobot(selectedRowNumber - 1);//SimulationRobot.changeSelectedRobot(selectedRowNumber - 1);
+            int selectedRowNumber = robotTable.getSelectionModel().getSelectedItem().getUniqueIndexNumberOfMazeRobot();
+            boolean tableDataChanged = SimulationMaze.getSelectedMaze().changeSelectedRobot(selectedRowNumber);
 
             if (tableDataChanged) {
                 updateRobotTableDataAndLabel();
@@ -408,70 +407,6 @@ public class Controller_MainGUI implements Initializable {
         mazePane.getChildren().clear();
         mazePane.getChildren().addAll(SimulationMaze.getSelectedMaze().getMazeDrawFields());
     }
-//    private void drawMaze(String filePath) {
-//        mazeFields.clear();
-//        BufferedReader br;
-//        try {
-//            br = new BufferedReader(new FileReader(filePath));
-//
-//            StringBuilder sb = new StringBuilder();
-//            String line = "";
-//
-//            while ((line = br.readLine()) != null) {
-//                sb.append(line);
-//                sb.append(System.lineSeparator());
-//            }
-//            br.close();
-//
-////          System.out.println(sb.toString());
-//            String[] mazeStringParts = sb.toString().split(System.lineSeparator());
-//
-//            // Setze Pixelgröße einzelner Labyrinthbausteine
-//            mazePixelX = (int) mazePane.getWidth() / mazeStringParts[0].length();
-//            mazePixelY = (int) mazePane.getHeight() / mazeStringParts.length;
-//
-//            // Initialisiere MazeLabel, wenn Maze das erste mal geladen wird
-//            if (SimulationMaze.getSelectedMaze().getMazeSizeY() == null && SimulationMaze.getSelectedMaze().getMazeSizeX() == null) {
-//                mazeLable.setText(MAZE_LABEL_PREFIX + SimulationMaze.getSelectedMaze().getFILE_NAME() + " Größe: " + mazeStringParts.length + "x" + mazeStringParts[0].length());
-//            }
-//
-//            // Setzt die Größe des Labyrinths
-////            SimulationMaze.getSelectedMaze().setMazeSizeX(mazeStringParts.length);
-////            SimulationMaze.getSelectedMaze().setMazeSizeY(mazeStringParts[0].length());
-//
-//            // System.out.println("x: " + mazePixelX + " y: " + mazePixelY);
-//            for (int y = 0; y < mazeStringParts.length; y++) {
-////                System.out.print(y + ": ");
-//                boolean isFreeField = false;
-//                for (int x = 0; x < mazeStringParts[0].length(); x++) {
-//                    Rectangle mazeField = new Rectangle(x * mazePixelX, y * mazePixelY, mazePixelX, mazePixelY);
-//                    if (mazeStringParts[y].charAt(x) == mazeWallSymbol) {
-//                        mazeField.setFill(mazeWallColor);
-//                        isFreeField = false;
-//                    } else if (mazeStringParts[y].charAt(x) == mazeVoidSymbol) {
-//                        mazeField.setFill(mazeVoidColor);
-//                        isFreeField = true;
-//                    } else {
-//                        mazeField.setFill(mazeErrorColor);
-//                        isFreeField = false;
-//                    }
-////                    System.out.print(mazeStringParts[y].charAt(x));
-//                    mazeFields.add(mazeField);
-//                    if (isFreeField) {
-////                        SimulationMaze.getSelectedMaze().addFreeField(mazeFields.size() - 1);
-//                    }
-//                }
-////                System.out.println();
-//            }
-//            mazePane.getChildren().setAll(mazeFields);
-//
-//        } catch (FileNotFoundException e) {
-//            System.err.println("Datei: " + filePath + " nicht gefunden!");
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     public void getMazeFiles(File dir) {
         File files[] = dir.listFiles();

@@ -1,5 +1,6 @@
 package gui_simulation;
 
+import javafx.scene.Parent;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
@@ -13,54 +14,51 @@ public class SimulationRobot implements Roboter {
     private static final Color DEFAULT_ROBOT_COLOR = Color.rgb(55, 109, 19);
 
     private static ArrayList<SimulationRobot> robots = new ArrayList<>();
-    private static int numberOfRobots = 0;
+    // private static int numberOfRobots = 0;
     private static Integer indexSelectedRobot = null;
 
     // Roboter Table
-    private final String roboName;
-    private final int roboNumber;
+    private final String robotName;
+    private final int robotNumber;
     private String selectedText = "";
     // Roboter Werte
     private int sizeX;
     private int sizeY;
     private int[] position;
     private Color robotColor = null;
-    private final int uniqueIndexMazeNumber;
     // TODO Headposition setzen
     // 0 = Nord, im Uhrzeigersinn
-    private Integer headDirection = null; //1
+    private Integer headDirection;
+    private final int uniqueIndexNumberOfMazeRobot;
 
     private SimulationRobot(int robotPixelX, int robotPixelY) {
-        roboName = PREFIX_ROBO_NAME + (++numberOfRobots);
-        roboNumber = numberOfRobots;
         this.sizeX = robotPixelX;
         this.sizeY = robotPixelY;
-//        this.headDirection = headDirection;
         this.headDirection = robotPixelX > robotPixelY ? 1 : 0;
-        this.uniqueIndexMazeNumber = SimulationMaze.getSelectedMaze().getAndSetUniqueIndexNumberOfMazeRobot();
+        this.uniqueIndexNumberOfMazeRobot = SimulationMaze.getSelectedMaze().getAndSetUniqueIndexNumberOfMazeRobot();
+        this.robotNumber = this.uniqueIndexNumberOfMazeRobot + 1;
+        this.robotName = PREFIX_ROBO_NAME + this.robotNumber;
     }
 
     private SimulationRobot(int robotPixelX, int robotPixelY, Color robotColor) {
-        roboName = PREFIX_ROBO_NAME + (++numberOfRobots);
-        roboNumber = numberOfRobots;
         this.sizeX = robotPixelX;
         this.sizeY = robotPixelY;
-//        this.headDirection = headDirection;
         this.headDirection = robotPixelX > robotPixelY ? 1 : 0;
         this.robotColor = robotColor;
-        this.uniqueIndexMazeNumber = SimulationMaze.getSelectedMaze().getAndSetUniqueIndexNumberOfMazeRobot();
+        this.uniqueIndexNumberOfMazeRobot = SimulationMaze.getSelectedMaze().getAndSetUniqueIndexNumberOfMazeRobot();
+        this.robotNumber = this.uniqueIndexNumberOfMazeRobot + 1;
+        this.robotName = PREFIX_ROBO_NAME + this.robotNumber;
     }
 
     private SimulationRobot(int robotPixelX, int robotPixelY, Color robotColor, int[] position) {
-        roboName = PREFIX_ROBO_NAME + (++numberOfRobots);
-        roboNumber = numberOfRobots;
         this.sizeX = robotPixelX;
         this.sizeY = robotPixelY;
-//        this.headDirection = headDirection;
         this.headDirection = robotPixelX > robotPixelY ? 1 : 0;
         this.robotColor = robotColor;
         this.position = position;
-        this.uniqueIndexMazeNumber = SimulationMaze.getSelectedMaze().getAndSetUniqueIndexNumberOfMazeRobot();
+        this.uniqueIndexNumberOfMazeRobot = SimulationMaze.getSelectedMaze().getAndSetUniqueIndexNumberOfMazeRobot();
+        this.robotNumber = this.uniqueIndexNumberOfMazeRobot + 1;
+        this.robotName = PREFIX_ROBO_NAME + this.robotNumber;
     }
 
     public static Color getDefaultRobotColor() {
@@ -117,8 +115,12 @@ public class SimulationRobot implements Roboter {
         return indexSelectedRobot;
     }
 
-    public String getRoboName() {
-        return roboName;
+    public int getUniqueIndexNumberOfMazeRobot(){
+        return this.uniqueIndexNumberOfMazeRobot;
+    }
+
+    public String getRobotName() {
+        return robotName;
     }
 
     public Color getRobotColor() {
@@ -130,7 +132,7 @@ public class SimulationRobot implements Roboter {
     }
 
     public int getRobotNumber() {
-        return roboNumber;
+        return robotNumber;
     }
 
     public int[] getPosition() {
@@ -173,12 +175,12 @@ public class SimulationRobot implements Roboter {
             }
         }
 
-        return "Nr. " + roboNumber + " Name: " + roboName + " Pos: " + stringPosition;
+        return "Nr. " + robotNumber + " Name: " + robotName + " Pos: " + stringPosition;
     }
 
     private void moveUp() {
         System.out.println("UP");
-        if (Controller_MainGUI.mazeFreeFieldsUp(whatLabyrinthDoIBelongTo(this.roboNumber).getNr() - 1, this.getRobotNumber() - 1)) {
+        if (Controller_MainGUI.mazeFreeFieldsUp(whatLabyrinthDoIBelongTo(this.robotNumber).getNr() - 1, this.getRobotNumber() - 1)) {
             for (int i = 0; i < this.position.length; i++) {
                 this.position[i] = this.position[i] - SimulationMaze.getSelectedMaze().getMazeSizeY();
             }
@@ -189,7 +191,7 @@ public class SimulationRobot implements Roboter {
 
     private void moveRight() {
         System.out.println("RIGHT");
-        if (Controller_MainGUI.mazeFreeFieldsRight(whatLabyrinthDoIBelongTo(this.roboNumber).getNr() - 1, this.getRobotNumber() - 1)) {
+        if (Controller_MainGUI.mazeFreeFieldsRight(whatLabyrinthDoIBelongTo(this.robotNumber).getNr() - 1, this.getRobotNumber() - 1)) {
             for (int i = 0; i < this.position.length; i++) {
                 this.position[i] = this.position[i] + 1;
             }
@@ -200,7 +202,7 @@ public class SimulationRobot implements Roboter {
 
     private void moveDown() {
         System.out.println("DOWN");
-        if (Controller_MainGUI.mazeFreeFieldsDown(whatLabyrinthDoIBelongTo(this.roboNumber).getNr() - 1, this.getRobotNumber() - 1)) {
+        if (Controller_MainGUI.mazeFreeFieldsDown(whatLabyrinthDoIBelongTo(this.robotNumber).getNr() - 1, this.getRobotNumber() - 1)) {
             for (int i = 0; i < this.position.length; i++) {
                 this.position[i] = this.position[i] + SimulationMaze.getSelectedMaze().getMazeSizeY();
             }
@@ -211,7 +213,7 @@ public class SimulationRobot implements Roboter {
 
     private void moveLeft() {
         System.out.println("LEFT");
-        if (Controller_MainGUI.mazeFreeFieldsLeft(whatLabyrinthDoIBelongTo(this.roboNumber).getNr() - 1, this.getRobotNumber() - 1)) {
+        if (Controller_MainGUI.mazeFreeFieldsLeft(whatLabyrinthDoIBelongTo(this.robotNumber).getNr() - 1, this.getRobotNumber() - 1)) {
             for (int i = 0; i < this.position.length; i++) {
                 this.position[i] = this.position[i] - 1;
             }
@@ -322,9 +324,9 @@ public class SimulationRobot implements Roboter {
     public void left() {
         System.out.println("Linksvorwärtsrotation");
         // TODO BUGGED
-        int mazeNumber = whatLabyrinthDoIBelongTo(this.roboNumber).getNr() - 1;
+        int mazeNumber = whatLabyrinthDoIBelongTo(this.robotNumber).getNr() - 1;
 
-        System.out.println("mazeNumber: " + mazeNumber + " roboNumber: " + (this.getRobotNumber() - 1));
+        System.out.println("mazeNumber: " + mazeNumber + " robotNumber: " + (this.getRobotNumber() - 1));
 
         if (Controller_MainGUI.mazeFreeFieldsRotateLeftForward(mazeNumber, this.getRobotNumber() - 1)) {
 

@@ -170,6 +170,75 @@ public class SimulationMaze {
         return this.mazeDrawFields;
     }
 
+    private void setSelectedMaze(SimpleStringProperty selectionText) {
+        this.selectedMazeText = selectionText;
+    }
+
+    public void addRobotToMaze(SimulationRobot newMazeRobot) {
+        this.mazeRobots.add(newMazeRobot);
+    }
+
+    public ArrayList<SimulationRobot> getMazeRobots() {
+        return mazeRobots;
+    }
+
+    public SimulationRobot getSelectedRobot() {
+        if(this.mazeRobots.size() > 0) {
+            System.out.println(selectedRobotNumber);
+            return this.mazeRobots.get(selectedRobotNumber);
+        }
+
+        return null;
+    }
+
+    public boolean changeSelectedRobot(int indexNewSelectedRobot) {
+        System.out.println("tableIndex: " + indexNewSelectedRobot);
+        if (this.mazeRobots.size() >= 1 && indexNewSelectedRobot <= this.mazeRobots.size()) {
+            if (!(this.selectedRobotNumber == null)) {
+                if(indexNewSelectedRobot == this.selectedRobotNumber){
+                    return false;
+                } else {
+                    this.getSelectedRobot().setDeselectedText();
+                }
+            }
+            this.selectedRobotNumber = indexNewSelectedRobot;
+            this.getSelectedRobot().setSelectedText();
+            return true;
+        }
+
+        return false;
+    }
+
+//    public boolean changeSelectedRobot(int indexNewSelectedRobot){
+//        if(this.mazeRobots.size() > 0 && indexNewSelectedRobot <= this.mazeRobots.size()){
+//
+//        }
+//    }
+
+    public Integer getMazeSizeX() {
+        return this.mazeSizeX;
+    }
+
+    public Integer getMazeSizeY() {
+        return this.mazeSizeY;
+    }
+
+    // Maze Table
+    public Integer getNr() {
+        return nr;
+    }
+
+    public String getFILE_NAME() {
+        return FILE_NAME.getValue();
+    }
+
+    public String getSelectedMazeText() {
+        return selectedMazeText.getValue();
+    }
+
+    /*
+    * Debug Funktionen
+    * */
     public void getMazeFreeFieldsToString() {
         String mazeFreeFieldsString = "";
 
@@ -228,65 +297,6 @@ public class SimulationMaze {
         }
 
         System.out.println(mazeFreeFieldsString);
-    }
-
-    private void setSelectedMaze(SimpleStringProperty selectionText) {
-        this.selectedMazeText = selectionText;
-    }
-
-    public void addRobotToMaze(SimulationRobot newMazeRobot) {
-        this.mazeRobots.add(newMazeRobot);
-    }
-
-    public ArrayList<SimulationRobot> getMazeRobots() {
-        return mazeRobots;
-    }
-
-    public SimulationRobot getSelectedRobot() {
-        if(this.mazeRobots.size() > 0) {
-            System.out.println(selectedRobotNumber);
-            return this.mazeRobots.get(selectedRobotNumber);
-        }
-
-        return null;
-    }
-
-    public boolean changeSelectedRobot(int indexNewSelectedRobot) {
-        if (this.mazeRobots.size() >= 1 && indexNewSelectedRobot <= this.mazeRobots.size()) {
-            if (!(this.selectedRobotNumber == null)) {
-                if(indexNewSelectedRobot == this.selectedRobotNumber){
-                    return false;
-                } else {
-                    this.getSelectedRobot().setDeselectedText();
-                }
-            }
-            this.selectedRobotNumber = indexNewSelectedRobot;
-            this.getSelectedRobot().setSelectedText();
-            return true;
-        }
-
-        return false;
-    }
-
-    public Integer getMazeSizeX() {
-        return this.mazeSizeX;
-    }
-
-    public Integer getMazeSizeY() {
-        return this.mazeSizeY;
-    }
-
-    // Maze Table
-    public Integer getNr() {
-        return nr;
-    }
-
-    public String getFILE_NAME() {
-        return FILE_NAME.getValue();
-    }
-
-    public String getSelectedMazeText() {
-        return selectedMazeText.getValue();
     }
 
 }
