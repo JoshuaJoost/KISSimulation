@@ -3,12 +3,14 @@ package gui_simulation;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class SimulationRobot implements Roboter {
     private static final String PREFIX_ROBO_NAME = "Robo_";
     private static final String SELECTED_TEXT = "yep";
     private static final String NOT_SELECTED_TEXT = "";
-    private static final Color DEFAULT_ROBOT_COLOR = Color.rgb(55, 109, 19);
+    private static final Color DEFAULT_ROBOT_BODY_COLOR = Color.rgb(55, 109, 19);
+    private static final Color DEFAULT_ROBOT_HEAD_COLOR = Color.rgb(255, 0, 0);
 
     // Roboter Table
     private final String robotName;
@@ -17,38 +19,80 @@ public class SimulationRobot implements Roboter {
     // Roboter Werte
     private int sizeX;
     private int sizeY;
+    // TODO position in ArrayList<Integer> konvertieren
     private int[] position;
-    private int[] headPosition;
-    private Color robotColor = null;
+    private Color robotBodyColor = null;
+    private Color robotHeadColor = null;
+    private Integer headDirection; // 0 = Nord, im Uhrzeigersinn
     // TODO Headposition setzen
-    // 0 = Nord, im Uhrzeigersinn
-    private Integer headDirection;
+    private ArrayList<Integer> headPosition = new ArrayList<>();
+    private final int headSize;
     private final int uniqueIndexNumberOfMazeRobot;
     private final int robotMazeIndexNumber;
 
-    private SimulationRobot(int robotPixelX, int robotPixelY) {
+    private SimulationRobot(int robotPixelX, int robotPixelY, int[] position) {
         this.sizeX = robotPixelX;
         this.sizeY = robotPixelY;
+        this.position = position;
         this.headDirection = robotPixelX > robotPixelY ? 1 : 0;
         this.uniqueIndexNumberOfMazeRobot = SimulationMaze.getSelectedMaze().getAndSetUniqueIndexNumberOfMazeRobot();
         this.robotNumber = this.uniqueIndexNumberOfMazeRobot + 1;
         this.robotName = PREFIX_ROBO_NAME + this.robotNumber;
         this.robotMazeIndexNumber = SimulationMaze.getSelectedMazeIndexNumber();
+
+        switch (this.headDirection){
+            case 0:
+                if(this.sizeX < 1){
+                    this.headSize = 0;
+                }
+                else if(this.sizeX == 1 || this.sizeX == 2){
+                    this.headSize = 1;
+                } else {
+                    this.headSize = this.sizeX - 2;
+                }
+                break;
+            case 1:
+                if(this.sizeY < 0){
+                    this.headSize = 0;
+                } else if(this.sizeY == 1 || this.sizeY == 2){
+                    this.headSize = 1;
+                } else {
+                    this.headSize = this.sizeY - 2;
+                }
+                break;
+            default:
+                this.headSize = 0;
+                break;
+        }
+
+        changeHeadPosition();
     }
 
-    public static SimulationRobot addRobot(int robotPixelX, int robotPixelY) {
-        return new SimulationRobot(robotPixelX, robotPixelY);
+    public static SimulationRobot addRobot(int robotPixelX, int robotPixelY, int[] position) {
+        return new SimulationRobot(robotPixelX, robotPixelY, position);
+    }
+
+    public ArrayList<Integer> getHeadPosition(){
+        return this.headPosition;
     }
 
     public int getUniqueIndexNumberOfMazeRobot(){
         return this.uniqueIndexNumberOfMazeRobot;
     }
 
-    public Color getRobotColor() {
-        if (this.robotColor == null) {
-            return DEFAULT_ROBOT_COLOR;
+    public Color getRobotBodyColor() {
+        if (this.robotBodyColor == null) {
+            return DEFAULT_ROBOT_BODY_COLOR;
         } else {
-            return this.robotColor;
+            return this.robotBodyColor;
+        }
+    }
+
+    public Color getRobotHeadColor(){
+        if(this.robotHeadColor == null){
+            return DEFAULT_ROBOT_HEAD_COLOR;
+        } else {
+            return this.robotHeadColor;
         }
     }
 
@@ -80,6 +124,65 @@ public class SimulationRobot implements Roboter {
         this.selectedText = NOT_SELECTED_TEXT;
     }
 
+    private void changeHeadPosition(){
+        this.headPosition.clear();
+        int[] sortedPos = this.position;
+        Arrays.sort(sortedPos);
+
+        if(this.sizeX > 0 && this.sizeY > 0) {
+            switch (this.headDirection) {
+                case 0:
+                    if (this.headSize > 0) {
+                        if(this.sizeX == 1){
+                            this.headPosition.add(sortedPos[0]);
+                        } else if(this.sizeX == 2){
+                            this.headPosition.add(sortedPos[1]);
+                        } else {
+                            for (int x = 0; x < this.headSize; x++) {
+                                this.headPosition.add(sortedPos[this.sizeX - this.headSize - 1 + x]);
+                            }
+                        }
+                    }
+                    break;
+                case 1:
+                    if (this.headSize > 0) {
+                        if (this.sizeY == 1 || this.sizeY == 2) {
+                            this.headPosition.add(sortedPos[this.sizeX * this.sizeY - 1]);
+                        } else {
+                            for (int y = 2; y < this.headSize + 2; y++) {
+                                this.headPosition.add(sortedPos[y * this.sizeX - 1]);
+                            }
+                        }
+                    }
+                    break;
+                case 2:
+                    if (this.headSize > 0) {
+                        if(this.sizeX == 1){
+                            this.headPosition.add(sortedPos[this.sizeY - 1]);
+                        } else if(this.sizeX == 2){
+                            this.headPosition.add(sortedPos[this.sizeX * this.sizeY - 1 - 1]);
+                        } else {
+                            for(int x = 0; x < this.headSize; x++){
+                                this.headPosition.add(sortedPos[this.sizeX * this.sizeY - 1 - this.headSize + x]);
+                            }
+                        }
+                    }
+                    break;
+                case 3:
+                    if(this.headSize > 0){
+                        if(this.sizeY == 1 || this.sizeY == 2){
+                            this.headPosition.add(sortedPos[0]);
+                        } else {
+                            for(int y = 1; y < this.headSize + 1; y++){
+                                this.headPosition.add(sortedPos[y * this.sizeX]);
+                            }
+                        }
+                    }
+                    break;
+            }
+        }
+    }
+
     @Override
     public String toString() {
         String stringPosition = "";
@@ -101,6 +204,8 @@ public class SimulationRobot implements Roboter {
             for (int i = 0; i < this.position.length; i++) {
                 this.position[i] = this.position[i] - SimulationMaze.getSelectedMaze().getMazeSizeY();
             }
+
+            changeHeadPosition();
         } else {
             isBumped();
         }
@@ -112,6 +217,8 @@ public class SimulationRobot implements Roboter {
             for (int i = 0; i < this.position.length; i++) {
                 this.position[i] = this.position[i] + 1;
             }
+
+            changeHeadPosition();
         } else {
             isBumped();
         }
@@ -123,6 +230,8 @@ public class SimulationRobot implements Roboter {
             for (int i = 0; i < this.position.length; i++) {
                 this.position[i] = this.position[i] + SimulationMaze.getSelectedMaze().getMazeSizeY();
             }
+
+            changeHeadPosition();
         } else {
             isBumped();
         }
@@ -134,6 +243,8 @@ public class SimulationRobot implements Roboter {
             for (int i = 0; i < this.position.length; i++) {
                 this.position[i] = this.position[i] - 1;
             }
+
+            changeHeadPosition();
         } else {
             isBumped();
         }
@@ -278,6 +389,8 @@ public class SimulationRobot implements Roboter {
             int tmpSizeX = this.sizeX;
             this.sizeX = sizeY;
             this.sizeY = tmpSizeX;
+
+            changeHeadPosition();
         } else {
             isBumped();
         }
@@ -286,7 +399,6 @@ public class SimulationRobot implements Roboter {
     @Override
     public void right() {
         System.out.println("Rechtsvorwärtsrotation");
-        System.out.println(this.headDirection);
         if(Controller_MainGUI.mazeFreeFieldsRotateRightForward(SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber), SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeRobots().get(this.uniqueIndexNumberOfMazeRobot))){
             switch(this.headDirection){
                 case 0:
@@ -328,6 +440,7 @@ public class SimulationRobot implements Roboter {
             this.sizeX = this.sizeY;
             this.sizeY = tmpSizeX;
 
+            changeHeadPosition();
         } else {
             isBumped();
         }

@@ -259,10 +259,9 @@ public class Controller_MainGUI implements Initializable {
 
             if (robotSuccessfullySet) {
                 // Erstelle Roboter und füge ihm aktuell selektiertem Labyrinth zu, zeige ihn anschließend an
-                SimulationRobot newRobot = SimulationRobot.addRobot(robotSizeX, robotSizeY);
+                SimulationRobot newRobot = SimulationRobot.addRobot(robotSizeX, robotSizeY, OwnUtils.convertArrayListToIntArray(robotPositions));
                 SimulationMaze.getSelectedMaze().addRobotToMaze(newRobot);
                 SimulationMaze.getSelectedMaze().changeSelectedRobot(SimulationMaze.getSelectedMaze().getMazeRobots().size() - 1);
-                SimulationMaze.getSelectedMaze().getSelectedRobot().setPosition(OwnUtils.convertArrayListToIntArray(robotPositions));
                 updateMaze(true);
                 updateRobotTableDataAndLabel();
             } else {
@@ -397,11 +396,17 @@ public class Controller_MainGUI implements Initializable {
         drawMaze();
 
         if (drawRobot) {
+            ArrayList<Integer> robotHeadPosition = SimulationMaze.getSelectedMaze().getSelectedRobot().getHeadPosition();
+
             for (int robotPosition : SimulationMaze.getSelectedMaze().getSelectedRobot().getPosition()) {
                 Rectangle valueRect = SimulationMaze.getSelectedMaze().getMazeDrawFields().get(robotPosition);
 
                 Rectangle robotField = new Rectangle(valueRect.getX(), valueRect.getY(), valueRect.getWidth(), valueRect.getHeight());
-                robotField.setFill(SimulationMaze.getSelectedMaze().getSelectedRobot().getRobotColor());
+                if(!(robotHeadPosition.contains(robotPosition))) {
+                    robotField.setFill(SimulationMaze.getSelectedMaze().getSelectedRobot().getRobotBodyColor());
+                } else {
+                    robotField.setFill(SimulationMaze.getSelectedMaze().getSelectedRobot().getRobotHeadColor());
+                }
                 mazePane.getChildren().set(robotPosition, robotField);
             }
         }
