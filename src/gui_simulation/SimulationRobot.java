@@ -24,7 +24,6 @@ public class SimulationRobot implements Roboter {
     private Color robotBodyColor = null;
     private Color robotHeadColor = null;
     private Integer headDirection; // 0 = Nord, im Uhrzeigersinn
-    // TODO Headposition setzen
     private ArrayList<Integer> headPosition = new ArrayList<>();
     private final int headSize;
     private final int uniqueIndexNumberOfMazeRobot;

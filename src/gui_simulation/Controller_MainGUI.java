@@ -305,6 +305,11 @@ public class Controller_MainGUI implements Initializable {
         }
     }
 
+    @FXML
+    void focusMazePane(MouseEvent event) {
+        mazePane.requestFocus();
+    }
+
 //    @FXML
 //    void mazeMoveRobot(KeyEvent event) {
 //        System.out.println(":" + event.getCode());

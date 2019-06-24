@@ -13,7 +13,7 @@
       <AnchorPane prefHeight="520.0" prefWidth="500.0">
          <children>
             <Label fx:id="mazeLable" prefHeight="20.0" text="Labyrinth: &lt;keines ausgewählt&gt;" />
-            <Pane fx:id="mazePane" focusTraversable="true" layoutY="20.0" prefHeight="500.0" prefWidth="500.0" />
+            <Pane fx:id="mazePane" focusTraversable="true" layoutY="20.0" onMouseClicked="#focusMazePane" prefHeight="500.0" prefWidth="500.0" />
          </children>
       </AnchorPane>
       <AnchorPane layoutY="520.0" prefHeight="180.0" prefWidth="500.0">
