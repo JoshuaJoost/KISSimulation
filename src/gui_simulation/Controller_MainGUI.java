@@ -278,18 +278,22 @@ public class Controller_MainGUI implements Initializable {
             switch (event.getCode().toString()) {
                 // TODO weitere Tastatureingaben einbinden: E rotataRight, W,A,S,D, Y Messen
                 case "RIGHT":
+                case "D":
                     SimulationMaze.getSelectedMaze().getSelectedRobot().keyboardMoveRight();
                     updateMaze(true);
                     break;
                 case "LEFT":
+                case "A":
                     SimulationMaze.getSelectedMaze().getSelectedRobot().keyboardMoveLeft();
                     updateMaze(true);
                     break;
                 case "DOWN":
+                case "S":
                     SimulationMaze.getSelectedMaze().getSelectedRobot().keyboardMoveDown();
                     updateMaze(true);
                     break;
                 case "UP":
+                case "W":
                     SimulationMaze.getSelectedMaze().getSelectedRobot().keyboardMoveUp();
                     updateMaze(true);
                     break;
