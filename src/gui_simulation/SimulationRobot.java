@@ -10,10 +10,6 @@ public class SimulationRobot implements Roboter {
     private static final String NOT_SELECTED_TEXT = "";
     private static final Color DEFAULT_ROBOT_COLOR = Color.rgb(55, 109, 19);
 
-    private static ArrayList<SimulationRobot> robots = new ArrayList<>();
-    // private static int numberOfRobots = 0;
-    private static Integer indexSelectedRobot = null;
-
     // Roboter Table
     private final String robotName;
     private final int robotNumber;
@@ -22,6 +18,7 @@ public class SimulationRobot implements Roboter {
     private int sizeX;
     private int sizeY;
     private int[] position;
+    private int[] headPosition;
     private Color robotColor = null;
     // TODO Headposition setzen
     // 0 = Nord, im Uhrzeigersinn
@@ -39,89 +36,12 @@ public class SimulationRobot implements Roboter {
         this.robotMazeIndexNumber = SimulationMaze.getSelectedMazeIndexNumber();
     }
 
-    private SimulationRobot(int robotPixelX, int robotPixelY, Color robotColor) {
-        this.sizeX = robotPixelX;
-        this.sizeY = robotPixelY;
-        this.headDirection = robotPixelX > robotPixelY ? 1 : 0;
-        this.robotColor = robotColor;
-        this.uniqueIndexNumberOfMazeRobot = SimulationMaze.getSelectedMaze().getAndSetUniqueIndexNumberOfMazeRobot();
-        this.robotNumber = this.uniqueIndexNumberOfMazeRobot + 1;
-        this.robotName = PREFIX_ROBO_NAME + this.robotNumber;
-        this.robotMazeIndexNumber = SimulationMaze.getSelectedMazeIndexNumber();
-    }
-
-    private SimulationRobot(int robotPixelX, int robotPixelY, Color robotColor, int[] position) {
-        this.sizeX = robotPixelX;
-        this.sizeY = robotPixelY;
-        this.headDirection = robotPixelX > robotPixelY ? 1 : 0;
-        this.robotColor = robotColor;
-        this.position = position;
-        this.uniqueIndexNumberOfMazeRobot = SimulationMaze.getSelectedMaze().getAndSetUniqueIndexNumberOfMazeRobot();
-        this.robotNumber = this.uniqueIndexNumberOfMazeRobot + 1;
-        this.robotName = PREFIX_ROBO_NAME + this.robotNumber;
-        this.robotMazeIndexNumber = SimulationMaze.getSelectedMazeIndexNumber();
-    }
-
-    public static Color getDefaultRobotColor() {
-        return DEFAULT_ROBOT_COLOR;
-    }
-
     public static SimulationRobot addRobot(int robotPixelX, int robotPixelY) {
-        SimulationRobot newRobot = new SimulationRobot(robotPixelX, robotPixelY);
-        robots.add(newRobot);
-
-        return newRobot;
-    }
-
-    // TODO soll deprecated werden
-    public static ArrayList<SimulationRobot> addRobot(int robotPixelX, int robotPixelY, Color robotColor, int[] position) {
-        robots.add(new SimulationRobot(robotPixelX, robotPixelY, robotColor, position));
-        return robots;
-    }
-
-    public static ArrayList<SimulationRobot> getRobots() {
-        return robots;
-    }
-
-    public static SimulationRobot getSelectedRobot() {
-        return robots.get(indexSelectedRobot);
-    }
-
-    public static boolean changeSelectedRobot(int indexNewSelectedRobot) {
-        if (indexNewSelectedRobot <= robots.size() - 1) {
-            if (indexSelectedRobot == null) {
-                indexSelectedRobot = indexNewSelectedRobot;
-                robots.get(indexSelectedRobot).setSelectedText();
-                return true;
-            } else {
-                if (indexSelectedRobot != indexNewSelectedRobot) {
-                    robots.get(indexSelectedRobot).setDeselectedText();
-                    indexSelectedRobot = indexNewSelectedRobot;
-                    robots.get(indexSelectedRobot).setSelectedText();
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        }
-        return false;
-    }
-
-//    public static void deleteAllRobots() {
-//        robots.clear();
-//        indexSelectedRobot = null;
-//    }
-
-    public static Integer getIndexSelectedRobot() {
-        return indexSelectedRobot;
+        return new SimulationRobot(robotPixelX, robotPixelY);
     }
 
     public int getUniqueIndexNumberOfMazeRobot(){
         return this.uniqueIndexNumberOfMazeRobot;
-    }
-
-    public String getRobotName() {
-        return robotName;
     }
 
     public Color getRobotColor() {
@@ -134,10 +54,6 @@ public class SimulationRobot implements Roboter {
 
     public int getRobotMazeIndexNumber(){
         return this.robotMazeIndexNumber;
-    }
-
-    public int getRobotNumber() {
-        return robotNumber;
     }
 
     public int[] getPosition() {
@@ -154,10 +70,6 @@ public class SimulationRobot implements Roboter {
 
     public int getSizeY() {
         return sizeY;
-    }
-
-    public String getSelectedText() {
-        return selectedText;
     }
 
     public void setSelectedText() {
@@ -252,10 +164,6 @@ public class SimulationRobot implements Roboter {
     }
 
     public void keyboardRotateForwardRight() { right(); }
-
-    private void setPositionN(int position, int newValue) {
-        this.position[position] = newValue;
-    }
 
     // Roboter Interface Methods
     @Override
@@ -423,5 +331,18 @@ public class SimulationRobot implements Roboter {
         } else {
             isBumped();
         }
+    }
+
+    // Robot Table
+    public String getSelectedText() {
+        return selectedText;
+    }
+
+    public int getRobotNumber() {
+        return robotNumber;
+    }
+
+    public String getRobotName() {
+        return robotName;
     }
 }
