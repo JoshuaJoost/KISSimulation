@@ -305,6 +305,11 @@ public class Controller_MainGUI implements Initializable {
                     SimulationMaze.getSelectedMaze().getSelectedRobot().keyboardRotateForwardRight();
                     updateMaze(true);
                     break;
+                case "Y":
+                case "Z":
+                    SimulationMaze.getSelectedMaze().getSelectedRobot().keyboardLook();
+                    updateMaze(true);
+                    break;
             }
         }
     }
@@ -401,12 +406,14 @@ public class Controller_MainGUI implements Initializable {
         }
     }
 
+    // TODO Zeige Lookfelder an
     private void updateMaze(boolean drawRobot) {
         drawMaze();
 
         if (drawRobot) {
             ArrayList<Integer> robotHeadPosition = SimulationMaze.getSelectedMaze().getSelectedRobot().getHeadPosition();
 
+            // Setze Roboter und seinen Kopf
             for (int robotPosition : SimulationMaze.getSelectedMaze().getSelectedRobot().getPosition()) {
                 Rectangle valueRect = SimulationMaze.getSelectedMaze().getMazeDrawFields().get(robotPosition);
 
@@ -417,6 +424,37 @@ public class Controller_MainGUI implements Initializable {
                     robotField.setFill(SimulationMaze.getSelectedMaze().getSelectedRobot().getRobotHeadColor());
                 }
                 mazePane.getChildren().set(robotPosition, robotField);
+            }
+
+            // Setze gemessene Felder
+            if(SimulationMaze.getSelectedMaze().getSelectedRobot().getDistanceDataFieldsLeft().size() > 0){
+                for(int measurePos : SimulationMaze.getSelectedMaze().getSelectedRobot().getDistanceDataFieldsLeft()){
+                    Rectangle valueRect = SimulationMaze.getSelectedMaze().getMazeDrawFields().get(measurePos);
+
+                    Rectangle measureField = new Rectangle(valueRect.getX(), valueRect.getY(), valueRect.getWidth(), valueRect.getHeight());
+                    measureField.setFill(SimulationMaze.getSelectedMaze().getSelectedRobot().getMeasureDistanceColor());
+                    mazePane.getChildren().set(measurePos, measureField);
+                }
+            }
+
+            if(SimulationMaze.getSelectedMaze().getSelectedRobot().getDistanceDataFieldsFront().size() > 0){
+                for(int measurePos : SimulationMaze.getSelectedMaze().getSelectedRobot().getDistanceDataFieldsFront()){
+                    Rectangle valueRect = SimulationMaze.getSelectedMaze().getMazeDrawFields().get(measurePos);
+
+                    Rectangle measureField = new Rectangle(valueRect.getX(), valueRect.getY(), valueRect.getWidth(), valueRect.getHeight());
+                    measureField.setFill(SimulationMaze.getSelectedMaze().getSelectedRobot().getMeasureDistanceColor());
+                    mazePane.getChildren().set(measurePos, measureField);
+                }
+            }
+
+            if(SimulationMaze.getSelectedMaze().getSelectedRobot().getDistanceDataFieldsRight().size() > 0){
+                for(int measurePos : SimulationMaze.getSelectedMaze().getSelectedRobot().getDistanceDataFieldsRight()){
+                    Rectangle valueRect = SimulationMaze.getSelectedMaze().getMazeDrawFields().get(measurePos);
+
+                    Rectangle measureField = new Rectangle(valueRect.getX(), valueRect.getY(), valueRect.getWidth(), valueRect.getHeight());
+                    measureField.setFill(SimulationMaze.getSelectedMaze().getSelectedRobot().getMeasureDistanceColor());
+                    mazePane.getChildren().set(measurePos, measureField);
+                }
             }
         }
     }
