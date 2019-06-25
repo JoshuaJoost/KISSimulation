@@ -1,8 +1,5 @@
 package gui_simulation;
 
-import javafx.concurrent.Task;
-import javafx.concurrent.WorkerStateEvent;
-import javafx.event.EventHandler;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
@@ -14,12 +11,39 @@ public class SimulationRobot implements Roboter {
     private static final String NOT_SELECTED_TEXT = "";
     private static final Color DEFAULT_ROBOT_BODY_COLOR = Color.rgb(55, 109, 19);
     private static final Color DEFAULT_ROBOT_HEAD_COLOR = Color.rgb(255, 0, 0);
-    private static final Color DEFAULT_MEASURE_DISTANCE = Color.rgb(255, 255, 0);
-    // Roboter Aktionen
+    private static final Color DEFAULT_MEASURE_DISTANCE = Color.rgb(255,255,0);
+    private static final int MIN_DISTANCE = 1;
+
+    // Roboter Bewegung
     private static final int DRIVE_FORWARD = 0;
-    private static final int DRIVE_LEFT = 1;
-    private static final int DRIVE_RIGHT = 2;
+    private static final int DRIVE_ROTATE_LEFT = 1;
+    private static final int DRIVE_ROTATE_RIGHT = 2;
     private static final int DRIVE_BACKWARD = 3;
+
+    //Rewards - Learning Algorithmus
+    private static final double REWARD_BUMPED = -1;
+    private static final double REWARD_NOT_BUMPED = 0.5;
+    private static final double REWARD_DRIVE_BACK = - 0.5;
+
+    // Bewegungskontrolle
+    private int drived_isBumped = 0;
+    private int drived_forward = 0;
+    private int drived_backward = 0;
+    private int drived_rotateLeft = 0;
+    private int drived_rotateRight = 0;
+    private int drived_look = 0;
+    private boolean isBumped = false;
+
+    // Zustände Barrieren
+    private int stateFront = 0;
+    private int stateFrontLeft = 0;
+    private int stateFrontRight = 0;
+    private int stateLeft = 0;
+    private int stateRight = 0;
+    private int stateLeftRight = 0;
+    private int stateFrontLeftRight = 0;
+    private int stateBumped = 0;
+    private int stateNoBarrier = 0;
 
     // Roboter Table
     private final String robotName;
@@ -42,6 +66,9 @@ public class SimulationRobot implements Roboter {
     private ArrayList<Integer> distanceDataFieldsLeft = new ArrayList<>();
     private ArrayList<Integer> distanceDataFieldsFront = new ArrayList<>();
     private ArrayList<Integer> distanceDataFieldsRight = new ArrayList<>();
+    // QLearningAgent
+    private QLearningAgent learningAlgorithmus = new QLearningAgent();
+    double reward = 0;
 
     private SimulationRobot(int robotPixelX, int robotPixelY, int[] position) {
         this.sizeX = robotPixelX;
@@ -85,15 +112,23 @@ public class SimulationRobot implements Roboter {
         return new SimulationRobot(robotPixelX, robotPixelY, position);
     }
 
-    public ArrayList<Integer> getDistanceDataFieldsLeft() {
+    public void callGuiUpdateFunction(){
+        if(SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getNr() == SimulationMaze.getSelectedMaze().getNr()){
+            if(this.getUniqueIndexNumberOfMazeRobot() == SimulationMaze.getSelectedMaze().getSelectedRobot().getUniqueIndexNumberOfMazeRobot()){
+                SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getFXML_MAIN_CONTROLLER().updateMaze(true);
+            }
+        }
+    }
+
+    public ArrayList<Integer> getDistanceDataFieldsLeft(){
         return this.distanceDataFieldsLeft;
     }
 
-    public ArrayList<Integer> getDistanceDataFieldsFront() {
+    public ArrayList<Integer> getDistanceDataFieldsFront(){
         return this.distanceDataFieldsFront;
     }
 
-    public ArrayList<Integer> getDistanceDataFieldsRight() {
+    public ArrayList<Integer> getDistanceDataFieldsRight(){
         return this.distanceDataFieldsRight;
     }
 
@@ -121,8 +156,8 @@ public class SimulationRobot implements Roboter {
         }
     }
 
-    public Color getMeasureDistanceColor() {
-        if (this.measureDistanceColor == null) {
+    public Color getMeasureDistanceColor(){
+        if(this.measureDistanceColor == null){
             return DEFAULT_MEASURE_DISTANCE;
         } else {
             return this.measureDistanceColor;
@@ -231,24 +266,16 @@ public class SimulationRobot implements Roboter {
         return "Nr. " + robotNumber + " Name: " + robotName + " Pos: " + stringPosition;
     }
 
-    private void callGUIUpdateMethod() {
-        if ((int) SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getNr() == SimulationMaze.getSelectedMaze().getNr()) {
-            if (this.uniqueIndexNumberOfMazeRobot == SimulationMaze.getSelectedMaze().getSelectedRobot().getUniqueIndexNumberOfMazeRobot()) {
-                SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getFxmlMainController().updateMaze(true);
-            }
-        }
-    }
-
     private void moveUp() {
         clearDistanceData();
-        System.out.println("UP");
         if (Controller_MainGUI.mazeFreeFieldsUp(SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber), SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeRobots().get(this.uniqueIndexNumberOfMazeRobot))) {
             for (int i = 0; i < this.position.length; i++) {
                 this.position[i] = this.position[i] - SimulationMaze.getSelectedMaze().getMazeSizeY();
             }
 
             changeHeadPosition();
-            callGUIUpdateMethod();
+            callGuiUpdateFunction();
+            this.reward = this.reward + SimulationRobot.REWARD_NOT_BUMPED;
         } else {
             isBumped();
         }
@@ -256,14 +283,14 @@ public class SimulationRobot implements Roboter {
 
     private void moveRight() {
         clearDistanceData();
-        System.out.println("RIGHT");
         if (Controller_MainGUI.mazeFreeFieldsRight(SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber), SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeRobots().get(this.uniqueIndexNumberOfMazeRobot))) {
             for (int i = 0; i < this.position.length; i++) {
                 this.position[i] = this.position[i] + 1;
             }
 
             changeHeadPosition();
-            callGUIUpdateMethod();
+            callGuiUpdateFunction();
+            this.reward = this.reward + SimulationRobot.REWARD_NOT_BUMPED;
         } else {
             isBumped();
         }
@@ -271,14 +298,14 @@ public class SimulationRobot implements Roboter {
 
     private void moveDown() {
         clearDistanceData();
-        System.out.println("DOWN");
         if (Controller_MainGUI.mazeFreeFieldsDown(SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber), SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeRobots().get(this.uniqueIndexNumberOfMazeRobot))) {
             for (int i = 0; i < this.position.length; i++) {
                 this.position[i] = this.position[i] + SimulationMaze.getSelectedMaze().getMazeSizeY();
             }
 
             changeHeadPosition();
-            callGUIUpdateMethod();
+            callGuiUpdateFunction();
+            this.reward = this.reward + SimulationRobot.REWARD_DRIVE_BACK;
         } else {
             isBumped();
         }
@@ -286,14 +313,14 @@ public class SimulationRobot implements Roboter {
 
     private void moveLeft() {
         clearDistanceData();
-        System.out.println("LEFT");
         if (Controller_MainGUI.mazeFreeFieldsLeft(SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber), SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeRobots().get(this.uniqueIndexNumberOfMazeRobot))) {
             for (int i = 0; i < this.position.length; i++) {
                 this.position[i] = this.position[i] - 1;
             }
 
             changeHeadPosition();
-            callGUIUpdateMethod();
+            callGuiUpdateFunction();
+            this.reward = this.reward + SimulationRobot.REWARD_NOT_BUMPED;
         } else {
             isBumped();
         }
@@ -327,34 +354,37 @@ public class SimulationRobot implements Roboter {
         right();
     }
 
-    public void keyboardLook() {
+    public void keyboardLook(){
         look();
     }
 
-    private ArrayList<Integer> getDistanceDataAbove() {
+    private ArrayList<Integer> getDistanceDataAbove(int startValue){
         ArrayList<Integer> distanceDataAbove = new ArrayList<>();
 
-        boolean freeField = true;
-        for (int y = -1; freeField && this.headPosition.get(0) + y * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY() >= 0; y--) {
-            if (SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getIndexMazeFreeFields().contains(this.headPosition.get(0) + y * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY())) {
+        boolean freeFields = true;
+        int y = startValue;
+        while(freeFields){
+
+            if(SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getIndexMazeFreeFields().contains(this.headPosition.get(0) + y * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY())){
                 distanceDataAbove.add(this.headPosition.get(0) + y * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY());
             } else {
-                freeField = false;
+                freeFields = false;
             }
+            y--;
         }
 
         return distanceDataAbove;
     }
 
-    private ArrayList<Integer> getDistanceDataRight() {
+    private ArrayList<Integer> getDistanceDataRight(int startValue){
         ArrayList<Integer> distanceDataRight = new ArrayList<>();
 
         boolean freeField = true;
-        int x = 1;
-        while (freeField) {
-            if (SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getIndexMazeFreeFields().contains(this.headPosition.get(0) + x)) {
+        int x = startValue; //1;
+        while(freeField){
+            if(SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getIndexMazeFreeFields().contains(this.headPosition.get(0) + x)){
                 distanceDataRight.add(this.headPosition.get(0) + x);
-            } else {
+            } else{
                 freeField = false;
             }
             x++;
@@ -363,28 +393,38 @@ public class SimulationRobot implements Roboter {
         return distanceDataRight;
     }
 
-    private ArrayList<Integer> getDistanceDataBelow() {
+    private ArrayList<Integer> getDistanceDataBelow(int startValue){
         ArrayList<Integer> distanceDataBelow = new ArrayList<>();
 
-        boolean freeField = true;
-        for (int y = 1; freeField && this.headPosition.get(0) + y * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY() <= SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY() * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeX(); y++) {
-            if (SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getIndexMazeFreeFields().contains(this.headPosition.get(0) + y * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY())) {
+//        boolean freeField = true;
+//        for(int y = 1; freeField && this.headPosition.get(0) + y * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY() <= SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY() * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeX(); y++){
+//            if(SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getIndexMazeFreeFields().contains(this.headPosition.get(0) + y * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY())){
+//                distanceDataBelow.add(this.headPosition.get(0) + y * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY());
+//            } else {
+//                freeField = false;
+//            }
+//        }
+        boolean freeFields = true;
+        int y = startValue; // -1
+        while(freeFields){
+            if(SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getIndexMazeFreeFields().contains(this.headPosition.get(0) + y * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY())){
                 distanceDataBelow.add(this.headPosition.get(0) + y * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY());
             } else {
-                freeField = false;
+                freeFields = false;
             }
+            y--;
         }
 
         return distanceDataBelow;
     }
 
-    private ArrayList<Integer> getDistanceDataLeft() {
+    private ArrayList<Integer> getDistanceDataLeft(int starValue){
         ArrayList<Integer> distanceDataLeft = new ArrayList<>();
 
         boolean freeFields = true;
-        int x = -1;
-        while (freeFields) {
-            if (SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getIndexMazeFreeFields().contains(this.headPosition.get(0) + x)) {
+        int x = starValue; // -1
+        while(freeFields){
+            if(SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getIndexMazeFreeFields().contains(this.headPosition.get(0) + x)){
                 distanceDataLeft.add(this.headPosition.get(0) + x);
             } else {
                 freeFields = false;
@@ -395,7 +435,7 @@ public class SimulationRobot implements Roboter {
         return distanceDataLeft;
     }
 
-    public void clearDistanceData() {
+    public void clearDistanceData(){
         this.distanceData[0] = -1;
         this.distanceData[1] = -1;
         this.distanceData[2] = -1;
@@ -405,57 +445,73 @@ public class SimulationRobot implements Roboter {
         this.distanceDataFieldsRight.clear();
     }
 
-    public void startRobot() {
-        System.out.println("Started");
-
-        for(int i = 0; i < 50; i++) {
-            Task<Void> sleeper = new Task<Void>() {
-                @Override
-                protected Void call() throws Exception {
-                    try {
-                        System.err.println("Sleep");
-                        Thread.sleep(5000);
-                        System.err.println("Awaken");
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    return null;
-                }
-            };
-            sleeper.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-                @Override
-                public void handle(WorkerStateEvent event) {
-                    int rnd = (int)(Math.random() * 4);
-                    System.out.println("action: " + rnd);
-                    doAction(rnd);
-                }
-            });
-
-            new Thread(sleeper).start();
-//            sleeper.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-//                @Override
-//                public void handle(WorkerStateEvent event) {
-//                    // SimulationMaze.getSelectedMaze().getSelectedRobot().doAction(rnd);
-//                }
-//            });
+    public void start(){
+        this.drived_isBumped = 0;
+        this.drived_look = 0;
+        this.drived_rotateLeft = 0;
+        this.drived_backward = 0;
+        this.drived_rotateRight = 0;
+        this.drived_forward = 0;
+        this.stateFront = 0;
+        this.stateLeft = 0;
+        this.stateRight = 0;
+        this.stateNoBarrier = 0;
+        this.stateBumped = 0;
+        this.stateFrontLeftRight = 0;
+        this.stateFrontLeft = 0;
+        this.stateFrontRight = 0;
+        this.stateLeftRight = 0;
+        for(int i = 0; i < 1000; i++) {
+            look();
+            int s = findBarrier();
+            int a = learningAlgorithmus.chooseAction(s);
+            doAction(a);
+            int sNext = findBarrier();
+            learningAlgorithmus.learn(s, sNext, a, reward);
         }
+
+        System.out.println("Bewegungsmuster:");
+        System.out.println("vorwärts: " + this.drived_forward);
+        System.out.println("Rechtsrotation: " + this.drived_rotateRight);
+        System.out.println("Zurück:" + this.drived_backward);
+        System.out.println("Linksrotation: " + this.drived_rotateLeft);
+        System.out.println("Geschaut: " + this.drived_look);
+        System.out.println("Angestoßen: " + this.drived_isBumped);
+        System.out.println();
+        System.out.println("Statusmuster:");
+        System.out.println("Bumped: " + this.stateBumped);
+        System.out.println("Keine Barriere: " + this.stateNoBarrier);
+        System.out.println("Barriere vorne: " + this.stateFront);
+        System.out.println("Barriere links: " + this.stateLeft);
+        System.out.println("Barriere rechts: " + this.stateRight);
+        System.out.println("Barriere vorne & links: " + this.stateFrontLeft);
+        System.out.println("Barriere vorne & rechts: " + this.stateFrontRight);
+        System.out.println("Barriere links & rechts: " + this.stateLeftRight);
+        System.out.println("Barriere vorne & links & rechts: " + this.stateFrontLeftRight);
+
+        learningAlgorithmus.printQTable();
     }
 
     // Roboter Interface Methods
     @Override
     public void doAction(int action) {
-        switch (action) {
-            case SimulationRobot.DRIVE_FORWARD:
+        this.isBumped = false;
+        switch(action){
+            case DRIVE_FORWARD:
                 this.forward();
+                this.drived_forward++;
                 break;
-            case SimulationRobot.DRIVE_RIGHT:
+            case DRIVE_ROTATE_RIGHT:
                 this.right();
+                this.drived_rotateRight++;
                 break;
-            case SimulationRobot.DRIVE_BACKWARD:
+            case DRIVE_BACKWARD:
                 this.backward();
+                this.drived_backward++;
                 break;
-            case SimulationRobot.DRIVE_LEFT:
+            case DRIVE_ROTATE_LEFT:
                 this.left();
+                this.drived_rotateLeft++;
                 break;
         }
     }
@@ -467,6 +523,75 @@ public class SimulationRobot implements Roboter {
 
     @Override
     public int findBarrier() {
+        // bumped
+        if(isBumped){
+            this.stateBumped++;
+            return 8;
+        }
+        // front = 1
+        if (distanceData[0] > MIN_DISTANCE && distanceData[1] < MIN_DISTANCE && distanceData[2] > MIN_DISTANCE) {
+            // front + bumped
+//			if (isBumped()) {
+//				return 8;
+//			}
+            this.stateFront++;
+            return 1;
+        }
+        // left = 2
+        if (distanceData[0] < MIN_DISTANCE && distanceData[1] > MIN_DISTANCE && distanceData[2] > MIN_DISTANCE) {
+            // left + bumped
+//			if (isBumped()) {
+//				return 9;
+//			}
+            this.stateLeft++;
+            return 2;
+        }
+        // right = 3
+        if (distanceData[0] > MIN_DISTANCE && distanceData[1] > MIN_DISTANCE && distanceData[2] < MIN_DISTANCE) {
+            // right + bumped
+//			if (isBumped()) {
+//				return 10;
+//			}
+            this.stateRight++;
+            return 3;
+        }
+        // front + left = 4
+        if (distanceData[0] < MIN_DISTANCE && distanceData[1] < MIN_DISTANCE && distanceData[2] > MIN_DISTANCE) {
+            // front + left + bumped
+//			if (isBumped()) {
+//				return 11;
+//			}
+            this.stateFrontLeft++;
+            return 4;
+        }
+        // front + right = 5
+        if (distanceData[0] > MIN_DISTANCE && distanceData[1] < MIN_DISTANCE && distanceData[2] < MIN_DISTANCE) {
+            // front + right + bumped
+//			if (isBumped()) {
+//				return 12;
+//			}
+            this.stateFrontRight++;
+            return 5;
+        }
+        // left + right = 6
+        if (distanceData[0] < MIN_DISTANCE && distanceData[1] > MIN_DISTANCE && distanceData[2] < MIN_DISTANCE) {
+            // left + right + bumped
+//			if (isBumped()) {
+//				return 13;
+//			}
+            this.stateLeftRight++;
+            return 6;
+        }
+        // front + left + right = 7
+        if (distanceData[0] < MIN_DISTANCE && distanceData[1] < MIN_DISTANCE && distanceData[2] < MIN_DISTANCE) {
+            // front + left + right + bumped
+//			if (isBumped()) {
+//				return 14;
+//			}
+            this.stateFrontLeftRight++;
+            return 7;
+        }
+        this.stateNoBarrier++;
         return 0;
     }
 
@@ -476,48 +601,52 @@ public class SimulationRobot implements Roboter {
         this.distanceDataFieldsFront.clear();
         this.distanceDataFieldsRight.clear();
 
-        switch (this.headDirection) {
+        switch(this.headDirection){
             case 0:
-                this.distanceDataFieldsLeft.addAll(getDistanceDataLeft());
+                this.distanceDataFieldsLeft.addAll(getDistanceDataLeft(-2));
                 this.distanceData[0] = this.distanceDataFieldsLeft.size();
-                this.distanceDataFieldsFront.addAll(getDistanceDataAbove());
+                this.distanceDataFieldsFront.addAll(getDistanceDataAbove(-1));
                 this.distanceData[1] = this.distanceDataFieldsFront.size();
-                this.distanceDataFieldsRight.addAll(getDistanceDataRight());
+                this.distanceDataFieldsRight.addAll(getDistanceDataRight(2));
                 this.distanceData[2] = this.distanceDataFieldsRight.size();
                 break;
             case 1:
-                this.distanceDataFieldsLeft.addAll(getDistanceDataAbove());
+                System.out.println("hd: " + this.headDirection);
+                this.distanceDataFieldsLeft.addAll(getDistanceDataAbove(0));
                 this.distanceData[0] = this.distanceDataFieldsLeft.size();
-                this.distanceDataFieldsFront.addAll(getDistanceDataRight());
+                this.distanceDataFieldsFront.addAll(getDistanceDataRight(1));
                 this.distanceData[1] = this.distanceDataFieldsFront.size();
-                this.distanceDataFieldsRight.addAll(getDistanceDataBelow());
+                this.distanceDataFieldsRight.addAll(getDistanceDataBelow(-2));
                 this.distanceData[2] = this.distanceDataFieldsRight.size();
                 break;
             case 2:
-                this.distanceDataFieldsLeft.addAll(getDistanceDataRight());
+                this.distanceDataFieldsLeft.addAll(getDistanceDataRight(2));
                 this.distanceData[0] = this.distanceDataFieldsLeft.size();
-                this.distanceDataFieldsFront.addAll(getDistanceDataBelow());
+                this.distanceDataFieldsFront.addAll(getDistanceDataBelow(1));
                 this.distanceData[1] = this.distanceDataFieldsFront.size();
-                this.distanceDataFieldsRight.addAll(getDistanceDataLeft());
+                this.distanceDataFieldsRight.addAll(getDistanceDataLeft(-2));
                 this.distanceData[2] = this.distanceDataFieldsRight.size();
                 break;
             case 3:
-                this.distanceDataFieldsLeft.addAll(getDistanceDataBelow());
+                this.distanceDataFieldsLeft.addAll(getDistanceDataBelow(2));
                 this.distanceData[0] = this.distanceDataFieldsLeft.size();
-                this.distanceDataFieldsFront.addAll(getDistanceDataLeft());
+                this.distanceDataFieldsFront.addAll(getDistanceDataLeft(-1));
                 this.distanceData[1] = this.distanceDataFieldsFront.size();
-                this.distanceDataFieldsRight.addAll(getDistanceDataAbove());
+                this.distanceDataFieldsRight.addAll(getDistanceDataAbove(-2));
                 this.distanceData[2] = this.distanceDataFieldsRight.size();
                 break;
         }
 
-        callGUIUpdateMethod();
+        this.drived_look++;
+        callGuiUpdateFunction();
     }
 
     @Override
     public boolean isBumped() {
-        System.out.println("bumped");
-        return false;
+        this.reward = this.reward + SimulationRobot.REWARD_BUMPED;
+        this.drived_isBumped++;
+        this.isBumped = true;
+        return true;
     }
 
     @Override
@@ -566,7 +695,6 @@ public class SimulationRobot implements Roboter {
     @Override
     public void left() {
         clearDistanceData();
-        System.out.println("Linksvorwärtsrotation");
         if (Controller_MainGUI.mazeFreeFieldsRotateLeftForward(SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber), SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeRobots().get(this.uniqueIndexNumberOfMazeRobot))) {
             switch (this.headDirection) {
                 case 0:
@@ -609,7 +737,8 @@ public class SimulationRobot implements Roboter {
             this.sizeY = tmpSizeX;
 
             changeHeadPosition();
-            callGUIUpdateMethod();
+            callGuiUpdateFunction();
+            this.reward = this.reward + SimulationRobot.REWARD_NOT_BUMPED;
         } else {
             isBumped();
         }
@@ -618,7 +747,6 @@ public class SimulationRobot implements Roboter {
     @Override
     public void right() {
         clearDistanceData();
-        System.out.println("Rechtsvorwärtsrotation");
         if (Controller_MainGUI.mazeFreeFieldsRotateRightForward(SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber), SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeRobots().get(this.uniqueIndexNumberOfMazeRobot))) {
             switch (this.headDirection) {
                 case 0:
@@ -661,7 +789,8 @@ public class SimulationRobot implements Roboter {
             this.sizeY = tmpSizeX;
 
             changeHeadPosition();
-            callGUIUpdateMethod();
+            callGuiUpdateFunction();
+            this.reward = this.reward + SimulationRobot.REWARD_NOT_BUMPED;
         } else {
             isBumped();
         }

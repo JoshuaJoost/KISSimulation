@@ -12,6 +12,7 @@ import java.util.ArrayList;
 public class SimulationMaze {
 
     // File
+    // TODO Controller umbauen, soll nur noch hier drauf zugreifen
     public static final char mazeWallSymbol = '#';
     public static final char mazeVoidSymbol = ' ';
 
@@ -26,8 +27,6 @@ public class SimulationMaze {
     private static final SimpleStringProperty SELECTED_TEXT = new SimpleStringProperty("yep");
     private static final SimpleStringProperty NOT_SELECTED_TEXT = new SimpleStringProperty("");
 
-    // Controller
-    private final Controller_MainGUI fxmlMainController;
     // Labyrinth Table
     private final Integer nr;
     private final SimpleStringProperty FILE_NAME;
@@ -41,12 +40,14 @@ public class SimulationMaze {
     private ArrayList<SimulationRobot> mazeRobots = new ArrayList<>();
     private Integer selectedRobotNumber = null;
     public int uniqueIndexNumberOfMazeRobot = 0;
+    // Controller
+    private final Controller_MainGUI FXML_MAIN_CONTROLLER;
 
     private SimulationMaze(String filename, int mazePaneX, int mazePaneY, Controller_MainGUI fxmlMainController) {
         nr = (++numberOfMazeFiles);
         FILE_NAME = new SimpleStringProperty(filename);
         selectedMazeText = new SimpleStringProperty("");
-        this.fxmlMainController = fxmlMainController;
+        this.FXML_MAIN_CONTROLLER = fxmlMainController;
 
         Integer mazeSizeX = null;
         Integer mazeSizeY = null;
@@ -145,8 +146,8 @@ public class SimulationMaze {
         return "Nr. <" + nr + "> Dateiname: <" + FILE_NAME.getValue() + "> Ausgewählt Text: <" + selectedMazeText.getValue() + ">";
     }
 
-    public Controller_MainGUI getFxmlMainController(){
-        return this.fxmlMainController;
+    public Controller_MainGUI getFXML_MAIN_CONTROLLER(){
+        return this.FXML_MAIN_CONTROLLER;
     }
 
     public int getAndSetUniqueIndexNumberOfMazeRobot(){
@@ -197,6 +198,12 @@ public class SimulationMaze {
 
         return false;
     }
+
+//    public boolean changeSelectedRobot(int indexNewSelectedRobot){
+//        if(this.mazeRobots.size() > 0 && indexNewSelectedRobot <= this.mazeRobots.size()){
+//
+//        }
+//    }
 
     public Integer getMazeSizeX() {
         return this.mazeSizeX;

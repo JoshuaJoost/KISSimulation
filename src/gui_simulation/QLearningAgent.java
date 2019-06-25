@@ -3,8 +3,8 @@ package gui_simulation;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class QLearningAgent {
-    private double epsilon = 0.1;
-    private double alpha = 0.01; // Lernrate (0..1)
+    private double epsilon = 0.2;
+    private double alpha = 0.1; // Lernrate (0..1)
     private double gamma = 0.9; // Bewertungsfaktor (0..1)
     private double q[][]; // Q-Learning-Array
     private static final int POSSIBLE_ACTIONS = 4;
@@ -15,12 +15,13 @@ public class QLearningAgent {
     private static final int BARRIER_LOCATIONS = 8;
     // is the robot bumped or not? 1 state for the barrier bumped and one state for the location not bumped
     // dhort of no barrier
-    private static final int BUMPED = 0;
+    private static final int BUMPED = 1;
     /*
      * 8 barrier states: no barrier, front, left, right, front+left, front+right, right+left, front+right+left
      */
 
     public QLearningAgent() {
+        System.out.println("Initialisiere QTable");
         this.q = new double[BARRIER_LOCATIONS+BUMPED][POSSIBLE_ACTIONS];
         // initalize q
         for(int i = 0; i < this.q.length; i++) {
@@ -37,7 +38,7 @@ public class QLearningAgent {
         printQTable();
     }
 
-    private void printQTable() {
+    public void printQTable() {
         for (int i = 0; i < BARRIER_LOCATIONS+BUMPED; i++) {
             for (int j=0; j < POSSIBLE_ACTIONS; j++) {
                 System.out.print(this.q[i][j] + ",");

@@ -272,10 +272,11 @@ public class Controller_MainGUI implements Initializable {
 
     @FXML
     void mazeMoveRobotKeyboard(KeyEvent event) {
-        // System.out.println(":" + event.getCode());
+        System.out.println(":" + event.getCode());
 
         if (SimulationMaze.getMazeFiles().size() > 0 && SimulationMaze.getSelectedMazeIndexNumber() != null && SimulationMaze.getSelectedMaze().getMazeRobots().size() > 0) {
             switch (event.getCode().toString()) {
+                // TODO weitere Tastatureingaben einbinden: E rotataRight, W,A,S,D, Y Messen
                 case "RIGHT":
                 case "D":
                     SimulationMaze.getSelectedMaze().getSelectedRobot().keyboardMoveRight();
@@ -323,7 +324,7 @@ public class Controller_MainGUI implements Initializable {
 
     @FXML
     void robotStartStop(ActionEvent event) {
-        SimulationMaze.getSelectedMaze().getSelectedRobot().startRobot();
+        SimulationMaze.getSelectedMaze().getSelectedRobot().start();
     }
 
     @FXML
