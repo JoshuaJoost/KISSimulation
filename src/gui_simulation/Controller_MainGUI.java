@@ -280,35 +280,28 @@ public class Controller_MainGUI implements Initializable {
                 case "RIGHT":
                 case "D":
                     SimulationMaze.getSelectedMaze().getSelectedRobot().keyboardMoveRight();
-                    updateMaze(true);
                     break;
                 case "LEFT":
                 case "A":
                     SimulationMaze.getSelectedMaze().getSelectedRobot().keyboardMoveLeft();
-                    updateMaze(true);
                     break;
                 case "DOWN":
                 case "S":
                     SimulationMaze.getSelectedMaze().getSelectedRobot().keyboardMoveDown();
-                    updateMaze(true);
                     break;
                 case "UP":
                 case "W":
                     SimulationMaze.getSelectedMaze().getSelectedRobot().keyboardMoveUp();
-                    updateMaze(true);
                     break;
                 case "Q":
                     SimulationMaze.getSelectedMaze().getSelectedRobot().keyboardRotateForwardLeft();
-                    updateMaze(true);
                     break;
                 case "E":
                     SimulationMaze.getSelectedMaze().getSelectedRobot().keyboardRotateForwardRight();
-                    updateMaze(true);
                     break;
                 case "Y":
                 case "Z":
                     SimulationMaze.getSelectedMaze().getSelectedRobot().keyboardLook();
-                    updateMaze(true);
                     break;
             }
         }
@@ -406,8 +399,7 @@ public class Controller_MainGUI implements Initializable {
         }
     }
 
-    // TODO Zeige Lookfelder an
-    private void updateMaze(boolean drawRobot) {
+    public void updateMaze(boolean drawRobot) {
         drawMaze();
 
         if (drawRobot) {
@@ -469,7 +461,7 @@ public class Controller_MainGUI implements Initializable {
 
         for (int i = 0; i < files.length; i++) {
             if (files[i].isFile() && files[i].getName().startsWith("maze")) {
-                SimulationMaze.addMazefileTableData(files[i].getName(), Controller_MainGUI.mazePaneX, Controller_MainGUI.mazePaneY);
+                SimulationMaze.addMazefileTableData(files[i].getName(), Controller_MainGUI.mazePaneX, Controller_MainGUI.mazePaneY, this);
             }
         }
 

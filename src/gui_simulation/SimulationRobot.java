@@ -223,6 +223,12 @@ public class SimulationRobot implements Roboter {
         return "Nr. " + robotNumber + " Name: " + robotName + " Pos: " + stringPosition;
     }
 
+    private void callGUIUpdateMethod(){
+        if((int)SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getNr() == SimulationMaze.getSelectedMaze().getNr()){
+            SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getFxmlMainController().updateMaze(true);
+        }
+    }
+
     private void moveUp() {
         clearDistanceData();
         System.out.println("UP");
@@ -232,6 +238,7 @@ public class SimulationRobot implements Roboter {
             }
 
             changeHeadPosition();
+            callGUIUpdateMethod();
         } else {
             isBumped();
         }
@@ -246,6 +253,7 @@ public class SimulationRobot implements Roboter {
             }
 
             changeHeadPosition();
+            callGUIUpdateMethod();
         } else {
             isBumped();
         }
@@ -260,6 +268,7 @@ public class SimulationRobot implements Roboter {
             }
 
             changeHeadPosition();
+            callGUIUpdateMethod();
         } else {
             isBumped();
         }
@@ -274,6 +283,7 @@ public class SimulationRobot implements Roboter {
             }
 
             changeHeadPosition();
+            callGUIUpdateMethod();
         } else {
             isBumped();
         }
@@ -441,6 +451,8 @@ public class SimulationRobot implements Roboter {
                 this.distanceData[2] = this.distanceDataFieldsRight.size();
                 break;
         }
+
+        callGUIUpdateMethod();
     }
 
     @Override
@@ -538,6 +550,7 @@ public class SimulationRobot implements Roboter {
             this.sizeY = tmpSizeX;
 
             changeHeadPosition();
+            callGUIUpdateMethod();
         } else {
             isBumped();
         }
@@ -589,6 +602,7 @@ public class SimulationRobot implements Roboter {
             this.sizeY = tmpSizeX;
 
             changeHeadPosition();
+            callGUIUpdateMethod();
         } else {
             isBumped();
         }

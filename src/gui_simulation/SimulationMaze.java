@@ -27,6 +27,8 @@ public class SimulationMaze {
     private static final SimpleStringProperty SELECTED_TEXT = new SimpleStringProperty("yep");
     private static final SimpleStringProperty NOT_SELECTED_TEXT = new SimpleStringProperty("");
 
+    // Controller
+    private final Controller_MainGUI fxmlMainController;
     // Labyrinth Table
     private final Integer nr;
     private final SimpleStringProperty FILE_NAME;
@@ -41,10 +43,11 @@ public class SimulationMaze {
     private Integer selectedRobotNumber = null;
     public int uniqueIndexNumberOfMazeRobot = 0;
 
-    private SimulationMaze(String filename, int mazePaneX, int mazePaneY) {
+    private SimulationMaze(String filename, int mazePaneX, int mazePaneY, Controller_MainGUI fxmlMainController) {
         nr = (++numberOfMazeFiles);
         FILE_NAME = new SimpleStringProperty(filename);
         selectedMazeText = new SimpleStringProperty("");
+        this.fxmlMainController = fxmlMainController;
 
         Integer mazeSizeX = null;
         Integer mazeSizeY = null;
@@ -100,8 +103,8 @@ public class SimulationMaze {
         this.mazeDrawFields = mazeDrawFields;
     }
 
-    public static ArrayList<SimulationMaze> addMazefileTableData(String filename, int mazePaneX, int mazePaneY) {
-        mazeFiles.add(new SimulationMaze(filename, mazePaneX, mazePaneY));
+    public static ArrayList<SimulationMaze> addMazefileTableData(String filename, int mazePaneX, int mazePaneY, Controller_MainGUI fxmlMainController) {
+        mazeFiles.add(new SimulationMaze(filename, mazePaneX, mazePaneY, fxmlMainController));
         return mazeFiles;
     }
 
@@ -141,6 +144,10 @@ public class SimulationMaze {
     @Override
     public String toString() {
         return "Nr. <" + nr + "> Dateiname: <" + FILE_NAME.getValue() + "> Ausgewählt Text: <" + selectedMazeText.getValue() + ">";
+    }
+
+    public Controller_MainGUI getFxmlMainController(){
+        return this.fxmlMainController;
     }
 
     public int getAndSetUniqueIndexNumberOfMazeRobot(){
