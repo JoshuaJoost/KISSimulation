@@ -12,7 +12,6 @@ import java.util.ArrayList;
 public class SimulationMaze {
 
     // File
-    // TODO Controller umbauen, soll nur noch hier drauf zugreifen
     public static final char mazeWallSymbol = '#';
     public static final char mazeVoidSymbol = ' ';
 

@@ -12,6 +12,11 @@ public class SimulationRobot implements Roboter {
     private static final Color DEFAULT_ROBOT_BODY_COLOR = Color.rgb(55, 109, 19);
     private static final Color DEFAULT_ROBOT_HEAD_COLOR = Color.rgb(255, 0, 0);
     private static final Color DEFAULT_MEASURE_DISTANCE = Color.rgb(255,255,0);
+    // Roboter Aktionen
+    private static final int DRIVE_FORWARD = 0;
+    private static final int DRIVE_LEFT = 1;
+    private static final int DRIVE_RIGHT = 2;
+    private static final int DRIVE_BACKWARD = 3;
 
     // Roboter Table
     private final String robotName;
@@ -400,7 +405,20 @@ public class SimulationRobot implements Roboter {
     // Roboter Interface Methods
     @Override
     public void doAction(int action) {
-
+        switch(action){
+            case SimulationRobot.DRIVE_FORWARD:
+                this.forward();
+                break;
+            case SimulationRobot.DRIVE_RIGHT:
+                this.right();
+                break;
+            case SimulationRobot.DRIVE_BACKWARD:
+                this.backward();
+                break;
+            case SimulationRobot.DRIVE_LEFT:
+                this.left();
+                break;
+        }
     }
 
     @Override

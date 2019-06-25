@@ -272,11 +272,10 @@ public class Controller_MainGUI implements Initializable {
 
     @FXML
     void mazeMoveRobotKeyboard(KeyEvent event) {
-        System.out.println(":" + event.getCode());
+        // System.out.println(":" + event.getCode());
 
         if (SimulationMaze.getMazeFiles().size() > 0 && SimulationMaze.getSelectedMazeIndexNumber() != null && SimulationMaze.getSelectedMaze().getMazeRobots().size() > 0) {
             switch (event.getCode().toString()) {
-                // TODO weitere Tastatureingaben einbinden: E rotataRight, W,A,S,D, Y Messen
                 case "RIGHT":
                 case "D":
                     SimulationMaze.getSelectedMaze().getSelectedRobot().keyboardMoveRight();
@@ -312,44 +311,6 @@ public class Controller_MainGUI implements Initializable {
         mazePane.requestFocus();
     }
 
-//    @FXML
-//    void mazeMoveRobot(KeyEvent event) {
-//        System.out.println(":" + event.getCode());
-//        if (SimulationRobot.getIndexSelectedRobot() != null) {
-//            // TODO switch Kopfteil
-//            boolean freeFields = true;
-//            int[] sortedPositions = SimulationRobot.getSelectedRobot().getPosition();
-//            Arrays.sort(sortedPositions);
-//            switch (event.getCode().toString()) {
-//                case "RIGHT":
-//                    // TODO Roboter nach rechts bewegen
-//                    SimulationRobot.getSelectedRobot().keyboardMoveRight();
-//                    updateMaze(true);
-//                    break;
-//                case "LEFT":
-//                    // TODO Roboter nach links bewegen
-//                    SimulationRobot.getSelectedRobot().keyboardMoveLeft();
-//                    updateMaze(true);
-//                    break;
-//                case "DOWN":
-//                    SimulationRobot.getSelectedRobot().keyboardMoveDown();
-//                    updateMaze(true);
-//                    break;
-//                case "UP":
-//                    // TODO an Position des Kopfes anpassen
-//                    SimulationRobot.getSelectedRobot().keyboardMoveUp();
-//                    updateMaze(true);
-//                    break;
-//                case "Q": // Nach links drehen
-//                    SimulationRobot.getSelectedRobot().keyboardRotateForwardLeft();
-//                    updateMaze(true);
-//                    break;
-//                default: // TODO noch auf andere Tastatureingaben reagieren? z.B. zum Drehen
-//                    break;
-//            }
-//        }
-//    }
-
     @FXML
     void robotDelete(ActionEvent event) {
 
@@ -362,7 +323,7 @@ public class Controller_MainGUI implements Initializable {
 
     @FXML
     void robotStartStop(ActionEvent event) {
-
+        SimulationMaze.getSelectedMaze().getSelectedRobot().doAction();
     }
 
     @FXML
