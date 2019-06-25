@@ -378,9 +378,9 @@ public class SimulationRobot implements Roboter {
 
     private ArrayList<Integer> getDistanceDataRight(int startValue){
         ArrayList<Integer> distanceDataRight = new ArrayList<>();
-//
+
         boolean freeField = true;
-        int x = startValue; //1;
+        int x = startValue;
         while(freeField){
             if(SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getIndexMazeFreeFields().contains(this.headPosition.get(0) + x)){
                 distanceDataRight.add(this.headPosition.get(0) + x);
@@ -396,19 +396,11 @@ public class SimulationRobot implements Roboter {
     private ArrayList<Integer> getDistanceDataBelow(int startValue){
         ArrayList<Integer> distanceDataBelow = new ArrayList<>();
 
-//        boolean freeField = true;
-//        for(int y = 1; freeField && this.headPosition.get(0) + y * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY() <= SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY() * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeX(); y++){
-//            if(SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getIndexMazeFreeFields().contains(this.headPosition.get(0) + y * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY())){
-//                distanceDataBelow.add(this.headPosition.get(0) + y * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY());
-//            } else {
-//                freeField = false;
-//            }
-//        }
         boolean freeFields = true;
-        int y = startValue; // -1
+        int y = startValue;
         while(freeFields){
-            if(SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getIndexMazeFreeFields().contains(this.headPosition.get(0) + y * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY())){
-                distanceDataBelow.add(this.headPosition.get(0) + y * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY());
+            if(SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getIndexMazeFreeFields().contains(this.headPosition.get(0) - y * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY())){
+                distanceDataBelow.add(this.headPosition.get(0) - y * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY());
             } else {
                 freeFields = false;
             }
@@ -422,7 +414,7 @@ public class SimulationRobot implements Roboter {
         ArrayList<Integer> distanceDataLeft = new ArrayList<>();
 
         boolean freeFields = true;
-        int x = starValue; // -1
+        int x = starValue;
         while(freeFields){
             if(SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getIndexMazeFreeFields().contains(this.headPosition.get(0) + x)){
                 distanceDataLeft.add(this.headPosition.get(0) + x);
@@ -611,8 +603,7 @@ public class SimulationRobot implements Roboter {
                 this.distanceData[2] = this.distanceDataFieldsRight.size();
                 break;
             case 1:
-                System.out.println("hd: " + this.headDirection);
-                this.distanceDataFieldsLeft.addAll(getDistanceDataAbove(0));
+                this.distanceDataFieldsLeft.addAll(getDistanceDataAbove(-2));
                 this.distanceData[0] = this.distanceDataFieldsLeft.size();
                 this.distanceDataFieldsFront.addAll(getDistanceDataRight(1));
                 this.distanceData[1] = this.distanceDataFieldsFront.size();
@@ -622,13 +613,13 @@ public class SimulationRobot implements Roboter {
             case 2:
                 this.distanceDataFieldsLeft.addAll(getDistanceDataRight(2));
                 this.distanceData[0] = this.distanceDataFieldsLeft.size();
-                this.distanceDataFieldsFront.addAll(getDistanceDataBelow(1));
+                this.distanceDataFieldsFront.addAll(getDistanceDataBelow(-1));
                 this.distanceData[1] = this.distanceDataFieldsFront.size();
                 this.distanceDataFieldsRight.addAll(getDistanceDataLeft(-2));
                 this.distanceData[2] = this.distanceDataFieldsRight.size();
                 break;
             case 3:
-                this.distanceDataFieldsLeft.addAll(getDistanceDataBelow(2));
+                this.distanceDataFieldsLeft.addAll(getDistanceDataBelow(-2));
                 this.distanceData[0] = this.distanceDataFieldsLeft.size();
                 this.distanceDataFieldsFront.addAll(getDistanceDataLeft(-1));
                 this.distanceData[1] = this.distanceDataFieldsFront.size();
