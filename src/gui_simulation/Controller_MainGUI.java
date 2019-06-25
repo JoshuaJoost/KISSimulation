@@ -280,35 +280,28 @@ public class Controller_MainGUI implements Initializable {
                 case "RIGHT":
                 case "D":
                     SimulationMaze.getSelectedMaze().getSelectedRobot().keyboardMoveRight();
-                    updateMaze(true);
                     break;
                 case "LEFT":
                 case "A":
                     SimulationMaze.getSelectedMaze().getSelectedRobot().keyboardMoveLeft();
-                    updateMaze(true);
                     break;
                 case "DOWN":
                 case "S":
                     SimulationMaze.getSelectedMaze().getSelectedRobot().keyboardMoveDown();
-                    updateMaze(true);
                     break;
                 case "UP":
                 case "W":
                     SimulationMaze.getSelectedMaze().getSelectedRobot().keyboardMoveUp();
-                    updateMaze(true);
                     break;
                 case "Q":
                     SimulationMaze.getSelectedMaze().getSelectedRobot().keyboardRotateForwardLeft();
-                    updateMaze(true);
                     break;
                 case "E":
                     SimulationMaze.getSelectedMaze().getSelectedRobot().keyboardRotateForwardRight();
-                    updateMaze(true);
                     break;
                 case "Y":
                 case "Z":
                     SimulationMaze.getSelectedMaze().getSelectedRobot().keyboardLook();
-                    updateMaze(true);
                     break;
             }
         }
@@ -318,44 +311,6 @@ public class Controller_MainGUI implements Initializable {
     void focusMazePane(MouseEvent event) {
         mazePane.requestFocus();
     }
-
-//    @FXML
-//    void mazeMoveRobot(KeyEvent event) {
-//        System.out.println(":" + event.getCode());
-//        if (SimulationRobot.getIndexSelectedRobot() != null) {
-//            // TODO switch Kopfteil
-//            boolean freeFields = true;
-//            int[] sortedPositions = SimulationRobot.getSelectedRobot().getPosition();
-//            Arrays.sort(sortedPositions);
-//            switch (event.getCode().toString()) {
-//                case "RIGHT":
-//                    // TODO Roboter nach rechts bewegen
-//                    SimulationRobot.getSelectedRobot().keyboardMoveRight();
-//                    updateMaze(true);
-//                    break;
-//                case "LEFT":
-//                    // TODO Roboter nach links bewegen
-//                    SimulationRobot.getSelectedRobot().keyboardMoveLeft();
-//                    updateMaze(true);
-//                    break;
-//                case "DOWN":
-//                    SimulationRobot.getSelectedRobot().keyboardMoveDown();
-//                    updateMaze(true);
-//                    break;
-//                case "UP":
-//                    // TODO an Position des Kopfes anpassen
-//                    SimulationRobot.getSelectedRobot().keyboardMoveUp();
-//                    updateMaze(true);
-//                    break;
-//                case "Q": // Nach links drehen
-//                    SimulationRobot.getSelectedRobot().keyboardRotateForwardLeft();
-//                    updateMaze(true);
-//                    break;
-//                default: // TODO noch auf andere Tastatureingaben reagieren? z.B. zum Drehen
-//                    break;
-//            }
-//        }
-//    }
 
     @FXML
     void robotDelete(ActionEvent event) {
@@ -369,7 +324,7 @@ public class Controller_MainGUI implements Initializable {
 
     @FXML
     void robotStartStop(ActionEvent event) {
-
+        SimulationMaze.getSelectedMaze().getSelectedRobot().start();
     }
 
     @FXML
@@ -406,8 +361,7 @@ public class Controller_MainGUI implements Initializable {
         }
     }
 
-    // TODO Zeige Lookfelder an
-    private void updateMaze(boolean drawRobot) {
+    public void updateMaze(boolean drawRobot) {
         drawMaze();
 
         if (drawRobot) {
@@ -469,7 +423,7 @@ public class Controller_MainGUI implements Initializable {
 
         for (int i = 0; i < files.length; i++) {
             if (files[i].isFile() && files[i].getName().startsWith("maze")) {
-                SimulationMaze.addMazefileTableData(files[i].getName(), Controller_MainGUI.mazePaneX, Controller_MainGUI.mazePaneY);
+                SimulationMaze.addMazefileTableData(files[i].getName(), Controller_MainGUI.mazePaneX, Controller_MainGUI.mazePaneY, this);
             }
         }
 

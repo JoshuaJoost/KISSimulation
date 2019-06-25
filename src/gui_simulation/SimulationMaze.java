@@ -40,11 +40,14 @@ public class SimulationMaze {
     private ArrayList<SimulationRobot> mazeRobots = new ArrayList<>();
     private Integer selectedRobotNumber = null;
     public int uniqueIndexNumberOfMazeRobot = 0;
+    // Controller
+    private final Controller_MainGUI FXML_MAIN_CONTROLLER;
 
-    private SimulationMaze(String filename, int mazePaneX, int mazePaneY) {
+    private SimulationMaze(String filename, int mazePaneX, int mazePaneY, Controller_MainGUI fxmlMainController) {
         nr = (++numberOfMazeFiles);
         FILE_NAME = new SimpleStringProperty(filename);
         selectedMazeText = new SimpleStringProperty("");
+        this.FXML_MAIN_CONTROLLER = fxmlMainController;
 
         Integer mazeSizeX = null;
         Integer mazeSizeY = null;
@@ -100,8 +103,8 @@ public class SimulationMaze {
         this.mazeDrawFields = mazeDrawFields;
     }
 
-    public static ArrayList<SimulationMaze> addMazefileTableData(String filename, int mazePaneX, int mazePaneY) {
-        mazeFiles.add(new SimulationMaze(filename, mazePaneX, mazePaneY));
+    public static ArrayList<SimulationMaze> addMazefileTableData(String filename, int mazePaneX, int mazePaneY, Controller_MainGUI fxmlMainController) {
+        mazeFiles.add(new SimulationMaze(filename, mazePaneX, mazePaneY, fxmlMainController));
         return mazeFiles;
     }
 
@@ -141,6 +144,10 @@ public class SimulationMaze {
     @Override
     public String toString() {
         return "Nr. <" + nr + "> Dateiname: <" + FILE_NAME.getValue() + "> Ausgewählt Text: <" + selectedMazeText.getValue() + ">";
+    }
+
+    public Controller_MainGUI getFXML_MAIN_CONTROLLER(){
+        return this.FXML_MAIN_CONTROLLER;
     }
 
     public int getAndSetUniqueIndexNumberOfMazeRobot(){
