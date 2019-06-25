@@ -378,7 +378,7 @@ public class SimulationRobot implements Roboter {
 
     private ArrayList<Integer> getDistanceDataRight(int startValue){
         ArrayList<Integer> distanceDataRight = new ArrayList<>();
-
+//
         boolean freeField = true;
         int x = startValue; //1;
         while(freeField){
