@@ -199,12 +199,6 @@ public class SimulationMaze {
         return false;
     }
 
-//    public boolean changeSelectedRobot(int indexNewSelectedRobot){
-//        if(this.mazeRobots.size() > 0 && indexNewSelectedRobot <= this.mazeRobots.size()){
-//
-//        }
-//    }
-
     public Integer getMazeSizeX() {
         return this.mazeSizeX;
     }

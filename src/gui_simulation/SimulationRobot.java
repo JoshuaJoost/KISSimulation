@@ -225,7 +225,9 @@ public class SimulationRobot implements Roboter {
 
     private void callGUIUpdateMethod(){
         if((int)SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getNr() == SimulationMaze.getSelectedMaze().getNr()){
-            SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getFxmlMainController().updateMaze(true);
+            if(this.uniqueIndexNumberOfMazeRobot == SimulationMaze.getSelectedMaze().getSelectedRobot().getUniqueIndexNumberOfMazeRobot()) {
+                SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getFxmlMainController().updateMaze(true);
+            }
         }
     }
 
