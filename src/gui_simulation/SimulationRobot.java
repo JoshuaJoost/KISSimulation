@@ -1,5 +1,8 @@
 package gui_simulation;
 
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
@@ -11,7 +14,7 @@ public class SimulationRobot implements Roboter {
     private static final String NOT_SELECTED_TEXT = "";
     private static final Color DEFAULT_ROBOT_BODY_COLOR = Color.rgb(55, 109, 19);
     private static final Color DEFAULT_ROBOT_HEAD_COLOR = Color.rgb(255, 0, 0);
-    private static final Color DEFAULT_MEASURE_DISTANCE = Color.rgb(255,255,0);
+    private static final Color DEFAULT_MEASURE_DISTANCE = Color.rgb(255, 255, 0);
     // Roboter Aktionen
     private static final int DRIVE_FORWARD = 0;
     private static final int DRIVE_LEFT = 1;
@@ -82,15 +85,15 @@ public class SimulationRobot implements Roboter {
         return new SimulationRobot(robotPixelX, robotPixelY, position);
     }
 
-    public ArrayList<Integer> getDistanceDataFieldsLeft(){
+    public ArrayList<Integer> getDistanceDataFieldsLeft() {
         return this.distanceDataFieldsLeft;
     }
 
-    public ArrayList<Integer> getDistanceDataFieldsFront(){
+    public ArrayList<Integer> getDistanceDataFieldsFront() {
         return this.distanceDataFieldsFront;
     }
 
-    public ArrayList<Integer> getDistanceDataFieldsRight(){
+    public ArrayList<Integer> getDistanceDataFieldsRight() {
         return this.distanceDataFieldsRight;
     }
 
@@ -118,8 +121,8 @@ public class SimulationRobot implements Roboter {
         }
     }
 
-    public Color getMeasureDistanceColor(){
-        if(this.measureDistanceColor == null){
+    public Color getMeasureDistanceColor() {
+        if (this.measureDistanceColor == null) {
             return DEFAULT_MEASURE_DISTANCE;
         } else {
             return this.measureDistanceColor;
@@ -228,9 +231,9 @@ public class SimulationRobot implements Roboter {
         return "Nr. " + robotNumber + " Name: " + robotName + " Pos: " + stringPosition;
     }
 
-    private void callGUIUpdateMethod(){
-        if((int)SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getNr() == SimulationMaze.getSelectedMaze().getNr()){
-            if(this.uniqueIndexNumberOfMazeRobot == SimulationMaze.getSelectedMaze().getSelectedRobot().getUniqueIndexNumberOfMazeRobot()) {
+    private void callGUIUpdateMethod() {
+        if ((int) SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getNr() == SimulationMaze.getSelectedMaze().getNr()) {
+            if (this.uniqueIndexNumberOfMazeRobot == SimulationMaze.getSelectedMaze().getSelectedRobot().getUniqueIndexNumberOfMazeRobot()) {
                 SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getFxmlMainController().updateMaze(true);
             }
         }
@@ -324,16 +327,16 @@ public class SimulationRobot implements Roboter {
         right();
     }
 
-    public void keyboardLook(){
+    public void keyboardLook() {
         look();
     }
 
-    private ArrayList<Integer> getDistanceDataAbove(){
+    private ArrayList<Integer> getDistanceDataAbove() {
         ArrayList<Integer> distanceDataAbove = new ArrayList<>();
 
         boolean freeField = true;
-        for(int y = -1; freeField && this.headPosition.get(0) + y * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY() >= 0; y--){
-            if(SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getIndexMazeFreeFields().contains(this.headPosition.get(0) + y * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY())) {
+        for (int y = -1; freeField && this.headPosition.get(0) + y * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY() >= 0; y--) {
+            if (SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getIndexMazeFreeFields().contains(this.headPosition.get(0) + y * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY())) {
                 distanceDataAbove.add(this.headPosition.get(0) + y * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY());
             } else {
                 freeField = false;
@@ -343,15 +346,15 @@ public class SimulationRobot implements Roboter {
         return distanceDataAbove;
     }
 
-    private ArrayList<Integer> getDistanceDataRight(){
+    private ArrayList<Integer> getDistanceDataRight() {
         ArrayList<Integer> distanceDataRight = new ArrayList<>();
 
         boolean freeField = true;
         int x = 1;
-        while(freeField){
-            if(SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getIndexMazeFreeFields().contains(this.headPosition.get(0) + x)){
+        while (freeField) {
+            if (SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getIndexMazeFreeFields().contains(this.headPosition.get(0) + x)) {
                 distanceDataRight.add(this.headPosition.get(0) + x);
-            } else{
+            } else {
                 freeField = false;
             }
             x++;
@@ -360,12 +363,12 @@ public class SimulationRobot implements Roboter {
         return distanceDataRight;
     }
 
-    private ArrayList<Integer> getDistanceDataBelow(){
+    private ArrayList<Integer> getDistanceDataBelow() {
         ArrayList<Integer> distanceDataBelow = new ArrayList<>();
 
         boolean freeField = true;
-        for(int y = 1; freeField && this.headPosition.get(0) + y * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY() <= SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY() * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeX(); y++){
-            if(SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getIndexMazeFreeFields().contains(this.headPosition.get(0) + y * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY())){
+        for (int y = 1; freeField && this.headPosition.get(0) + y * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY() <= SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY() * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeX(); y++) {
+            if (SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getIndexMazeFreeFields().contains(this.headPosition.get(0) + y * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY())) {
                 distanceDataBelow.add(this.headPosition.get(0) + y * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY());
             } else {
                 freeField = false;
@@ -375,13 +378,13 @@ public class SimulationRobot implements Roboter {
         return distanceDataBelow;
     }
 
-    private ArrayList<Integer> getDistanceDataLeft(){
+    private ArrayList<Integer> getDistanceDataLeft() {
         ArrayList<Integer> distanceDataLeft = new ArrayList<>();
 
         boolean freeFields = true;
         int x = -1;
-        while(freeFields){
-            if(SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getIndexMazeFreeFields().contains(this.headPosition.get(0) + x)){
+        while (freeFields) {
+            if (SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getIndexMazeFreeFields().contains(this.headPosition.get(0) + x)) {
                 distanceDataLeft.add(this.headPosition.get(0) + x);
             } else {
                 freeFields = false;
@@ -392,7 +395,7 @@ public class SimulationRobot implements Roboter {
         return distanceDataLeft;
     }
 
-    public void clearDistanceData(){
+    public void clearDistanceData() {
         this.distanceData[0] = -1;
         this.distanceData[1] = -1;
         this.distanceData[2] = -1;
@@ -402,10 +405,46 @@ public class SimulationRobot implements Roboter {
         this.distanceDataFieldsRight.clear();
     }
 
+    public void startRobot() {
+        System.out.println("Started");
+
+        for(int i = 0; i < 50; i++) {
+            Task<Void> sleeper = new Task<Void>() {
+                @Override
+                protected Void call() throws Exception {
+                    try {
+                        System.err.println("Sleep");
+                        Thread.sleep(5000);
+                        System.err.println("Awaken");
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                }
+            };
+            sleeper.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+                @Override
+                public void handle(WorkerStateEvent event) {
+                    int rnd = (int)(Math.random() * 4);
+                    System.out.println("action: " + rnd);
+                    doAction(rnd);
+                }
+            });
+
+            new Thread(sleeper).start();
+//            sleeper.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+//                @Override
+//                public void handle(WorkerStateEvent event) {
+//                    // SimulationMaze.getSelectedMaze().getSelectedRobot().doAction(rnd);
+//                }
+//            });
+        }
+    }
+
     // Roboter Interface Methods
     @Override
     public void doAction(int action) {
-        switch(action){
+        switch (action) {
             case SimulationRobot.DRIVE_FORWARD:
                 this.forward();
                 break;
@@ -437,7 +476,7 @@ public class SimulationRobot implements Roboter {
         this.distanceDataFieldsFront.clear();
         this.distanceDataFieldsRight.clear();
 
-        switch(this.headDirection){
+        switch (this.headDirection) {
             case 0:
                 this.distanceDataFieldsLeft.addAll(getDistanceDataLeft());
                 this.distanceData[0] = this.distanceDataFieldsLeft.size();

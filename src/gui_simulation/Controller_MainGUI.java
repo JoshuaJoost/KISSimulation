@@ -323,7 +323,7 @@ public class Controller_MainGUI implements Initializable {
 
     @FXML
     void robotStartStop(ActionEvent event) {
-        SimulationMaze.getSelectedMaze().getSelectedRobot().doAction();
+        SimulationMaze.getSelectedMaze().getSelectedRobot().startRobot();
     }
 
     @FXML
