@@ -2,32 +2,21 @@ package gui_simulation;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-public class QLearningAgent {
-    private double epsilon = 1;
-    private double alpha = 0.5; // Lernrate (0..1)
-    private double gamma = 0.8; // Bewertungsfaktor (0..1)
+public class QLearningAgentMovement {
+
+    public double epsilon = 1;
+    public double alpha = 0.5; // Lernrate (0..1)
+    public double gamma = 0.8; // Bewertungsfaktor (0..1)
     private double q[][]; // Q-Learning-Array
-    private static final int POSSIBLE_ACTIONS = 4;
-    /*
-     * possible actions: DRIVE_FORWARD = 0, DRIVE_LEFT = 1,
-     * DRIVE_RIGHT = 2, DRIVE_BACKWARD = 3
-     */
-    private static final int BARRIER_LOCATIONS = 8;
-    // is the robot bumped or not? 1 state for the barrier bumped and one state for the location not bumped
-    // dhort of no barrier
-    private static final int BUMPED = 10;
-    /*
-     * 8 barrier states: no barrier, front, left, right, front+left, front+right, right+left, front+right+left
-     */
-    private static final int CAN_ROTATE = 3; //left, right, right & Left
+    private static final int POSSIBLE_ACTIONS = 4; // 2^4 = 16 Mögliche Zustände
 
 
-    public QLearningAgent() {
+    public QLearningAgentMovement() {
         System.out.println("Initialisiere QTable");
-        this.q = new double[BARRIER_LOCATIONS+BUMPED+CAN_ROTATE][POSSIBLE_ACTIONS];
+        this.q = new double[(int) Math.pow(2, POSSIBLE_ACTIONS)][POSSIBLE_ACTIONS];
         // initalize q
-        for(int i = 0; i < this.q.length; i++) {
-            for(int j=0; j < this.q[i].length; j++) {
+        for (int i = 0; i < this.q.length; i++) {
+            for (int j = 0; j < this.q[i].length; j++) {
                 // values between 0 and 0.1 without 0.1
                 this.q[i][j] = Math.random() / 10;
             }
@@ -35,14 +24,14 @@ public class QLearningAgent {
         printQTable();
     }
 
-    public QLearningAgent(double [][] array) {
+    public QLearningAgentMovement(double[][] array) {
         this.q = array;
         printQTable();
     }
 
     public void printQTable() {
-        for (int i = 0; i < BARRIER_LOCATIONS+BUMPED+CAN_ROTATE; i++) {
-            for (int j=0; j < POSSIBLE_ACTIONS; j++) {
+        for (int i = 0; i < (int) Math.pow(2, POSSIBLE_ACTIONS); i++) {
+            for (int j = 0; j < POSSIBLE_ACTIONS; j++) {
                 System.out.print(this.q[i][j] + ",");
             }
             System.out.println();
@@ -52,10 +41,11 @@ public class QLearningAgent {
     /**
      * Lernt durch die übergebenen Zustände, ob die Aktion erfolgreich war und
      * speichert die Werte in das q-array.
-     * @param s: Aktueller Zustand
+     *
+     * @param s:      Aktueller Zustand
      * @param s_next: Nächster Zustand
-     * @param a: Aktion
-     * @param r: Belohnung
+     * @param a:      Aktion
+     * @param r:      Belohnung
      */
     public void learn(int s, int s_next, int a, double r) {
         this.q[s][a] += this.alpha * (r + this.gamma * (this.q[s_next][actionWithBestRating(s_next)]) - q[s][a]);
@@ -63,6 +53,7 @@ public class QLearningAgent {
 
     /**
      * Wählt die Aktion mit der besten Rate aus
+     *
      * @param s: Zustand s
      * @return: Gibt die Aktion als int zurück.
      */
@@ -80,6 +71,7 @@ public class QLearningAgent {
 
     /**
      * Wählt eine zufällige Aktion anhand des Zustands aus
+     *
      * @param s: Zustand
      * @return: Gibt die Aktion als int zurück.
      */
