@@ -64,6 +64,11 @@ public class SimulationRobot implements Roboter {
     private int iterations = 0;
     private int averageImpulses = 0;
 
+    // Bestimmen der bestmöglichen Lern-Variablen
+    private int epsilon = 0;
+    private int alpha = 0;
+    private int gamma = 0;
+
 //    private int stateCanRotateRight = 0;
 //    private int stateCanRotateLeft = 0;
 //    private int stateCanRotateLeftRight = 0;
@@ -349,19 +354,27 @@ public class SimulationRobot implements Roboter {
     }
 
     public void keyboardMoveUp() {
-        moveUp();
+        if(SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).aboveFree(this)) {
+            moveUp();
+        }
     }
 
     public void keyboardMoveDown() {
-        moveDown();
+        if(SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).belowFree(this)) {
+            moveDown();
+        }
     }
 
     public void keyboardMoveRight() {
-        moveRight();
+        if(SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).rightFree(this)) {
+            moveRight();
+        }
     }
 
     public void keyboardMoveLeft() {
-        moveLeft();
+        if(SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).leftFree(this)) {
+            moveLeft();
+        }
     }
 
     public void keyboardRotateForwardLeft() {
