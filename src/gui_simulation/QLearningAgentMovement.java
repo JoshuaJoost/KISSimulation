@@ -4,12 +4,11 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class QLearningAgentMovement {
 
-    public double epsilon = 0.35;
-    public double alpha = 0.87; // Lernrate (0..1)
-    public double gamma = 0.00; // Bewertungsfaktor (0..1)
+    public double epsilon = 0.7; // Zufällige Bewegung
+    public double alpha = 0.1; // Lernrate (0..1)
+    public double gamma = 0.90; // Bewertungsfaktor (0..1)
     private double q[][]; // Q-Learning-Array
     private static final int POSSIBLE_ACTIONS = 4; // 2^4 = 16 Mögliche Zustände
-
 
     public QLearningAgentMovement() {
         System.out.println("Initialisiere QTable");
@@ -18,7 +17,7 @@ public class QLearningAgentMovement {
         for (int i = 0; i < this.q.length; i++) {
             for (int j = 0; j < this.q[i].length; j++) {
                 // values between 0 and 0.1 without 0.1
-                this.q[i][j] = Math.random() / 10;
+                this.q[i][j] = 0;//Math.random() / 10;
             }
         }
         printQTable();
@@ -58,10 +57,11 @@ public class QLearningAgentMovement {
      * @return: Gibt die Aktion als int zurück.
      */
     public int actionWithBestRating(int s) {
-        double max = 0;
+        double max = Integer.MIN_VALUE;
         int index = 0;
+
         for (int i = 0; i < POSSIBLE_ACTIONS; i++) {
-            if (this.q[s][i] > max) {
+            if (this.q[s][i] >= max) {
                 max = this.q[s][i];
                 index = i;
             }
@@ -77,11 +77,34 @@ public class QLearningAgentMovement {
      */
     public int chooseAction(int s) {
         int a = 0;
-        if (Math.random() < this.epsilon) {
+        double rand = Math.random();
+        if (rand < this.epsilon) {
             // + 1 to have the last inclusive
             a = ThreadLocalRandom.current().nextInt(0, POSSIBLE_ACTIONS);
         } else {
+            //TODO wenn er die auswahlt zwischen verschiedenen Aktionen hat random zwischen diesen auswählen
             a = actionWithBestRating(s);
+
+            String table = "";
+            for(double i : this.q[s]){
+                table += i + " | ";
+            }
+            switch (a) {
+                case SimulationRobot.DRIVE_FORWARD:
+                    System.out.print("T:" + table + " -> Forward ");
+                    break;
+                case SimulationRobot.DRIVE_BACKWARD:
+                    System.out.print("T:" + table + " -> Backward");
+                    break;
+                case SimulationRobot.DRIVE_ROTATE_LEFT:
+                    System.out.print("T:" + table + " -> RLeft");
+                    break;
+                case SimulationRobot.DRIVE_ROTATE_RIGHT:
+                    System.out.print("T:" + table + " -> RRight");
+                    break;
+                default:
+                    System.out.print("Ungültige Aktion");
+            }
         }
         return a;
     }

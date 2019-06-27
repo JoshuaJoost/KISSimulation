@@ -16,6 +16,7 @@ public class SimulationMaze {
     // TODO Controller umbauen, soll nur noch hier drauf zugreifen
     public static final char mazeWallSymbol = '#';
     public static final char mazeVoidSymbol = ' ';
+    public static final char mazeTargetSymbol = 't';
 
     public static final Color mazeVoidColor = Color.rgb(255, 255, 255);
     public static final Color mazeWallColor = Color.rgb(0, 0, 0);
@@ -36,6 +37,7 @@ public class SimulationMaze {
     private final Integer mazeSizeX;
     private final Integer mazeSizeY;
     private final ArrayList<Integer> indexMazeFreeFields;
+    private final ArrayList<Integer> indexMazeTargetFields;
     private final ArrayList<Rectangle> mazeDrawFields;
     // Labyrinth Roboter
     private ArrayList<SimulationRobot> mazeRobots = new ArrayList<>();
@@ -54,6 +56,7 @@ public class SimulationMaze {
         Integer mazeSizeY = null;
         ArrayList<Rectangle> mazeDrawFields = new ArrayList<>();
         ArrayList<Integer> indexMazeFreeFields = new ArrayList<>();
+        ArrayList<Integer> indexMazeTargetFields = new ArrayList<>();
 
         BufferedReader br;
         try{
@@ -85,7 +88,11 @@ public class SimulationMaze {
                     } else if(mazeStringParts[y].charAt(x) == SimulationMaze.mazeVoidSymbol){
                         mazeDrawField.setFill(SimulationMaze.mazeVoidColor);
                         indexMazeFreeFields.add(mazeDrawFields.size());
-                    } else {
+                    } else if(mazeStringParts[y].charAt(x) == SimulationMaze.mazeTargetSymbol){
+                        mazeDrawField.setFill(SimulationMaze.mazeTargetColor);
+                        indexMazeFreeFields.add(mazeDrawFields.size());
+                        indexMazeTargetFields.add(mazeDrawFields.size());
+                    }else {
                         mazeDrawField.setFill(SimulationMaze.mazeErrorColor);
                     }
 
@@ -101,6 +108,7 @@ public class SimulationMaze {
         this.mazeSizeX = mazeSizeX;
         this.mazeSizeY = mazeSizeY;
         this.indexMazeFreeFields = indexMazeFreeFields;
+        this.indexMazeTargetFields = indexMazeTargetFields;
         this.mazeDrawFields = mazeDrawFields;
     }
 
@@ -153,6 +161,10 @@ public class SimulationMaze {
 
     public int getAndSetUniqueIndexNumberOfMazeRobot(){
         return this.uniqueIndexNumberOfMazeRobot++;
+    }
+
+    public ArrayList<Integer> getIndexMazeTargetFields(){
+        return this.indexMazeTargetFields;
     }
 
     public ArrayList<Integer> getIndexMazeFreeFields() {

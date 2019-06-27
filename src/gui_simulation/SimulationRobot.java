@@ -19,17 +19,18 @@ public class SimulationRobot implements Roboter {
     private static final int MIN_DISTANCE = 1;
 
     // Roboter Bewegung
-    private static final int DRIVE_FORWARD = 0;
-    private static final int DRIVE_ROTATE_LEFT = 1;
-    private static final int DRIVE_ROTATE_RIGHT = 2;
-    private static final int DRIVE_BACKWARD = 3;
+    public static final int DRIVE_FORWARD = 0;
+    public static final int DRIVE_ROTATE_LEFT = 1;
+    public static final int DRIVE_ROTATE_RIGHT = 2;
+    public static final int DRIVE_BACKWARD = 3;
 
     //Rewards - Learning Algorithmus
     private static final double REWARD_BUMPED = -1;
-    private static final double REWARD_DRIVE_BACK = 0.5;
-    private static final double REWARD_DRIVE_FORWARD = 0.5;
-    private static final double REWARD_DRIVE_ROTATE_RIGHT = 0.25;
-    private static final double REWARD_DRIVE_ROTATE_LEFT = 0.25;
+    private static final double REWARD_DRIVE_BACK = 0;
+    private static final double REWARD_DRIVE_FORWARD = 0;
+    private static final double REWARD_DRIVE_ROTATE_RIGHT = 0;
+    private static final double REWARD_DRIVE_ROTATE_LEFT = 0;
+    private static final double REWARD_DRIVE_TARGET = 1;
 
     // Bewegungskontrolle
     private boolean isBumped = false;
@@ -106,6 +107,7 @@ public class SimulationRobot implements Roboter {
     private int sizeY;
     // TODO position in ArrayList<Integer> konvertieren
     private int[] position;
+    private final int[] startPosition;
     private Color robotBodyColor = null;
     private Color robotHeadColor = null;
     private Color measureDistanceColor = null;
@@ -126,6 +128,13 @@ public class SimulationRobot implements Roboter {
         this.sizeX = robotPixelX;
         this.sizeY = robotPixelY;
         this.position = position;
+
+        ArrayList<Integer> tmpPositions = new ArrayList<>();
+        for(int i : this.position){
+            tmpPositions.add(i);
+        }
+
+        this.startPosition = OwnUtils.convertArrayListToIntArray(tmpPositions);
         this.headDirection = robotPixelX > robotPixelY ? 1 : 0;
         this.uniqueIndexNumberOfMazeRobot = SimulationMaze.getSelectedMaze().getAndSetUniqueIndexNumberOfMazeRobot();
         this.robotNumber = this.uniqueIndexNumberOfMazeRobot + 1;
@@ -156,6 +165,11 @@ public class SimulationRobot implements Roboter {
 //                this.headSize = 0;
 //                break;
 //        }
+        String sp = "";
+        for(int startPos : this.startPosition){
+            sp += startPos + "-";
+        }
+        System.out.println("StartPos: " + sp);
 
         changeHeadPosition();
     }
@@ -473,6 +487,20 @@ public class SimulationRobot implements Roboter {
         this.distanceDataFieldsRight.clear();
     }
 
+    public boolean targetReached() {
+        boolean reachedTarget = false;
+
+        for (int i = 0; i < this.position.length; i++) {
+            for (int j = 0; j < SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getIndexMazeTargetFields().size(); j++) {
+                if (this.position[i] == SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getIndexMazeTargetFields().get(j)) {
+                    reachedTarget = true;
+                }
+            }
+        }
+
+        return reachedTarget;
+    }
+
     public void start() {
         this.drived_look = 0;
         this.drived_rotateLeft = 0;
@@ -501,10 +529,8 @@ public class SimulationRobot implements Roboter {
         this.state1110 = 0;
         this.state1111 = 0;
 
-
-
-
-//        for (int i = 0; i < 1000000; i++) {
+        // Test QTabel
+//        for (int i = 0; i < 10000; i++) {
 //            //System.out.println("i: " + i);
 //            look();
 //            int s = findBarrier();
@@ -514,269 +540,406 @@ public class SimulationRobot implements Roboter {
 //            int sNext = findBarrier();
 //            this.lerningAlgorithmus.learn(s, sNext, a, reward);
 //        }
+//
+//        this.lerningAlgorithmus.printQTable();
+//        callGuiUpdateFunction();
 
+        // Lerndurchlauf
+        long startTime = System.currentTimeMillis();
+        double deltaE = 0.00;
+        int runs = 100;
+        for (int j = 0; j < runs; j++, deltaE += 0.01) {
+            ArrayList<Integer> tmpPositions = new ArrayList<>();
+            for(int i : this.startPosition){
+                tmpPositions.add(i);
+            }
+            this.position = OwnUtils.convertArrayListToIntArray(tmpPositions);
 
+            lerningAlgorithmus.epsilon -= deltaE;
 
+            if (lerningAlgorithmus.epsilon < 0) {
+                lerningAlgorithmus.epsilon = 0;
+            }
+
+            boolean targetReached = false;
+            int i = 0;
+            while (!targetReached) {
+                targetReached = targetReached();
+                look();
+                int s = findBarrier();
+                int a = this.lerningAlgorithmus.chooseAction(s);
+                doAction(a);
+                // 0 Forward, 1 RLeft, 2 RRight, 3 Backward
+                System.out.print(" I: " + i);
+                System.out.println();
+                look();
+                int sNext = findBarrier();
+                this.lerningAlgorithmus.learn(s, sNext, a, reward);
+                i++;
+            }
+            System.out.println("I: " + i + " Target reached! In " + ((System.currentTimeMillis() - startTime) / 1000) + "s");
+        }
+
+//        this.drived_look = 0;
+//        this.drived_rotateLeft = 0;
+//        this.drived_backward = 0;
+//        this.drived_rotateRight = 0;
+//        this.drived_forward = 0;
+//        this.try_drived_forward = 0;
+//        this.try_drived_backward = 0;
+//        this.try_drived_rotateLeft = 0;
+//        this.try_drived_rotateRight = 0;
+//
+//        this.state0000 = 0;
+//        this.state0001 = 0;
+//        this.state0010 = 0;
+//        this.state0011 = 0;
+//        this.state0100 = 0;
+//        this.state0101 = 0;
+//        this.state0110 = 0;
+//        this.state0111 = 0;
+//        this.state1000 = 0;
+//        this.state1001 = 0;
+//        this.state1010 = 0;
+//        this.state1011 = 0;
+//        this.state1100 = 0;
+//        this.state1101 = 0;
+//        this.state1110 = 0;
+//        this.state1111 = 0;
+//
+//        // Probedurchlauf
+//        boolean targetReached = false;
+//        int i = 0;
+//
+//        ArrayList<Integer> tmpPositions = new ArrayList<>();
+//        for(int z : this.startPosition){
+//            tmpPositions.add(z);
+//        }
+//        this.position = OwnUtils.convertArrayListToIntArray(tmpPositions);
+//
+//        sp = "";
+//        for(int startPos : this.startPosition){
+//            sp += startPos + "-";
+//        }
+//        System.out.println("Vor Probedurchlauf - StartPos: " + sp);
+//
+//        while (!targetReached) {
+//            targetReached = targetReached();
+//            look();
+//            int s = findBarrier();
+//            int a = this.lerningAlgorithmus.chooseAction(s);
+//            doAction(a);
+//            look();
+//            int sNext = findBarrier();
+//            this.lerningAlgorithmus.learn(s, sNext, a, reward);
+//            i++;
+//
+//            String roboPos = "";
+//            for (int pos : this.position) {
+//                roboPos += pos + "-";
+//            }
+//            String targetPos = "";
+//            for (int tPos : SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getIndexMazeTargetFields()) {
+//                targetPos += tPos + "-";
+//            }
+//            System.out.println("I: " + i + " rPos: " + roboPos + " tPos: " + targetPos);
+//        }
+//        System.out.println("Target reached! In " + ((System.currentTimeMillis() - startTime) / 1000) + "s");
+//        System.out.println("Iterationen: " + i);
+//
+//        System.out.println("Bewegungsmuster:");
+//        System.out.println("vorwärts: " + this.drived_forward);
+//        System.out.println("vorwärts angestoßen: " + this.try_drived_forward);
+//        System.out.println("Zurück:" + this.drived_backward);
+//        System.out.println("hinten angestoßen: " + this.try_drived_backward);
+//        System.out.println("Rechtsrotation: " + this.drived_rotateRight);
+//        System.out.println("Bei Rechtsrotation angestoßen: " + this.try_drived_rotateRight);
+//        System.out.println("Linksrotation: " + this.drived_rotateLeft);
+//        System.out.println("Bei Linksrotation angestoßen: " + this.try_drived_rotateLeft);
+//        System.out.println("Geschaut: " + this.drived_look);
+//        System.out.println("Angestoßen: " + (this.try_drived_forward + this.try_drived_backward + this.try_drived_rotateRight + this.try_drived_rotateLeft));
+//        System.out.println();
+//        System.out.println("Statusmuster:");
+//        System.out.println("0000: " + this.state0000);
+//        System.out.println("0001: " + this.state0001);
+//        System.out.println("0010: " + this.state0010);
+//        System.out.println("0011: " + this.state0011);
+//        System.out.println("0100: " + this.state0100);
+//        System.out.println("0101: " + this.state0101);
+//        System.out.println("0110: " + this.state0110);
+//        System.out.println("0111: " + this.state0111);
+//        System.out.println("1000: " + this.state1000);
+//        System.out.println("1001: " + this.state1001);
+//        System.out.println("1010: " + this.state1010);
+//        System.out.println("1011: " + this.state1011);
+//        System.out.println("1100: " + this.state1100);
+//        System.out.println("1101: " + this.state1101);
+//        System.out.println("1110: " + this.state1110);
+//        System.out.println("1111: " + this.state1111);
+//        System.out.println("Angestoßen: " + (this.try_drived_forward + this.try_drived_backward + this.try_drived_rotateRight + this.try_drived_rotateLeft));
+//        System.out.println("Durchschnittliche Anstöße: " + this.averageImpulses);
+//
+//        this.lerningAlgorithmus.printQTable();
+//        callGuiUpdateFunction();
 
         // Bestimme beste Wertebelegung für alpha, gamma, epsilon
-        ArrayList<Double[]> bestValues75 = new ArrayList<>();
-        int testRun = 1000;
-        long startTime = System.currentTimeMillis();
-        for (double k = 0, g = 0; k < 100; k++, g += 0.01) {
-            System.out.println("Durchlauf: " + k + " aktuell verstrichene Zeit: " + ((System.currentTimeMillis() - startTime) / 1000) + "s");
-            System.out.println("Aktuell beste Werte: epsilon[" + this.bestEpsilon + "] alpha[" + this.bestAlpha + "] gamma[" + this.bestGamma + "] Fehler: " + (this.lowestImpulses * 100 / testRun) + "%");
-            lerningAlgorithmus.gamma = g;
-            for (double j = 0, a = 0; j < 100; j++, a += 0.01) {
-                lerningAlgorithmus.alpha = a;
-                for (double i = 0, e = 0; i < 100; i++, e += 0.01) {
-                    this.try_drived_forward = 0;
-                    this.try_drived_backward = 0;
-                    this.try_drived_rotateRight = 0;
-                    this.try_drived_rotateLeft = 0;
-                    lerningAlgorithmus.epsilon = e;
+//        ArrayList<Double[]> bestValues75 = new ArrayList<>();
+//        int testRun = 1000;
+//        long startTime = System.currentTimeMillis();
+//        for (double k = 0, g = 0; k < 100; k++, g += 0.01) {
+//            System.out.println("Durchlauf: " + k + " aktuell verstrichene Zeit: " + ((System.currentTimeMillis() - startTime) / 1000) + "s");
+//            System.out.println("Aktuell beste Werte: epsilon[" + this.bestEpsilon + "] alpha[" + this.bestAlpha + "] gamma[" + this.bestGamma + "] Fehler: " + (this.lowestImpulses * 100 / testRun) + "%");
+//            lerningAlgorithmus.gamma = g;
+//            for (double j = 0, a = 0; j < 100; j++, a += 0.01) {
+//                lerningAlgorithmus.alpha = a;
+//                for (double i = 0, e = 0; i < 100; i++, e += 0.01) {
+//                    this.try_drived_forward = 0;
+//                    this.try_drived_backward = 0;
+//                    this.try_drived_rotateRight = 0;
+//                    this.try_drived_rotateLeft = 0;
+//                    lerningAlgorithmus.epsilon = e;
+//
+//                    this.reward = 0;
+//                    for (int l = 0; l < testRun; l++) {
+//                        look();
+//                        int s = findBarrier();
+//                        int az = this.lerningAlgorithmus.chooseAction(s);
+//                        doAction(az);
+//                        look();
+//                        int sNext = findBarrier();
+//                        this.lerningAlgorithmus.learn(s, sNext, az, this.reward);
+//                    }
+//
+//                    if((this.try_drived_backward + this.try_drived_forward + this.try_drived_rotateRight + this.try_drived_rotateLeft) < 750){
+//                        System.out.println("< 75 - Value added: " + (this.try_drived_backward + this.try_drived_forward + this.try_drived_rotateRight + this.try_drived_rotateLeft) + " a[" + a + "] e[" + e + "]" + " g[" + g + "]");
+//                        Double[] values = {a,e,g};
+//                        bestValues75.add(values);
+//
+//                        if((this.try_drived_forward + this.try_drived_backward + this.try_drived_rotateLeft + this.try_drived_rotateLeft) < this.lowestImpulses){
+//                            this.bestAlpha = a;
+//                            this.bestEpsilon = e;
+//                            this.bestGamma = g;
+//                            this.lowestImpulses = (this.try_drived_forward + this.try_drived_backward + this.try_drived_rotateLeft + this.try_drived_rotateLeft);
+//                            System.out.println("Neue beste Fehlerrate: " + (this.lowestImpulses * 100 / testRun));
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        System.out.println("75er Durchlaufzeit: " + ((System.currentTimeMillis() - startTime) / 1000) + "s");
+//
+//        ArrayList<Double[]> bestValues50 = new ArrayList<>();
+//        testRun = 2000;
+//        for (int k = 0; k < bestValues75.size(); k++) {
+//            System.out.println("Durchlauf: " + k + " aktuell verstrichene Zeit: " + ((System.currentTimeMillis() - startTime) / 1000) + "s");
+//            System.out.println("Aktuell beste Werte: epsilon[" + this.bestEpsilon + "] alpha[" + this.bestAlpha + "] gamma[" + this.bestGamma + "] Fehler: " + (this.lowestImpulses * 100 / testRun) + "%");
+//            lerningAlgorithmus.gamma = bestValues75.get(k)[2];
+//            for (int j = 0; j < bestValues75.size(); j++) {
+//                lerningAlgorithmus.alpha = bestValues75.get(j)[0];
+//                for (int i = 0; i < bestValues75.size(); i++) {
+//                    this.try_drived_forward = 0;
+//                    this.try_drived_backward = 0;
+//                    this.try_drived_rotateRight = 0;
+//                    this.try_drived_rotateLeft = 0;
+//                    lerningAlgorithmus.epsilon = bestValues75.get(i)[1];
+//
+//                    this.reward = 0;
+//                    for (int l = 0; l < testRun; l++) {
+//                        look();
+//                        int s = findBarrier();
+//                        int az = this.lerningAlgorithmus.chooseAction(s);
+//                        doAction(az);
+//                        look();
+//                        int sNext = findBarrier();
+//                        this.lerningAlgorithmus.learn(s, sNext, az, this.reward);
+//                    }
+//
+//                    if((this.try_drived_backward + this.try_drived_forward + this.try_drived_rotateRight + this.try_drived_rotateLeft) < 1000){
+//                        System.out.println("< 50 - Value added: " + (this.try_drived_backward + this.try_drived_forward + this.try_drived_rotateRight + this.try_drived_rotateLeft) + " a[" + bestValues75.get(j)[0] + "] e[" + bestValues75.get(i)[1] + "]" + " g[" + bestValues75.get(k)[2] + "]");
+//                        Double[] values = {bestValues75.get(j)[0], bestValues75.get(i)[1], bestValues75.get(k)[2]};
+//                        bestValues50.add(values);
+//
+//                        if((this.try_drived_forward + this.try_drived_backward + this.try_drived_rotateLeft + this.try_drived_rotateLeft) < this.lowestImpulses){
+//                            this.bestAlpha = bestValues75.get(j)[0];
+//                            this.bestEpsilon = bestValues75.get(i)[1];
+//                            this.bestGamma = bestValues75.get(k)[2];
+//                            this.lowestImpulses = (this.try_drived_forward + this.try_drived_backward + this.try_drived_rotateLeft + this.try_drived_rotateLeft);
+//                            System.out.println("Neue beste Fehlerrate: " + (this.lowestImpulses * 100 / testRun));
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        System.out.println("50er Durchlaufzeit: " + ((System.currentTimeMillis() - startTime) / 1000) + "s");
+//
+//        ArrayList<Double[]> bestValues25 = new ArrayList<>();
+//        testRun = 4000;
+//        for (int k = 0; k < bestValues50.size(); k++) {
+//            System.out.println("Durchlauf: " + k + " aktuell verstrichene Zeit: " + ((System.currentTimeMillis() - startTime) / 1000) + "s");
+//            System.out.println("Aktuell beste Werte: epsilon[" + this.bestEpsilon + "] alpha[" + this.bestAlpha + "] gamma[" + this.bestGamma + "] Fehler: " + (this.lowestImpulses * 100 / testRun) + "%");
+//            lerningAlgorithmus.gamma = bestValues50.get(k)[2];
+//            for (int j = 0; j < bestValues50.size(); j++) {
+//                lerningAlgorithmus.alpha = bestValues50.get(j)[0];
+//                for (int i = 0; i < bestValues50.size(); i++) {
+//                    this.try_drived_forward = 0;
+//                    this.try_drived_backward = 0;
+//                    this.try_drived_rotateRight = 0;
+//                    this.try_drived_rotateLeft = 0;
+//                    lerningAlgorithmus.epsilon = bestValues50.get(i)[1];
+//
+//                    this.reward = 0;
+//                    for (int l = 0; l < testRun; l++) {
+//                        look();
+//                        int s = findBarrier();
+//                        int az = this.lerningAlgorithmus.chooseAction(s);
+//                        doAction(az);
+//                        look();
+//                        int sNext = findBarrier();
+//                        this.lerningAlgorithmus.learn(s, sNext, az, this.reward);
+//                    }
+//
+//                    if((this.try_drived_backward + this.try_drived_forward + this.try_drived_rotateRight + this.try_drived_rotateLeft) < 1000){
+//                        System.out.println("< 50 - Value added: " + (this.try_drived_backward + this.try_drived_forward + this.try_drived_rotateRight + this.try_drived_rotateLeft) + " a[" + bestValues50.get(j)[0] + "] e[" + bestValues50.get(i)[1] + "]" + " g[" + bestValues50.get(k)[2] + "]");
+//                        Double[] values = {bestValues50.get(j)[0], bestValues50.get(i)[1], bestValues50.get(k)[2]};
+//                        bestValues25.add(values);
+//
+//                        if((this.try_drived_forward + this.try_drived_backward + this.try_drived_rotateLeft + this.try_drived_rotateLeft) < this.lowestImpulses){
+//                            this.bestAlpha = bestValues50.get(j)[0];
+//                            this.bestEpsilon = bestValues50.get(i)[1];
+//                            this.bestGamma = bestValues50.get(k)[2];
+//                            this.lowestImpulses = (this.try_drived_forward + this.try_drived_backward + this.try_drived_rotateLeft + this.try_drived_rotateLeft);
+//                            System.out.println("Neue beste Fehlerrate: " + (this.lowestImpulses * 100 / testRun));
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//
+//        System.out.println("25er Durchlaufzeit: " + ((System.currentTimeMillis() - startTime) / 1000) + "s");
 
-                    this.reward = 0;
-                    for (int l = 0; l < testRun; l++) {
-                        look();
-                        int s = findBarrier();
-                        int az = this.lerningAlgorithmus.chooseAction(s);
-                        doAction(az);
-                        look();
-                        int sNext = findBarrier();
-                        this.lerningAlgorithmus.learn(s, sNext, az, this.reward);
-                    }
-
-                    if((this.try_drived_backward + this.try_drived_forward + this.try_drived_rotateRight + this.try_drived_rotateLeft) < 750){
-                        System.out.println("< 75 - Value added: " + (this.try_drived_backward + this.try_drived_forward + this.try_drived_rotateRight + this.try_drived_rotateLeft) + " a[" + a + "] e[" + e + "]" + " g[" + g + "]");
-                        Double[] values = {a,e,g};
-                        bestValues75.add(values);
-
-                        if((this.try_drived_forward + this.try_drived_backward + this.try_drived_rotateLeft + this.try_drived_rotateLeft) < this.lowestImpulses){
-                            this.bestAlpha = a;
-                            this.bestEpsilon = e;
-                            this.bestGamma = g;
-                            this.lowestImpulses = (this.try_drived_forward + this.try_drived_backward + this.try_drived_rotateLeft + this.try_drived_rotateLeft);
-                            System.out.println("Neue beste Fehlerrate: " + (this.lowestImpulses * 100 / testRun));
-                        }
-                    }
-                }
-            }
-        }
-        System.out.println("75er Durchlaufzeit: " + ((System.currentTimeMillis() - startTime) / 1000) + "s");
-
-        ArrayList<Double[]> bestValues50 = new ArrayList<>();
-        testRun = 2000;
-        for (int k = 0; k < bestValues75.size(); k++) {
-            System.out.println("Durchlauf: " + k + " aktuell verstrichene Zeit: " + ((System.currentTimeMillis() - startTime) / 1000) + "s");
-            System.out.println("Aktuell beste Werte: epsilon[" + this.bestEpsilon + "] alpha[" + this.bestAlpha + "] gamma[" + this.bestGamma + "] Fehler: " + (this.lowestImpulses * 100 / testRun) + "%");
-            lerningAlgorithmus.gamma = bestValues75.get(k)[2];
-            for (int j = 0; j < bestValues75.size(); j++) {
-                lerningAlgorithmus.alpha = bestValues75.get(j)[0];
-                for (int i = 0; i < bestValues75.size(); i++) {
-                    this.try_drived_forward = 0;
-                    this.try_drived_backward = 0;
-                    this.try_drived_rotateRight = 0;
-                    this.try_drived_rotateLeft = 0;
-                    lerningAlgorithmus.epsilon = bestValues75.get(i)[1];
-
-                    this.reward = 0;
-                    for (int l = 0; l < testRun; l++) {
-                        look();
-                        int s = findBarrier();
-                        int az = this.lerningAlgorithmus.chooseAction(s);
-                        doAction(az);
-                        look();
-                        int sNext = findBarrier();
-                        this.lerningAlgorithmus.learn(s, sNext, az, this.reward);
-                    }
-
-                    if((this.try_drived_backward + this.try_drived_forward + this.try_drived_rotateRight + this.try_drived_rotateLeft) < 1000){
-                        System.out.println("< 50 - Value added: " + (this.try_drived_backward + this.try_drived_forward + this.try_drived_rotateRight + this.try_drived_rotateLeft) + " a[" + bestValues75.get(j)[0] + "] e[" + bestValues75.get(i)[1] + "]" + " g[" + bestValues75.get(k)[2] + "]");
-                        Double[] values = {bestValues75.get(j)[0], bestValues75.get(i)[1], bestValues75.get(k)[2]};
-                        bestValues50.add(values);
-
-                        if((this.try_drived_forward + this.try_drived_backward + this.try_drived_rotateLeft + this.try_drived_rotateLeft) < this.lowestImpulses){
-                            this.bestAlpha = bestValues75.get(j)[0];
-                            this.bestEpsilon = bestValues75.get(i)[1];
-                            this.bestGamma = bestValues75.get(k)[2];
-                            this.lowestImpulses = (this.try_drived_forward + this.try_drived_backward + this.try_drived_rotateLeft + this.try_drived_rotateLeft);
-                            System.out.println("Neue beste Fehlerrate: " + (this.lowestImpulses * 100 / testRun));
-                        }
-                    }
-                }
-            }
-        }
-        System.out.println("50er Durchlaufzeit: " + ((System.currentTimeMillis() - startTime) / 1000) + "s");
-
-        ArrayList<Double[]> bestValues25 = new ArrayList<>();
-        testRun = 4000;
-        for (int k = 0; k < bestValues50.size(); k++) {
-            System.out.println("Durchlauf: " + k + " aktuell verstrichene Zeit: " + ((System.currentTimeMillis() - startTime) / 1000) + "s");
-            System.out.println("Aktuell beste Werte: epsilon[" + this.bestEpsilon + "] alpha[" + this.bestAlpha + "] gamma[" + this.bestGamma + "] Fehler: " + (this.lowestImpulses * 100 / testRun) + "%");
-            lerningAlgorithmus.gamma = bestValues50.get(k)[2];
-            for (int j = 0; j < bestValues50.size(); j++) {
-                lerningAlgorithmus.alpha = bestValues50.get(j)[0];
-                for (int i = 0; i < bestValues50.size(); i++) {
-                    this.try_drived_forward = 0;
-                    this.try_drived_backward = 0;
-                    this.try_drived_rotateRight = 0;
-                    this.try_drived_rotateLeft = 0;
-                    lerningAlgorithmus.epsilon = bestValues50.get(i)[1];
-
-                    this.reward = 0;
-                    for (int l = 0; l < testRun; l++) {
-                        look();
-                        int s = findBarrier();
-                        int az = this.lerningAlgorithmus.chooseAction(s);
-                        doAction(az);
-                        look();
-                        int sNext = findBarrier();
-                        this.lerningAlgorithmus.learn(s, sNext, az, this.reward);
-                    }
-
-                    if((this.try_drived_backward + this.try_drived_forward + this.try_drived_rotateRight + this.try_drived_rotateLeft) < 1000){
-                        System.out.println("< 50 - Value added: " + (this.try_drived_backward + this.try_drived_forward + this.try_drived_rotateRight + this.try_drived_rotateLeft) + " a[" + bestValues50.get(j)[0] + "] e[" + bestValues50.get(i)[1] + "]" + " g[" + bestValues50.get(k)[2] + "]");
-                        Double[] values = {bestValues50.get(j)[0], bestValues50.get(i)[1], bestValues50.get(k)[2]};
-                        bestValues25.add(values);
-
-                        if((this.try_drived_forward + this.try_drived_backward + this.try_drived_rotateLeft + this.try_drived_rotateLeft) < this.lowestImpulses){
-                            this.bestAlpha = bestValues50.get(j)[0];
-                            this.bestEpsilon = bestValues50.get(i)[1];
-                            this.bestGamma = bestValues50.get(k)[2];
-                            this.lowestImpulses = (this.try_drived_forward + this.try_drived_backward + this.try_drived_rotateLeft + this.try_drived_rotateLeft);
-                            System.out.println("Neue beste Fehlerrate: " + (this.lowestImpulses * 100 / testRun));
-                        }
-                    }
-                }
-            }
-        }
-
-        System.out.println("25er Durchlaufzeit: " + ((System.currentTimeMillis() - startTime) / 1000) + "s");
-
-        ArrayList<Double[]> bestValues10 = new ArrayList<>();
-        testRun = 10000;
-        for (int k = 0; k < bestValues25.size(); k++) {
-            System.out.println("Durchlauf: " + k + " aktuell verstrichene Zeit: " + ((System.currentTimeMillis() - startTime) / 1000) + "s");
-            System.out.println("Aktuell beste Werte: epsilon[" + this.bestEpsilon + "] alpha[" + this.bestAlpha + "] gamma[" + this.bestGamma + "] Fehler: " + (this.lowestImpulses * 100 / testRun) + "%");
-            lerningAlgorithmus.gamma = bestValues25.get(k)[2];
-            for (int j = 0; j < bestValues25.size(); j++) {
-                lerningAlgorithmus.alpha = bestValues25.get(j)[0];
-                for (int i = 0; i < bestValues25.size(); i++) {
-                    this.try_drived_forward = 0;
-                    this.try_drived_backward = 0;
-                    this.try_drived_rotateRight = 0;
-                    this.try_drived_rotateLeft = 0;
-                    lerningAlgorithmus.epsilon = bestValues25.get(i)[1];
-
-                    this.reward = 0;
-                    for (int l = 0; l < testRun; l++) {
-                        look();
-                        int s = findBarrier();
-                        int az = this.lerningAlgorithmus.chooseAction(s);
-                        doAction(az);
-                        look();
-                        int sNext = findBarrier();
-                        this.lerningAlgorithmus.learn(s, sNext, az, this.reward);
-                    }
-
-                    if((this.try_drived_backward + this.try_drived_forward + this.try_drived_rotateRight + this.try_drived_rotateLeft) < 1000){
-                        System.out.println("< 50 - Value added: " + (this.try_drived_backward + this.try_drived_forward + this.try_drived_rotateRight + this.try_drived_rotateLeft) + " a[" + bestValues25.get(j)[0] + "] e[" + bestValues25.get(i)[1] + "]" + " g[" + bestValues25.get(k)[2] + "]");
-                        Double[] values = {bestValues25.get(j)[0], bestValues25.get(i)[1], bestValues25.get(k)[2]};
-                        bestValues10.add(values);
-
-                        if((this.try_drived_forward + this.try_drived_backward + this.try_drived_rotateLeft + this.try_drived_rotateLeft) < this.lowestImpulses){
-                            this.bestAlpha = bestValues25.get(j)[0];
-                            this.bestEpsilon = bestValues25.get(i)[1];
-                            this.bestGamma = bestValues25.get(k)[2];
-                            this.lowestImpulses = (this.try_drived_forward + this.try_drived_backward + this.try_drived_rotateLeft + this.try_drived_rotateLeft);
-                            System.out.println("Neue beste Fehlerrate: " + (this.lowestImpulses * 100 / testRun));
-                        }
-                    }
-                }
-            }
-        }
-
-        System.out.println("10er Durchlaufzeit: " + ((System.currentTimeMillis() - startTime) / 1000) + "s");
+//        ArrayList<Double[]> bestValues10 = new ArrayList<>();
+//        testRun = 10000;
+//        for (int k = 0; k < bestValues25.size(); k++) {
+//            System.out.println("Durchlauf: " + k + " aktuell verstrichene Zeit: " + ((System.currentTimeMillis() - startTime) / 1000) + "s");
+//            System.out.println("Aktuell beste Werte: epsilon[" + this.bestEpsilon + "] alpha[" + this.bestAlpha + "] gamma[" + this.bestGamma + "] Fehler: " + (this.lowestImpulses * 100 / testRun) + "%");
+//            lerningAlgorithmus.gamma = bestValues25.get(k)[2];
+//            for (int j = 0; j < bestValues25.size(); j++) {
+//                lerningAlgorithmus.alpha = bestValues25.get(j)[0];
+//                for (int i = 0; i < bestValues25.size(); i++) {
+//                    this.try_drived_forward = 0;
+//                    this.try_drived_backward = 0;
+//                    this.try_drived_rotateRight = 0;
+//                    this.try_drived_rotateLeft = 0;
+//                    lerningAlgorithmus.epsilon = bestValues25.get(i)[1];
+//
+//                    this.reward = 0;
+//                    for (int l = 0; l < testRun; l++) {
+//                        look();
+//                        int s = findBarrier();
+//                        int az = this.lerningAlgorithmus.chooseAction(s);
+//                        doAction(az);
+//                        look();
+//                        int sNext = findBarrier();
+//                        this.lerningAlgorithmus.learn(s, sNext, az, this.reward);
+//                    }
+//
+//                    if((this.try_drived_backward + this.try_drived_forward + this.try_drived_rotateRight + this.try_drived_rotateLeft) < 1000){
+//                        System.out.println("< 50 - Value added: " + (this.try_drived_backward + this.try_drived_forward + this.try_drived_rotateRight + this.try_drived_rotateLeft) + " a[" + bestValues25.get(j)[0] + "] e[" + bestValues25.get(i)[1] + "]" + " g[" + bestValues25.get(k)[2] + "]");
+//                        Double[] values = {bestValues25.get(j)[0], bestValues25.get(i)[1], bestValues25.get(k)[2]};
+//                        bestValues10.add(values);
+//
+//                        if((this.try_drived_forward + this.try_drived_backward + this.try_drived_rotateLeft + this.try_drived_rotateLeft) < this.lowestImpulses){
+//                            this.bestAlpha = bestValues25.get(j)[0];
+//                            this.bestEpsilon = bestValues25.get(i)[1];
+//                            this.bestGamma = bestValues25.get(k)[2];
+//                            this.lowestImpulses = (this.try_drived_forward + this.try_drived_backward + this.try_drived_rotateLeft + this.try_drived_rotateLeft);
+//                            System.out.println("Neue beste Fehlerrate: " + (this.lowestImpulses * 100 / testRun));
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//
+//        System.out.println("10er Durchlaufzeit: " + ((System.currentTimeMillis() - startTime) / 1000) + "s");
 
         ////
-        FileWriter fw;
-        BufferedWriter bw;
-        try {
-            fw = new FileWriter(System.getProperty("user.dir") + "\\src\\gui_simulation\\" + "learning_variables2");
-            bw = new BufferedWriter(fw);
-
-            String toWrite = "";
-            if(bestValues10.size() > 0){
-                for(Double[] i : bestValues10){
-                    toWrite += "aplha: " + i[0] + " epsilon: " + i[1] + " gamma: " + i[2];
-                    bw.write(toWrite);
-                    bw.newLine();
-                }
-            } else {
-                for(Double[] i : bestValues25){
-                    toWrite += "aplha: " + i[0] + " epsilon: " + i[1] + " gamma: " + i[2];
-                    bw.write(toWrite);
-                    bw.newLine();
-                }
-            }
-
-            bw.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        FileWriter fw;
+//        BufferedWriter bw;
+//        try {
+//            fw = new FileWriter(System.getProperty("user.dir") + "\\src\\gui_simulation\\" + "learning_variables2");
+//            bw = new BufferedWriter(fw);
+//
+//            String toWrite = "";
+//            if(bestValues10.size() > 0){
+//                for(Double[] i : bestValues10){
+//                    toWrite += "aplha: " + i[0] + " epsilon: " + i[1] + " gamma: " + i[2];
+//                    bw.write(toWrite);
+//                    bw.newLine();
+//                }
+//            } else {
+//                for(Double[] i : bestValues25){
+//                    toWrite += "aplha: " + i[0] + " epsilon: " + i[1] + " gamma: " + i[2];
+//                    bw.write(toWrite);
+//                    bw.newLine();
+//                }
+//            }
+//
+//            bw.close();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
         ////
 //        System.out.println("Beste Variablenbelegungen: epsilon[" + this.bestEpsilon + "] alpha[" + this.bestAlpha + "] gamma[" + this.bestGamma + "] Anstöße: " + this.lowestImpulses + " Bester Fehler: " + (this.lowestImpulses * 100 / testRun));
 //        System.out.println("Durchlaufzeit: " + ((System.currentTimeMillis() - startTime) / 1000) + "s");
 
 
+//        callGuiUpdateFunction();
+//
+//        // Berechnen der Anstöße im Durchschnitt
+//        this.iterations++;
+//        this.averageImpulses = (this.averageImpulses * (this.iterations - 1) + (this.try_drived_forward + this.try_drived_backward + this.try_drived_rotateRight + this.try_drived_rotateLeft)) / this.iterations;
+//
+//        //
+//        System.out.println("Bewegungsmuster:");
+//        System.out.println("vorwärts: " + this.drived_forward);
+//        System.out.println("vorwärts angestoßen: " + this.try_drived_forward);
+//        System.out.println("Zurück:" + this.drived_backward);
+//        System.out.println("hinten angestoßen: " + this.try_drived_backward);
+//        System.out.println("Rechtsrotation: " + this.drived_rotateRight);
+//        System.out.println("Bei Rechtsrotation angestoßen: " + this.try_drived_rotateRight);
+//        System.out.println("Linksrotation: " + this.drived_rotateLeft);
+//        System.out.println("Bei Linksrotation angestoßen: " + this.try_drived_rotateLeft);
+//        System.out.println("Geschaut: " + this.drived_look);
+//        System.out.println("Angestoßen: " + (this.try_drived_forward + this.try_drived_backward + this.try_drived_rotateRight + this.try_drived_rotateLeft));
+//        System.out.println();
+//        System.out.println("Statusmuster:");
+//        System.out.println("0000: " + this.state0000);
+//        System.out.println("0001: " + this.state0001);
+//        System.out.println("0010: " + this.state0010);
+//        System.out.println("0011: " + this.state0011);
+//        System.out.println("0100: " + this.state0100);
+//        System.out.println("0101: " + this.state0101);
+//        System.out.println("0110: " + this.state0110);
+//        System.out.println("0111: " + this.state0111);
+//        System.out.println("1000: " + this.state1000);
+//        System.out.println("1001: " + this.state1001);
+//        System.out.println("1010: " + this.state1010);
+//        System.out.println("1011: " + this.state1011);
+//        System.out.println("1100: " + this.state1100);
+//        System.out.println("1101: " + this.state1101);
+//        System.out.println("1110: " + this.state1110);
+//        System.out.println("1111: " + this.state1111);
+//        System.out.println("Angestoßen: " + (this.try_drived_forward + this.try_drived_backward + this.try_drived_rotateRight + this.try_drived_rotateLeft));
+//        System.out.println("Durchschnittliche Anstöße: " + this.averageImpulses);
 
-        callGuiUpdateFunction();
-
-        // Berechnen der Anstöße im Durchschnitt
-        this.iterations++;
-        this.averageImpulses = (this.averageImpulses * (this.iterations - 1) + (this.try_drived_forward + this.try_drived_backward + this.try_drived_rotateRight + this.try_drived_rotateLeft)) / this.iterations;
-
-        //
-        System.out.println("Bewegungsmuster:");
-        System.out.println("vorwärts: " + this.drived_forward);
-        System.out.println("vorwärts angestoßen: " + this.try_drived_forward);
-        System.out.println("Zurück:" + this.drived_backward);
-        System.out.println("hinten angestoßen: " + this.try_drived_backward);
-        System.out.println("Rechtsrotation: " + this.drived_rotateRight);
-        System.out.println("Bei Rechtsrotation angestoßen: " + this.try_drived_rotateRight);
-        System.out.println("Linksrotation: " + this.drived_rotateLeft);
-        System.out.println("Bei Linksrotation angestoßen: " + this.try_drived_rotateLeft);
-        System.out.println("Geschaut: " + this.drived_look);
-        System.out.println("Angestoßen: " + (this.try_drived_forward + this.try_drived_backward + this.try_drived_rotateRight + this.try_drived_rotateLeft));
-        System.out.println();
-        System.out.println("Statusmuster:");
-        System.out.println("0000: " + this.state0000);
-        System.out.println("0001: " + this.state0001);
-        System.out.println("0010: " + this.state0010);
-        System.out.println("0011: " + this.state0011);
-        System.out.println("0100: " + this.state0100);
-        System.out.println("0101: " + this.state0101);
-        System.out.println("0110: " + this.state0110);
-        System.out.println("0111: " + this.state0111);
-        System.out.println("1000: " + this.state1000);
-        System.out.println("1001: " + this.state1001);
-        System.out.println("1010: " + this.state1010);
-        System.out.println("1011: " + this.state1011);
-        System.out.println("1100: " + this.state1100);
-        System.out.println("1101: " + this.state1101);
-        System.out.println("1110: " + this.state1110);
-        System.out.println("1111: " + this.state1111);
-        System.out.println("Angestoßen: " + (this.try_drived_forward + this.try_drived_backward + this.try_drived_rotateRight + this.try_drived_rotateLeft));
-        System.out.println("Durchschnittliche Anstöße: " + this.averageImpulses);
-
-        this.lerningAlgorithmus.printQTable();
-        System.exit(1);
+//        this.lerningAlgorithmus.printQTable();
     }
 
     // Roboter Interface Methods
     @Override
     public void doAction(int action) {
         this.isBumped = false;
+        this.reward = 0;
         switch (action) {
             case DRIVE_FORWARD:
                 this.forward();
