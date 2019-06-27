@@ -4,9 +4,9 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class QLearningAgentMovement {
 
-    public double epsilon = 1;
-    public double alpha = 0.5; // Lernrate (0..1)
-    public double gamma = 0.8; // Bewertungsfaktor (0..1)
+    public double epsilon = 0.35;
+    public double alpha = 0.87; // Lernrate (0..1)
+    public double gamma = 0.00; // Bewertungsfaktor (0..1)
     private double q[][]; // Q-Learning-Array
     private static final int POSSIBLE_ACTIONS = 4; // 2^4 = 16 Mögliche Zustände
 
