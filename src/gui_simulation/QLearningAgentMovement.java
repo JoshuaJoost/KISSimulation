@@ -5,7 +5,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class QLearningAgentMovement {
 
-    public double epsilon = 10; // Zufällige Bewegung
+    public double epsilon = 100; // Zufällige Bewegung
     public double alpha = 0.1; // Lernrate (0..1)
     public double gamma = 0.90; // Bewertungsfaktor (0..1)
     public double q[][]; // Q-Learning-Array
