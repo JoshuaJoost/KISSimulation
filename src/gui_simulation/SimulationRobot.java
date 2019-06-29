@@ -561,7 +561,7 @@ public class SimulationRobot implements Roboter {
 
         lerningAlgorithmus.printQTable();
 
-        System.out.println("---------------------------Lernphase 2 - Eigenes Lernen--------------------------");
+        System.out.println("---------------------------Lernphase 2 - QTable  Lernen--------------------------");
         System.out.println("---------------------------------------------------------------------------------");
         System.out.println("---------------------------------------------------------------------------------");
         this.lerningAlgorithmus.epsilon = 0;
