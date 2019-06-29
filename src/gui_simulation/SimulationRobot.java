@@ -26,6 +26,7 @@ public class SimulationRobot implements Roboter {
 
     //Rewards - Learning Algorithmus
     private static final double REWARD_BUMPED = -1;
+    //private static final double REWARD_DRIVE_BACK = -0.25;
     private static final double REWARD_DRIVE_BACK = 0;
     private static final double REWARD_DRIVE_FORWARD = 0;
     private static final double REWARD_DRIVE_ROTATE_RIGHT = 0;
@@ -570,12 +571,19 @@ public class SimulationRobot implements Roboter {
                 int a = this.lerningAlgorithmus.chooseAction(s);
                 doAction(a);
                 // 0 Forward, 1 RLeft, 2 RRight, 3 Backward
-                System.out.print(" I: " + i);
+                System.out.print("I: " + i);
                 System.out.println();
                 look();
                 int sNext = findBarrier();
                 this.lerningAlgorithmus.learn(s, sNext, a, reward);
                 i++;
+                System.out.println("s: " + s);
+                System.out.println("a: " + a);
+                System.out.println("0 Forward, 1 Left, 2 Right, 3 Backward");
+                System.out.println("sNext: " + sNext);
+                System.out.println("r: " + this.reward);
+                lerningAlgorithmus.printQTable();
+                System.out.println("Position: " + getPosition().toString());
             }
             System.out.println("I: " + i + " Target reached! In " + ((System.currentTimeMillis() - startTime) / 1000) + "s");
         }

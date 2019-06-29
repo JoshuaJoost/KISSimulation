@@ -4,7 +4,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class QLearningAgentMovement {
 
-    public double epsilon = 0.7; // Zufällige Bewegung
+    public double epsilon = 1; // Zufällige Bewegung
     public double alpha = 0.1; // Lernrate (0..1)
     public double gamma = 0.90; // Bewertungsfaktor (0..1)
     private double q[][]; // Q-Learning-Array
@@ -62,8 +62,10 @@ public class QLearningAgentMovement {
 
         for (int i = 0; i < POSSIBLE_ACTIONS; i++) {
             if (this.q[s][i] >= max) {
-                max = this.q[s][i];
-                index = i;
+                if(Math.random()>=0.5) {
+                    max = this.q[s][i];
+                    index = i;
+                }
             }
         }
         return index;
@@ -85,11 +87,11 @@ public class QLearningAgentMovement {
             //TODO wenn er die auswahlt zwischen verschiedenen Aktionen hat random zwischen diesen auswählen
             a = actionWithBestRating(s);
 
-            String table = "";
-            for(double i : this.q[s]){
+            //String table = "";
+            /*for(double i : this.q[s]){
                 table += i + " | ";
-            }
-            switch (a) {
+            }*/
+            /*switch (a) {
                 case SimulationRobot.DRIVE_FORWARD:
                     System.out.print("T:" + table + " -> Forward ");
                     break;
@@ -104,7 +106,7 @@ public class QLearningAgentMovement {
                     break;
                 default:
                     System.out.print("Ungültige Aktion");
-            }
+            }*/
         }
         return a;
     }
