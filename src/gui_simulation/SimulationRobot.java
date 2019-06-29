@@ -23,6 +23,7 @@ public class SimulationRobot implements Roboter {
     public static final int DRIVE_ROTATE_LEFT = 1;
     public static final int DRIVE_ROTATE_RIGHT = 2;
     public static final int DRIVE_BACKWARD = 3;
+    public static String movementHistorie = "";
 
     //Rewards - Learning Algorithmus
     private static final double REWARD_BUMPED = -1;
@@ -65,16 +66,6 @@ public class SimulationRobot implements Roboter {
     private int state1110 = 0;
     private int state1111 = 0;
 
-    // Anstöße im Durchschnitt
-    private int iterations = 0;
-    private int averageImpulses = 0;
-
-    // Bestimmen der bestmöglichen Lern-Variablen
-    private double bestEpsilon = 0;
-    private double bestAlpha = 0;
-    private double bestGamma = 0;
-    private int lowestImpulses = 1000000;
-
 //    private int stateCanRotateRight = 0;
 //    private int stateCanRotateLeft = 0;
 //    private int stateCanRotateLeftRight = 0;
@@ -102,16 +93,17 @@ public class SimulationRobot implements Roboter {
     private final String robotName;
     private final int robotNumber;
     private String selectedText = "";
+
     // Roboter Werte
     private int sizeX;
     private int sizeY;
-    // TODO position in ArrayList<Integer> konvertieren
     private int[] position;
     private final int[] startPosition;
     private Color robotBodyColor = null;
     private Color robotHeadColor = null;
     private Color measureDistanceColor = null;
     private Integer headDirection; // 0 = Nord, im Uhrzeigersinn
+    private Integer startHeadDirection;
     private ArrayList<Integer> headPosition = new ArrayList<>();
     private final int headSize;
     private final int uniqueIndexNumberOfMazeRobot;
@@ -122,7 +114,7 @@ public class SimulationRobot implements Roboter {
     private ArrayList<Integer> distanceDataFieldsRight = new ArrayList<>();
     // QLearningAgent
     private QLearningAgentMovement lerningAlgorithmus = new QLearningAgentMovement();
-    double reward = 0;
+    private double reward = 0;
 
     private SimulationRobot(int robotPixelX, int robotPixelY, int[] position) {
         this.sizeX = robotPixelX;
@@ -130,46 +122,21 @@ public class SimulationRobot implements Roboter {
         this.position = position;
 
         ArrayList<Integer> tmpPositions = new ArrayList<>();
-        for(int i : this.position){
+        for (int i : this.position) {
             tmpPositions.add(i);
         }
 
         this.startPosition = OwnUtils.convertArrayListToIntArray(tmpPositions);
         this.headDirection = robotPixelX > robotPixelY ? 1 : 0;
+
+        int headDircetionTmp = this.headDirection;
+        this.startHeadDirection = headDircetionTmp;
+
         this.uniqueIndexNumberOfMazeRobot = SimulationMaze.getSelectedMaze().getAndSetUniqueIndexNumberOfMazeRobot();
         this.robotNumber = this.uniqueIndexNumberOfMazeRobot + 1;
         this.robotName = PREFIX_ROBO_NAME + this.robotNumber;
         this.robotMazeIndexNumber = SimulationMaze.getSelectedMazeIndexNumber();
         this.headSize = 1;
-        // Größeren Head setzen
-//        switch (this.headDirection) {
-//            case 0:
-//                if (this.sizeX < 1) {
-//                    this.headSize = 0;
-//                } else if (this.sizeX == 1 || this.sizeX == 2) {
-//                    this.headSize = 1;
-//                } else {
-//                    this.headSize = this.sizeX - 2;
-//                }
-//                break;
-//            case 1:
-//                if (this.sizeY < 0) {
-//                    this.headSize = 0;
-//                } else if (this.sizeY == 1 || this.sizeY == 2) {
-//                    this.headSize = 1;
-//                } else {
-//                    this.headSize = this.sizeY - 2;
-//                }
-//                break;
-//            default:
-//                this.headSize = 0;
-//                break;
-//        }
-        String sp = "";
-        for(int startPos : this.startPosition){
-            sp += startPos + "-";
-        }
-        System.out.println("StartPos: " + sp);
 
         changeHeadPosition();
     }
@@ -266,17 +233,18 @@ public class SimulationRobot implements Roboter {
         if (this.sizeX > 0 && this.sizeY > 0) {
             switch (this.headDirection) {
                 case 0:
-                    if (this.headSize > 0) {
-                        if (this.sizeX == 1) {
-                            this.headPosition.add(sortedPos[0]);
-                        } else if (this.sizeX == 2) {
-                            this.headPosition.add(sortedPos[1]);
-                        } else {
-                            for (int x = 0; x < this.headSize; x++) {
-                                this.headPosition.add(sortedPos[this.sizeX - this.headSize - 1 + x]);
-                            }
-                        }
-                    }
+//                    if (this.headSize > 0) {
+//                        if (this.sizeX == 1) {
+//                            this.headPosition.add(sortedPos[0]);
+//                        } else if (this.sizeX == 2) {
+//                            this.headPosition.add(sortedPos[1]);
+//                        } else {
+//                            for (int x = 0; x < this.headSize; x++) {
+//                                this.headPosition.add(sortedPos[this.sizeX - this.headSize - 1 + x]);
+//                            }
+//                        }
+//                    }
+                    this.headPosition.add(sortedPos[1]);
                     break;
                 case 1:
                     if (this.headSize > 0) {
@@ -501,6 +469,30 @@ public class SimulationRobot implements Roboter {
         return reachedTarget;
     }
 
+    private void setRobotBackToStartPosition(){
+        for(int i = 0; i < this.startPosition.length; i++){
+            this.position[i] = this.startPosition[i];
+        }
+
+        int tmpHeadDirection = this.startHeadDirection;
+        this.headDirection = tmpHeadDirection;
+
+        changeHeadPosition();
+
+        switch(this.headDirection){
+            case 0:
+            case 2:
+                this.sizeX = 3;
+                this.sizeY = 4;
+                break;
+            case 1:
+            case 3:
+                this.sizeX = 4;
+                this.sizeY = 3;
+                break;
+        }
+    }
+
     public void start() {
         this.drived_look = 0;
         this.drived_rotateLeft = 0;
@@ -530,12 +522,151 @@ public class SimulationRobot implements Roboter {
         this.state1111 = 0;
 
         // Test QTabel
-//        for (int i = 0; i < 10000; i++) {
+        System.out.println("--------------------------Lerndurchlauf----------------------------------");
+        for(int j = 0, e = 0; j < 10000; j++, e++) {
+            System.out.println("Iteration: " + j);
+            setRobotBackToStartPosition();
+            this.lerningAlgorithmus.epsilon -= e;
+            if(this.lerningAlgorithmus.epsilon < 0){
+                this.lerningAlgorithmus.epsilon = 0;
+            }
+
+            boolean foundTarget = false;
+            for (int i = 0; i < 10000 && !foundTarget; i++) {
+                look();
+                int s = findBarrier();
+                int a = this.lerningAlgorithmus.chooseAction(s);
+                doAction(a);
+
+                foundTarget = targetReached();
+                if (foundTarget) {
+                    this.reward = SimulationRobot.REWARD_DRIVE_TARGET;
+                }
+
+                look();
+                int sNext = findBarrier();
+                this.lerningAlgorithmus.learn(s, sNext, a, reward);
+            }
+
+            if(foundTarget){
+                System.out.println("Target found!");
+            }
+        }
+        callGuiUpdateFunction();
+
+        //Probedurchlauf
+        System.out.println("--------------------------Probedurchlauf------------------------------");
+        System.out.println("----------------------------------------------------------------------");
+        System.out.println("----------------------------------------------------------------------");
+        this.drived_look = 0;
+        this.drived_rotateLeft = 0;
+        this.drived_backward = 0;
+        this.drived_rotateRight = 0;
+        this.drived_forward = 0;
+        this.try_drived_forward = 0;
+        this.try_drived_backward = 0;
+        this.try_drived_rotateLeft = 0;
+        this.try_drived_rotateRight = 0;
+
+        this.state0000 = 0;
+        this.state0001 = 0;
+        this.state0010 = 0;
+        this.state0011 = 0;
+        this.state0100 = 0;
+        this.state0101 = 0;
+        this.state0110 = 0;
+        this.state0111 = 0;
+        this.state1000 = 0;
+        this.state1001 = 0;
+        this.state1010 = 0;
+        this.state1011 = 0;
+        this.state1100 = 0;
+        this.state1101 = 0;
+        this.state1110 = 0;
+        this.state1111 = 0;
+
+
+        setRobotBackToStartPosition();
+
+        boolean foundTarget = false;
+        for(int i = 0; i < 10000 && !foundTarget; i++){
+            look();
+            int s = findBarrier();
+            int a = this.lerningAlgorithmus.chooseAction(s);
+            doAction(a);
+
+            foundTarget = targetReached();
+            if (foundTarget) {
+                this.reward = SimulationRobot.REWARD_DRIVE_TARGET;
+            }
+
+            look();
+            int sNext = findBarrier();
+            this.lerningAlgorithmus.learn(s, sNext, a, reward);
+        }
+
+        this.lerningAlgorithmus.printQTable();
+        callGuiUpdateFunction();
+
+        System.out.println("Bewegungsmuster:");
+        System.out.println("vorwärts: " + this.drived_forward);
+        System.out.println("vorwärts angestoßen: " + this.try_drived_forward);
+        System.out.println("Zurück:" + this.drived_backward);
+        System.out.println("hinten angestoßen: " + this.try_drived_backward);
+        System.out.println("Rechtsrotation: " + this.drived_rotateRight);
+        System.out.println("Bei Rechtsrotation angestoßen: " + this.try_drived_rotateRight);
+        System.out.println("Linksrotation: " + this.drived_rotateLeft);
+        System.out.println("Bei Linksrotation angestoßen: " + this.try_drived_rotateLeft);
+        System.out.println("Geschaut: " + this.drived_look);
+        System.out.println("Angestoßen: " + (this.try_drived_forward + this.try_drived_backward + this.try_drived_rotateRight + this.try_drived_rotateLeft));
+        System.out.println();
+        System.out.println("Statusmuster:");
+        System.out.println("0000: " + this.state0000);
+        System.out.println("0001: " + this.state0001);
+        System.out.println("0010: " + this.state0010);
+        System.out.println("0011: " + this.state0011);
+        System.out.println("0100: " + this.state0100);
+        System.out.println("0101: " + this.state0101);
+        System.out.println("0110: " + this.state0110);
+        System.out.println("0111: " + this.state0111);
+        System.out.println("1000: " + this.state1000);
+        System.out.println("1001: " + this.state1001);
+        System.out.println("1010: " + this.state1010);
+        System.out.println("1011: " + this.state1011);
+        System.out.println("1100: " + this.state1100);
+        System.out.println("1101: " + this.state1101);
+        System.out.println("1110: " + this.state1110);
+        System.out.println("1111: " + this.state1111);
+        System.out.println("Angestoßen: " + (this.try_drived_forward + this.try_drived_backward + this.try_drived_rotateRight + this.try_drived_rotateLeft));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//        System.out.println("----------------------------------------------------------");
+//        foundTarget = false;
+//        for (int i = 0; i < 10000 && !foundTarget; i++) {
 //            //System.out.println("i: " + i);
 //            look();
 //            int s = findBarrier();
 //            int a = this.lerningAlgorithmus.chooseAction(s);
 //            doAction(a);
+//
+//            foundTarget = targetReached();
+//            if(foundTarget){
+//                this.reward = SimulationRobot.REWARD_DRIVE_TARGET;
+//            }
+//
 //            look();
 //            int sNext = findBarrier();
 //            this.lerningAlgorithmus.learn(s, sNext, a, reward);
@@ -544,41 +675,337 @@ public class SimulationRobot implements Roboter {
 //        this.lerningAlgorithmus.printQTable();
 //        callGuiUpdateFunction();
 
+
+
+        // Probedurchlauf
+        //------------------------------------------------------------------------
+//        this.drived_look = 0;
+//        this.drived_rotateLeft = 0;
+//        this.drived_backward = 0;
+//        this.drived_rotateRight = 0;
+//        this.drived_forward = 0;
+//        this.try_drived_forward = 0;
+//        this.try_drived_backward = 0;
+//        this.try_drived_rotateLeft = 0;
+//        this.try_drived_rotateRight = 0;
+//
+//        this.state0000 = 0;
+//        this.state0001 = 0;
+//        this.state0010 = 0;
+//        this.state0011 = 0;
+//        this.state0100 = 0;
+//        this.state0101 = 0;
+//        this.state0110 = 0;
+//        this.state0111 = 0;
+//        this.state1000 = 0;
+//        this.state1001 = 0;
+//        this.state1010 = 0;
+//        this.state1011 = 0;
+//        this.state1100 = 0;
+//        this.state1101 = 0;
+//        this.state1110 = 0;
+//        this.state1111 = 0;
+//
+//        boolean targetReached = false;
+//        int i = 0;
+//
+//        ArrayList<Integer> tmpPositions = new ArrayList<>();
+//        for(int z : this.startPosition){
+//            tmpPositions.add(z);
+//        }
+//        this.position = OwnUtils.convertArrayListToIntArray(tmpPositions);
+//
+//        int j = 0;
+//        while (j < 1000) {
+//            j++;
+//            look();
+//            int s = findBarrier();
+//            int a = this.lerningAlgorithmus.chooseAction(s);
+//            doAction(a);
+//
+//            targetReached = targetReached();
+//            if(targetReached){
+//                this.reward = SimulationRobot.REWARD_DRIVE_TARGET;
+//            }
+//
+//            look();
+//            int sNext = findBarrier();
+//            this.lerningAlgorithmus.learn(s, sNext, a, reward);
+//            i++;
+//
+//            String roboPos = "";
+//            for (int pos : this.position) {
+//                roboPos += pos + "-";
+//            }
+//            String targetPos = "";
+//            for (int tPos : SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getIndexMazeTargetFields()) {
+//                targetPos += tPos + "-";
+//            }
+//            System.out.println("I: " + i + " rPos: " + roboPos + " tPos: " + targetPos);
+//        }
+//        System.out.println("Iterationen: " + i);
+//
+//        System.out.println("Bewegungsmuster:");
+//        System.out.println("vorwärts: " + this.drived_forward);
+//        System.out.println("vorwärts angestoßen: " + this.try_drived_forward);
+//        System.out.println("Zurück:" + this.drived_backward);
+//        System.out.println("hinten angestoßen: " + this.try_drived_backward);
+//        System.out.println("Rechtsrotation: " + this.drived_rotateRight);
+//        System.out.println("Bei Rechtsrotation angestoßen: " + this.try_drived_rotateRight);
+//        System.out.println("Linksrotation: " + this.drived_rotateLeft);
+//        System.out.println("Bei Linksrotation angestoßen: " + this.try_drived_rotateLeft);
+//        System.out.println("Geschaut: " + this.drived_look);
+//        System.out.println("Angestoßen: " + (this.try_drived_forward + this.try_drived_backward + this.try_drived_rotateRight + this.try_drived_rotateLeft));
+//        System.out.println();
+//        System.out.println("Statusmuster:");
+//        System.out.println("0000: " + this.state0000);
+//        System.out.println("0001: " + this.state0001);
+//        System.out.println("0010: " + this.state0010);
+//        System.out.println("0011: " + this.state0011);
+//        System.out.println("0100: " + this.state0100);
+//        System.out.println("0101: " + this.state0101);
+//        System.out.println("0110: " + this.state0110);
+//        System.out.println("0111: " + this.state0111);
+//        System.out.println("1000: " + this.state1000);
+//        System.out.println("1001: " + this.state1001);
+//        System.out.println("1010: " + this.state1010);
+//        System.out.println("1011: " + this.state1011);
+//        System.out.println("1100: " + this.state1100);
+//        System.out.println("1101: " + this.state1101);
+//        System.out.println("1110: " + this.state1110);
+//        System.out.println("1111: " + this.state1111);
+//        System.out.println("Angestoßen: " + (this.try_drived_forward + this.try_drived_backward + this.try_drived_rotateRight + this.try_drived_rotateLeft));
+//        System.out.println("Durchschnittliche Anstöße: " + this.averageImpulses);
+//
+//        this.lerningAlgorithmus.printQTable();
+//        callGuiUpdateFunction();
+        //-------------------------------------------------------------------------------------------------
+        // Ende Probedurchlauf
+
+        //OneKlick Bewegung
+
+//        System.err.println("-------------------------------------------------------------------------");
+//        System.err.println("-------------------------------------------------------------------------");
+//        for (int k = 0; k < 100; k++) {
+//            SimulationRobot.movementHistorie += "--------------------------------- " + k + " ---------------------------------";
+//            System.err.println(lerningAlgorithmus.epsilon);
+//            long startTime = System.currentTimeMillis();
+//
+//            ArrayList<Integer> tmpPositions = new ArrayList<>();
+//            for (int i : this.startPosition) {
+//                tmpPositions.add(i);
+//            }
+//            this.position = OwnUtils.convertArrayListToIntArray(tmpPositions);
+//
+//            int i = 0;
+//            boolean targetReached = false;
+//            while (!targetReached) {
+//                i++;
+//                if (i % 100000 == 0) {
+//                    System.out.println("I: " + i);
+//                    System.out.println("Statusmuster:");
+//                    System.out.println("0000: " + this.state0000);
+//                    System.out.println("0001: " + this.state0001);
+//                    System.out.println("0010: " + this.state0010);
+//                    System.out.println("0011: " + this.state0011);
+//                    System.out.println("0100: " + this.state0100);
+//                    System.out.println("0101: " + this.state0101);
+//                    System.out.println("0110: " + this.state0110);
+//                    System.out.println("0111: " + this.state0111);
+//                    System.out.println("1000: " + this.state1000);
+//                    System.out.println("1001: " + this.state1001);
+//                    System.out.println("1010: " + this.state1010);
+//                    System.out.println("1011: " + this.state1011);
+//                    System.out.println("1100: " + this.state1100);
+//                    System.out.println("1101: " + this.state1101);
+//                    System.out.println("1110: " + this.state1110);
+//                    System.out.println("1111: " + this.state1111);
+//                    lerningAlgorithmus.printQTable();
+//                    System.out.println("-----------------------------------------------------");
+//                }
+//                look();
+//                int s = findBarrier();
+//                int a = this.lerningAlgorithmus.chooseAction(s);
+//                doAction(a);
+//
+//                targetReached = targetReached();
+//                if (targetReached) {
+//                    this.reward = SimulationRobot.REWARD_DRIVE_TARGET;
+//                }
+//
+//                look();
+//                int sNext = findBarrier();
+//                this.lerningAlgorithmus.learn(s, sNext, a, reward);
+//
+//                String tableAfterAction = " \t => | ";
+//                for (double row : lerningAlgorithmus.q[s]) {
+//                    tableAfterAction += row + " | ";
+//                }
+//
+//                SimulationRobot.movementHistorie += tableAfterAction;
+//                SimulationRobot.movementHistorie += " ---- " + this.state0000;
+//                SimulationRobot.movementHistorie += System.lineSeparator();
+//
+//                ////
+//                FileWriter fw;
+//                BufferedWriter bw;
+//                try {
+//                    fw = new FileWriter(System.getProperty("user.dir") + "\\src\\gui_simulation\\" + "learning_variables2");
+//                    bw = new BufferedWriter(fw);
+//
+//                    bw.write(SimulationRobot.movementHistorie);
+//
+//                    bw.close();
+//                    fw.close();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//                ////
+//            }
+//
+//            System.out.println("Ziel erreicht bei Iteration: " + k + " in " + ((System.currentTimeMillis() - startTime) / 1000) + "s");
+//            lerningAlgorithmus.printQTable();
+//        }
+//        callGuiUpdateFunction();
+//
+//        System.out.println("Fertig!");
+//        System.out.println("forward \t backward \t rotLeft \t rotRight");
+//        lerningAlgorithmus.printQTable();
+//
+//        // Probedurchlauf
+//        System.out.println("Probedurchlauf wird gestartet");
+//        this.drived_look = 0;
+//        this.drived_rotateLeft = 0;
+//        this.drived_backward = 0;
+//        this.drived_rotateRight = 0;
+//        this.drived_forward = 0;
+//        this.try_drived_forward = 0;
+//        this.try_drived_backward = 0;
+//        this.try_drived_rotateLeft = 0;
+//        this.try_drived_rotateRight = 0;
+//
+//        this.state0000 = 0;
+//        this.state0001 = 0;
+//        this.state0010 = 0;
+//        this.state0011 = 0;
+//        this.state0100 = 0;
+//        this.state0101 = 0;
+//        this.state0110 = 0;
+//        this.state0111 = 0;
+//        this.state1000 = 0;
+//        this.state1001 = 0;
+//        this.state1010 = 0;
+//        this.state1011 = 0;
+//        this.state1100 = 0;
+//        this.state1101 = 0;
+//        this.state1110 = 0;
+//        this.state1111 = 0;
+//
+//        ArrayList<Integer> tmpPositions = new ArrayList<>();
+//        for (int i : this.startPosition) {
+//            tmpPositions.add(i);
+//        }
+//        this.position = OwnUtils.convertArrayListToIntArray(tmpPositions);
+//
+//        boolean targetReached = false;
+//        while (!targetReached) {
+//            look();
+//            int s = findBarrier();
+//            int a = this.lerningAlgorithmus.chooseAction(s);
+//            doAction(a);
+//
+//            targetReached = targetReached();
+//            if (targetReached) {
+//                this.reward = SimulationRobot.REWARD_DRIVE_TARGET;
+//            }
+//
+//            look();
+//            int sNext = findBarrier();
+//            this.lerningAlgorithmus.learn(s, sNext, a, reward);
+//
+//            String tableAfterAction = " \t => | ";
+//            for (double row : lerningAlgorithmus.q[s]) {
+//                tableAfterAction += row + " | ";
+//            }
+//
+//            // 0 Forward, 1 RLeft, 2 RRight, 3 Backward
+//            System.out.println(tableAfterAction);
+//        }
+//
+//        callGuiUpdateFunction();
+//
+//        System.out.println("Ziel erreicht");
+//        System.out.println("forward \t backward \t rotLeft \t rotRight");
+//        lerningAlgorithmus.printQTable();
+//
+//        System.out.println("Bewegungsmuster:");
+//        System.out.println("vorwärts: " + this.drived_forward);
+//        System.out.println("vorwärts angestoßen: " + this.try_drived_forward);
+//        System.out.println("Zurück:" + this.drived_backward);
+//        System.out.println("hinten angestoßen: " + this.try_drived_backward);
+//        System.out.println("Rechtsrotation: " + this.drived_rotateRight);
+//        System.out.println("Bei Rechtsrotation angestoßen: " + this.try_drived_rotateRight);
+//        System.out.println("Linksrotation: " + this.drived_rotateLeft);
+//        System.out.println("Bei Linksrotation angestoßen: " + this.try_drived_rotateLeft);
+//        System.out.println("Geschaut: " + this.drived_look);
+//        System.out.println("Angestoßen: " + (this.try_drived_forward + this.try_drived_backward + this.try_drived_rotateRight + this.try_drived_rotateLeft));
+//        System.out.println();
+//        System.out.println("Statusmuster:");
+//        System.out.println("0000: " + this.state0000);
+//        System.out.println("0001: " + this.state0001);
+//        System.out.println("0010: " + this.state0010);
+//        System.out.println("0011: " + this.state0011);
+//        System.out.println("0100: " + this.state0100);
+//        System.out.println("0101: " + this.state0101);
+//        System.out.println("0110: " + this.state0110);
+//        System.out.println("0111: " + this.state0111);
+//        System.out.println("1000: " + this.state1000);
+//        System.out.println("1001: " + this.state1001);
+//        System.out.println("1010: " + this.state1010);
+//        System.out.println("1011: " + this.state1011);
+//        System.out.println("1100: " + this.state1100);
+//        System.out.println("1101: " + this.state1101);
+//        System.out.println("1110: " + this.state1110);
+//        System.out.println("1111: " + this.state1111);
+//        System.out.println("Angestoßen: " + (this.try_drived_forward + this.try_drived_backward + this.try_drived_rotateRight + this.try_drived_rotateLeft));
+//        System.out.println("Durchschnittliche Anstöße: " + this.averageImpulses);
+
+
         // Lerndurchlauf
-        long startTime = System.currentTimeMillis();
-        double deltaE = 0.00;
-        int runs = 100;
-        for (int j = 0; j < runs; j++, deltaE += 0.01) {
-            ArrayList<Integer> tmpPositions = new ArrayList<>();
-            for(int i : this.startPosition){
-                tmpPositions.add(i);
-            }
-            this.position = OwnUtils.convertArrayListToIntArray(tmpPositions);
-
-            lerningAlgorithmus.epsilon -= deltaE;
-
-            if (lerningAlgorithmus.epsilon < 0) {
-                lerningAlgorithmus.epsilon = 0;
-            }
-
-            boolean targetReached = false;
-            int i = 0;
-            while (!targetReached) {
-                targetReached = targetReached();
-                look();
-                int s = findBarrier();
-                int a = this.lerningAlgorithmus.chooseAction(s);
-                doAction(a);
-                // 0 Forward, 1 RLeft, 2 RRight, 3 Backward
-                System.out.print(" I: " + i);
-                System.out.println();
-                look();
-                int sNext = findBarrier();
-                this.lerningAlgorithmus.learn(s, sNext, a, reward);
-                i++;
-            }
-            System.out.println("I: " + i + " Target reached! In " + ((System.currentTimeMillis() - startTime) / 1000) + "s");
-        }
+//        long startTime = System.currentTimeMillis();
+//        double deltaE = 0.00;
+//        int runs = 100;
+//        for (int j = 0; j < runs; j++, deltaE += 0.01) {
+//            ArrayList<Integer> tmpPositions = new ArrayList<>();
+//            for(int i : this.startPosition){
+//                tmpPositions.add(i);
+//            }
+//            this.position = OwnUtils.convertArrayListToIntArray(tmpPositions);
+//
+//            lerningAlgorithmus.epsilon -= deltaE;
+//
+//            if (lerningAlgorithmus.epsilon < 0) {
+//                lerningAlgorithmus.epsilon = 0;
+//            }
+//
+//            boolean targetReached = false;
+//            int i = 0;
+//            while (!targetReached) {
+//                targetReached = targetReached();
+//                look();
+//                int s = findBarrier();
+//                int a = this.lerningAlgorithmus.chooseAction(s);
+//                doAction(a);
+//                // 0 Forward, 1 RLeft, 2 RRight, 3 Backward
+//                System.out.print(" I: " + i);
+//                System.out.println();
+//                look();
+//                int sNext = findBarrier();
+//                this.lerningAlgorithmus.learn(s, sNext, a, reward);
+//                i++;
+//            }
+//            System.out.println("I: " + i + " Target reached! In " + ((System.currentTimeMillis() - startTime) / 1000) + "s");
+//        }
 
 //        this.drived_look = 0;
 //        this.drived_rotateLeft = 0;
@@ -944,10 +1371,10 @@ public class SimulationRobot implements Roboter {
             case DRIVE_FORWARD:
                 this.forward();
                 if (!isBumped) {
-                    this.reward += REWARD_DRIVE_FORWARD;
+                    this.reward = REWARD_DRIVE_FORWARD;
                     this.drived_forward++;
                 } else {
-                    this.reward += REWARD_BUMPED;
+                    this.reward = REWARD_BUMPED;
                     this.try_drived_forward++;
                 }
 
@@ -955,10 +1382,10 @@ public class SimulationRobot implements Roboter {
             case DRIVE_ROTATE_RIGHT:
                 this.right();
                 if (!isBumped) {
-                    this.reward += REWARD_DRIVE_ROTATE_RIGHT;
+                    this.reward = REWARD_DRIVE_ROTATE_RIGHT;
                     this.drived_rotateRight++;
                 } else {
-                    this.reward += REWARD_BUMPED;
+                    this.reward = REWARD_BUMPED;
                     this.try_drived_rotateRight++;
                 }
 
@@ -966,10 +1393,10 @@ public class SimulationRobot implements Roboter {
             case DRIVE_BACKWARD:
                 this.backward();
                 if (!isBumped) {
-                    this.reward += REWARD_DRIVE_BACK;
+                    this.reward = REWARD_DRIVE_BACK;
                     this.drived_backward++;
                 } else {
-                    this.reward += REWARD_BUMPED;
+                    this.reward = REWARD_BUMPED;
                     this.try_drived_backward++;
                 }
 
@@ -977,10 +1404,10 @@ public class SimulationRobot implements Roboter {
             case DRIVE_ROTATE_LEFT:
                 this.left();
                 if (!isBumped) {
-                    this.reward += REWARD_DRIVE_ROTATE_LEFT;
+                    this.reward = REWARD_DRIVE_ROTATE_LEFT;
                     this.drived_rotateLeft++;
                 } else {
-                    this.reward += REWARD_BUMPED;
+                    this.reward = REWARD_BUMPED;
                     this.try_drived_rotateLeft++;
                 }
 

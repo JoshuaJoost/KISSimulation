@@ -1,13 +1,14 @@
 package gui_simulation;
 
+import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class QLearningAgentMovement {
 
-    public double epsilon = 0.7; // Zufällige Bewegung
+    public double epsilon = 10; // Zufällige Bewegung
     public double alpha = 0.1; // Lernrate (0..1)
     public double gamma = 0.90; // Bewertungsfaktor (0..1)
-    private double q[][]; // Q-Learning-Array
+    public double q[][]; // Q-Learning-Array
     private static final int POSSIBLE_ACTIONS = 4; // 2^4 = 16 Mögliche Zustände
 
     public QLearningAgentMovement() {
@@ -31,7 +32,7 @@ public class QLearningAgentMovement {
     public void printQTable() {
         for (int i = 0; i < (int) Math.pow(2, POSSIBLE_ACTIONS); i++) {
             for (int j = 0; j < POSSIBLE_ACTIONS; j++) {
-                System.out.print(this.q[i][j] + ",");
+                System.out.print(this.q[i][j] + " \t");
             }
             System.out.println();
         }
@@ -41,13 +42,25 @@ public class QLearningAgentMovement {
      * Lernt durch die übergebenen Zustände, ob die Aktion erfolgreich war und
      * speichert die Werte in das q-array.
      *
-     * @param s:      Aktueller Zustand
-     * @param s_next: Nächster Zustand
-     * @param a:      Aktion
-     * @param r:      Belohnung
+     * @param actualState:      Aktueller Zustand
+     * @param nextState: Nächster Zustand
+     * @param action:      Aktion
+     * @param reward:      Belohnung
      */
-    public void learn(int s, int s_next, int a, double r) {
-        this.q[s][a] += this.alpha * (r + this.gamma * (this.q[s_next][actionWithBestRating(s_next)]) - q[s][a]);
+    public void learn(int actualState, int nextState, int action, double reward) {
+        ArrayList<Integer> nextActions = new ArrayList<>();
+        nextActions.addAll(actionWithBestRating(nextState));
+
+        Integer nextAction = null;
+        if(nextActions.size() > 1){
+            int rnd = (int)(Math.random() * nextActions.size());
+            nextAction = nextActions.get(rnd);
+        } else {
+            nextAction = nextActions.get(0);
+        }
+
+
+        this.q[actualState][action] += this.alpha * (reward + this.gamma * (this.q[nextState][nextAction]) - q[actualState][action]);
     }
 
     /**
@@ -56,17 +69,18 @@ public class QLearningAgentMovement {
      * @param s: Zustand s
      * @return: Gibt die Aktion als int zurück.
      */
-    public int actionWithBestRating(int s) {
+    public ArrayList<Integer> actionWithBestRating(int s) {
+        ArrayList<Integer> indexActionsWithBestRating = new ArrayList<>();
         double max = Integer.MIN_VALUE;
-        int index = 0;
 
         for (int i = 0; i < POSSIBLE_ACTIONS; i++) {
             if (this.q[s][i] >= max) {
                 max = this.q[s][i];
-                index = i;
+                indexActionsWithBestRating.add(i);
             }
         }
-        return index;
+//        return index;
+        return indexActionsWithBestRating;
     }
 
     /**
@@ -77,35 +91,52 @@ public class QLearningAgentMovement {
      */
     public int chooseAction(int s) {
         int a = 0;
-        double rand = Math.random();
+        int rand = (int) (Math.random() * 101);
         if (rand < this.epsilon) {
             // + 1 to have the last inclusive
-            a = ThreadLocalRandom.current().nextInt(0, POSSIBLE_ACTIONS);
+            // a = ThreadLocalRandom.current().nextInt(0, POSSIBLE_ACTIONS);
+            a = (int) (Math.random() * 4);
+//            System.out.print("Zufälliger Zug: " + a + " ");
         } else {
             //TODO wenn er die auswahlt zwischen verschiedenen Aktionen hat random zwischen diesen auswählen
-            a = actionWithBestRating(s);
-
-            String table = "";
-            for(double i : this.q[s]){
-                table += i + " | ";
-            }
-            switch (a) {
-                case SimulationRobot.DRIVE_FORWARD:
-                    System.out.print("T:" + table + " -> Forward ");
-                    break;
-                case SimulationRobot.DRIVE_BACKWARD:
-                    System.out.print("T:" + table + " -> Backward");
-                    break;
-                case SimulationRobot.DRIVE_ROTATE_LEFT:
-                    System.out.print("T:" + table + " -> RLeft");
-                    break;
-                case SimulationRobot.DRIVE_ROTATE_RIGHT:
-                    System.out.print("T:" + table + " -> RRight");
-                    break;
-                default:
-                    System.out.print("Ungültige Aktion");
+            ArrayList<Integer> indexActionsWithBestRating = new ArrayList<>(actionWithBestRating(s));
+            //indexActionsWithBestRating.addAll(actionWithBestRating(s));
+            //a = actionWithBestRating(s);
+            if(indexActionsWithBestRating.size() > 1){
+                int rnd = (int)(Math.random() * indexActionsWithBestRating.size());
+                a = indexActionsWithBestRating.get(rnd);
+//                System.out.print("Auswahl: \t\t" + a + " ");
+            } else {
+                a = indexActionsWithBestRating.get(0);
             }
         }
+
+        String table = "| ";
+        for(double i : this.q[s]){
+            table += i + " | ";
+        }
+        SimulationRobot.movementHistorie += table;
+        switch (a) {
+            case SimulationRobot.DRIVE_FORWARD:
+//                System.out.print(table + "\t -> " + a + " Forward");
+                SimulationRobot.movementHistorie += "\t -> " + a + " Forward";
+                break;
+            case SimulationRobot.DRIVE_BACKWARD:
+//                System.out.print(table + "\t -> " + a + " Backward");
+                SimulationRobot.movementHistorie += "\t -> " + a + " Backward";
+                break;
+            case SimulationRobot.DRIVE_ROTATE_LEFT:
+//                System.out.print(table + "\t -> " + a + " RLeft");
+                SimulationRobot.movementHistorie += "\t -> " + a + " RLeft";
+                break;
+            case SimulationRobot.DRIVE_ROTATE_RIGHT:
+//                System.out.print(table + "\t -> " + a + " RRight");
+                SimulationRobot.movementHistorie += "\t -> " + a + " RRight";
+                break;
+            default:
+//                System.out.print("Ungültige Aktion");
+        }
+
         return a;
     }
 }
