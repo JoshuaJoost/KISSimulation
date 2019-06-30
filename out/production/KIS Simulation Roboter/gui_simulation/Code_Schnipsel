@@ -1,0 +1,283 @@
+/*
+* Zustände Anhängig der möglichen Bewegung
+*/
+--- Bei Objektvariaben -----------
+// Zustände - Mögliche Bewegungen
+    // vorne | hinten | Rotation links | Rotation rechts
+    private int state0000 = 0;
+    private int state0001 = 0;
+    private int state0010 = 0;
+    private int state0011 = 0;
+    private int state0100 = 0;
+    private int state0101 = 0;
+    private int state0110 = 0;
+    private int state0111 = 0;
+    private int state1000 = 0;
+    private int state1001 = 0;
+    private int state1010 = 0;
+    private int state1011 = 0;
+    private int state1100 = 0;
+    private int state1101 = 0;
+    private int state1110 = 0;
+    private int state1111 = 0;
+
+------ start-Methode--------------------
+this.state0000 = 0;
+        this.state0001 = 0;
+        this.state0010 = 0;
+        this.state0011 = 0;
+        this.state0100 = 0;
+        this.state0101 = 0;
+        this.state0110 = 0;
+        this.state0111 = 0;
+        this.state1000 = 0;
+        this.state1001 = 0;
+        this.state1010 = 0;
+        this.state1011 = 0;
+        this.state1100 = 0;
+        this.state1101 = 0;
+        this.state1110 = 0;
+        this.state1111 = 0;
+
+        // Test QTabel
+        System.out.println("---------------------------Lernphase 1 - Epsilon Lernen--------------------------");
+        System.out.println("---------------------------------------------------------------------------------");
+        System.out.println("---------------------------------------------------------------------------------");
+        this.lerningAlgorithmus.epsilon = 100;
+        for(int j = 0; j < 100; j++) {
+            System.out.println("Iteration: " + j);
+            setRobotBackToStartPosition();
+
+            boolean foundTarget = false;
+            for (int i = 0; i < 10000 && !foundTarget; i++) {
+                look();
+                int s = findBarrier();
+                int a = this.lerningAlgorithmus.chooseAction(s);
+                doAction(a);
+
+                foundTarget = targetReached();
+                if (foundTarget) {
+                    this.reward = SimulationRobot.REWARD_DRIVE_TARGET;
+                }
+
+                look();
+                int sNext = findBarrier();
+                this.lerningAlgorithmus.learn(s, sNext, a, reward);
+            }
+
+            if(foundTarget){
+                System.out.println("Target found!");
+            } else{
+                System.out.println("Target -not- found");
+            }
+        }
+
+        lerningAlgorithmus.printQTable();
+
+        System.out.println("---------------------------Lernphase 2 - QTable  Lernen--------------------------");
+        System.out.println("---------------------------------------------------------------------------------");
+        System.out.println("---------------------------------------------------------------------------------");
+        this.lerningAlgorithmus.epsilon = 0;
+        for(int j = 0, e = 0; j < 15; j++, e++) {
+            System.out.println("Iteration: " + j);
+            setRobotBackToStartPosition();
+            this.lerningAlgorithmus.epsilon -= e;
+            if(this.lerningAlgorithmus.epsilon < 0){
+                this.lerningAlgorithmus.epsilon = 0;
+            }
+
+            boolean foundTarget = false;
+            for (int i = 0; i < 10000 && !foundTarget; i++) {
+                look();
+                int s = findBarrier();
+                int a = this.lerningAlgorithmus.chooseAction(s);
+                doAction(a);
+
+                foundTarget = targetReached();
+                if (foundTarget) {
+                    this.reward = SimulationRobot.REWARD_DRIVE_TARGET;
+                }
+
+                look();
+                int sNext = findBarrier();
+                this.lerningAlgorithmus.learn(s, sNext, a, reward);
+            }
+
+            if(foundTarget){
+                System.out.println("Target found!");
+            } else{
+                System.out.println("Target -not- found");
+            }
+        }
+
+        //Probedurchlauf
+        System.out.println("--------------------------Probedurchlauf------------------------------");
+        System.out.println("----------------------------------------------------------------------");
+        System.out.println("----------------------------------------------------------------------");
+        this.drived_look = 0;
+        this.drived_rotateLeft = 0;
+        this.drived_backward = 0;
+        this.drived_rotateRight = 0;
+        this.drived_forward = 0;
+        this.try_drived_forward = 0;
+        this.try_drived_backward = 0;
+        this.try_drived_rotateLeft = 0;
+        this.try_drived_rotateRight = 0;
+
+        this.state0000 = 0;
+        this.state0001 = 0;
+        this.state0010 = 0;
+        this.state0011 = 0;
+        this.state0100 = 0;
+        this.state0101 = 0;
+        this.state0110 = 0;
+        this.state0111 = 0;
+        this.state1000 = 0;
+        this.state1001 = 0;
+        this.state1010 = 0;
+        this.state1011 = 0;
+        this.state1100 = 0;
+        this.state1101 = 0;
+        this.state1110 = 0;
+        this.state1111 = 0;
+
+
+        setRobotBackToStartPosition();
+        this.lerningAlgorithmus.epsilon = 0;
+
+        boolean foundTarget = false;
+        int j = 0;
+        for(int i = 0; i < 10000 && !foundTarget; i++, j++){
+            look();
+            int s = findBarrier();
+            int a = this.lerningAlgorithmus.chooseAction(s);
+            doAction(a);
+
+            foundTarget = targetReached();
+            if (foundTarget) {
+                this.reward = SimulationRobot.REWARD_DRIVE_TARGET;
+            }
+
+            look();
+            int sNext = findBarrier();
+            this.lerningAlgorithmus.learn(s, sNext, a, reward);
+        }
+        callGuiUpdateFunction();
+
+        System.out.println("Bewegungsmuster:");
+        System.out.println("vorwärts: " + this.drived_forward);
+        System.out.println("vorwärts angestoßen: " + this.try_drived_forward);
+        System.out.println("Zurück:" + this.drived_backward);
+        System.out.println("hinten angestoßen: " + this.try_drived_backward);
+        System.out.println("Rechtsrotation: " + this.drived_rotateRight);
+        System.out.println("Bei Rechtsrotation angestoßen: " + this.try_drived_rotateRight);
+        System.out.println("Linksrotation: " + this.drived_rotateLeft);
+        System.out.println("Bei Linksrotation angestoßen: " + this.try_drived_rotateLeft);
+        System.out.println("Iterationen: " + j);
+        System.out.println("Angestoßen: " + (this.try_drived_forward + this.try_drived_backward + this.try_drived_rotateRight + this.try_drived_rotateLeft));
+        System.out.println();
+        System.out.println("Statusmuster:");
+        System.out.println("0000: " + this.state0000);
+        System.out.println("0001: " + this.state0001);
+        System.out.println("0010: " + this.state0010);
+        System.out.println("0011: " + this.state0011);
+        System.out.println("0100: " + this.state0100);
+        System.out.println("0101: " + this.state0101);
+        System.out.println("0110: " + this.state0110);
+        System.out.println("0111: " + this.state0111);
+        System.out.println("1000: " + this.state1000);
+        System.out.println("1001: " + this.state1001);
+        System.out.println("1010: " + this.state1010);
+        System.out.println("1011: " + this.state1011);
+        System.out.println("1100: " + this.state1100);
+        System.out.println("1101: " + this.state1101);
+        System.out.println("1110: " + this.state1110);
+        System.out.println("1111: " + this.state1111);
+        System.out.println("Angestoßen: " + (this.try_drived_forward + this.try_drived_backward + this.try_drived_rotateRight + this.try_drived_rotateLeft));
+        System.out.println("Fehlerquote: " + ((this.try_drived_forward + this.try_drived_backward + this.try_drived_rotateRight + this.try_drived_rotateLeft) * 100 / j) + "%");
+
+-------------------- findBarrier-Methode----------------------------------------
+@Override
+    public int findBarrier() {
+        if (!forwardFree() && !backwardFree() && !rotationLeftFree() && !rotationRightFree()) {
+            this.state0000++;
+            return 0;
+        }
+
+        if (!forwardFree() && !backwardFree() && !rotationLeftFree() && rotationRightFree()) {
+            this.state0001++;
+            return 1;
+        }
+
+        if (!forwardFree() && !backwardFree() && rotationLeftFree() && !rotationRightFree()) {
+            this.state0010++;
+            return 2;
+        }
+
+        if (!forwardFree() && !backwardFree() && rotationLeftFree() && rotationRightFree()) {
+            this.state0011++;
+            return 3;
+        }
+
+        if (!forwardFree() && backwardFree() && !rotationLeftFree() && !rotationRightFree()) {
+            this.state0100++;
+            return 4;
+        }
+
+        if (!forwardFree() && backwardFree() && !rotationLeftFree() && rotationRightFree()) {
+            this.state0101++;
+            return 5;
+        }
+
+        if (!forwardFree() && backwardFree() && rotationLeftFree() && !rotationRightFree()) {
+            this.state0110++;
+            return 6;
+        }
+
+        if (!forwardFree() && backwardFree() && rotationLeftFree() && rotationRightFree()) {
+            this.state0111++;
+            return 7;
+        }
+
+        if (forwardFree() && !backwardFree() && !rotationLeftFree() && !rotationRightFree()) {
+            this.state1000++;
+            return 8;
+        }
+
+        if (forwardFree() && !backwardFree() && !rotationLeftFree() && rotationRightFree()) {
+            this.state1001++;
+            return 9;
+        }
+
+        if (forwardFree() && !backwardFree() && rotationLeftFree() && !rotationRightFree()) {
+            this.state1010++;
+            return 10;
+        }
+
+        if (forwardFree() && !backwardFree() && rotationLeftFree() && rotationRightFree()) {
+            this.state1011++;
+            return 11;
+        }
+
+        if (forwardFree() && backwardFree() && !rotationLeftFree() && !rotationRightFree()) {
+            this.state1100++;
+            return 12;
+        }
+
+        if (forwardFree() && backwardFree() && !rotationLeftFree() && rotationRightFree()) {
+            this.state1101++;
+            return 13;
+        }
+
+        if (forwardFree() && backwardFree() && rotationLeftFree() && !rotationRightFree()) {
+            this.state1110++;
+            return 14;
+        }
+
+        if (forwardFree() && backwardFree() && rotationLeftFree() && rotationRightFree()) {
+            this.state1111++;
+            return 15;
+        }
+
+        throw new IllegalStateException("Roboter ist in keinem gültigen Zustand");
+    }

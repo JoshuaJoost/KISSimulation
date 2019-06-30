@@ -562,7 +562,7 @@ public class SimulationRobot implements Roboter {
         System.out.println("----------------------------------- Lerndurchlauf 3 -----------------------------------");
         System.out.println("----------------------------------- Kleines-Epsilon-lernen ----------------------------");
         System.out.println("---------------------------------------------------------------------------------------");
-        this.lerningAlgorithmus.setEpsilon(0.1);
+        this.lerningAlgorithmus.setEpsilon(0.2);
         for (int j = 0; j < 100; j++) {
             setRobotBackToStartPosition();
 
@@ -593,7 +593,7 @@ public class SimulationRobot implements Roboter {
         System.out.println("----------------------------------- Lerndurchlauf 4 -----------------------------------");
         System.out.println("----------------------------------- Q-Tabelle lernen ----------------------------------");
         System.out.println("---------------------------------------------------------------------------------------");
-        this.lerningAlgorithmus.setEpsilon(0);
+        this.lerningAlgorithmus.setEpsilon(0.1);
         for (int j = 0; j < 100; j++) {
             setRobotBackToStartPosition();
 
@@ -655,6 +655,27 @@ public class SimulationRobot implements Roboter {
 
             if (targetReached()) {
                 this.reward = SimulationRobot.REWARD_DRIVE_TARGET;
+            }
+//            System.out.println("s:" + s);
+            switch (s){
+                case 0: this.stateNoBarrier++;
+                break;
+                case 1: this.stateFront++;
+                break;
+                case 2: this.stateLeft++;
+                break;
+                case 3: this.stateRight++;
+                break;
+                case 4: this.stateFrontLeft++;
+                break;
+                case 5: this.stateFrontRight++;
+                break;
+                case 6: this.stateLeftRight++;
+                break;
+                case 7: this.stateFrontLeftRight++;
+                break;
+                case 8: this.stateBumped++;
+                break;
             }
 
             look();
@@ -762,16 +783,17 @@ public class SimulationRobot implements Roboter {
     public int findBarrier() {
         // bumped
         if (isBumped) {
-            this.stateBumped++;
+//            this.stateBumped++;
             return 8;
         }
         // front = 1
-        if (distanceData[0] >= MIN_DISTANCE && distanceData[1] < MIN_DISTANCE && distanceData[2] > MIN_DISTANCE) {
+        if (distanceData[0] >= MIN_DISTANCE && distanceData[1] < MIN_DISTANCE && distanceData[2] >= MIN_DISTANCE) {
             // front + bumped
 //			if (isBumped()) {
 //				return 8;
 //			}
-            this.stateFront++;
+//            System.out.println("Vorne");
+//            this.stateFront++;
             return 1;
         }
         // left = 2
@@ -780,7 +802,7 @@ public class SimulationRobot implements Roboter {
 //			if (isBumped()) {
 //				return 9;
 //			}
-            this.stateLeft++;
+//            this.stateLeft++;
             return 2;
         }
         // right = 3
@@ -789,7 +811,7 @@ public class SimulationRobot implements Roboter {
 //			if (isBumped()) {
 //				return 10;
 //			}
-            this.stateRight++;
+//            this.stateRight++;
             return 3;
         }
         // front + left = 4
@@ -798,7 +820,7 @@ public class SimulationRobot implements Roboter {
 //			if (isBumped()) {
 //				return 11;
 //			}
-            this.stateFrontLeft++;
+//            this.stateFrontLeft++;
             return 4;
         }
         // front + right = 5
@@ -807,7 +829,7 @@ public class SimulationRobot implements Roboter {
 //			if (isBumped()) {
 //				return 12;
 //			}
-            this.stateFrontRight++;
+//            this.stateFrontRight++;
             return 5;
         }
         // left + right = 6
@@ -816,7 +838,7 @@ public class SimulationRobot implements Roboter {
 //			if (isBumped()) {
 //				return 13;
 //			}
-            this.stateLeftRight++;
+//            this.stateLeftRight++;
             return 6;
         }
         // front + left + right = 7
@@ -825,10 +847,10 @@ public class SimulationRobot implements Roboter {
 //			if (isBumped()) {
 //				return 14;
 //			}
-            this.stateFrontLeftRight++;
+//            this.stateFrontLeftRight++;
             return 7;
         }
-        this.stateNoBarrier++;
+//        this.stateNoBarrier++;
         return 0;
     }
 
