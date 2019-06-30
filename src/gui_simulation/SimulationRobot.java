@@ -481,173 +481,61 @@ public class SimulationRobot implements Roboter {
             this.startPosition[i] = this.position[i];
         }
 
-        if (!targetReached()) {
-            // Bei langen Rechenoperationen blockiert der GUI-Thread, um auf dieser wieder Code
-            // zum Laufen zu bekommen muss man einem Task ein Platform.runlater() übergeben
-            // dieser dann gethreated wird
-            Task<Void> updateGui = new Task<Void>() {
-                @Override
-                protected Void call() throws Exception {
-                    Platform.runLater(() -> SimulationMaze.getSelectedMaze().getSelectedRobot().callGuiUpdateFunction());
-                    return null;
-                }
-            };
-
-            System.out.println("----------------------------------- Lerndurchlauf 1 -----------------------------------");
-            System.out.println("----------------------------------- Epsilon-lernen ------------------------------------");
-            System.out.println("---------------------------------------------------------------------------------------");
-            this.lerningAlgorithmus.setEpsilon(1);
-            for (int j = 0; j < 100; j++) {
-                setRobotBackToStartPosition();
-                for (int i = 0; i < 1000000 && !targetReached(); i++) {
-                    look();
-                    int s = findBarrier();
-                    int a = this.lerningAlgorithmus.chooseAction(s);
-                    doAction(a);
-
-                    if (targetReached()) {
-                        this.reward = SimulationRobot.REWARD_DRIVE_TARGET;
-                    }
-
-                    look();
-                    int sNext = findBarrier();
-                    this.lerningAlgorithmus.learn(s, sNext, a, this.reward);
-                }
-                System.out.print("I: " + (j + 1) + " ");
-                if (targetReached()) {
-                    System.out.print("Ziel gefunden!");
-                } else {
-                    System.out.print("Ziel -nicht- gefunden!");
-                }
-                System.out.println();
+        // Bei langen Rechenoperationen blockiert der GUI-Thread, um auf dieser wieder Code
+        // zum Laufen zu bekommen muss man einem Task ein Platform.runlater() übergeben
+        // dieser dann gethreated wird
+        Task<Void> updateGui = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                Platform.runLater(() -> SimulationMaze.getSelectedMaze().getSelectedRobot().callGuiUpdateFunction());
+                return null;
             }
+        };
 
-            System.out.println("----------------------------------- Lerndurchlauf 2 -----------------------------------");
-            System.out.println("----------------------------------- Degradierendes-Epsilon-lernen ---------------------");
-            System.out.println("---------------------------------------------------------------------------------------");
-            this.lerningAlgorithmus.setEpsilon(1);
-            for (int j = 0, e = 0; j < 100; j++, e += 0.01) {
-                setRobotBackToStartPosition();
-
-                double newEpsilon = this.lerningAlgorithmus.getEpsilon() - e;
-                this.lerningAlgorithmus.setEpsilon(newEpsilon);
-                if (this.lerningAlgorithmus.getEpsilon() < 0) {
-                    this.lerningAlgorithmus.setEpsilon(1);
-                    e = 0;
-                }
-
-                for (int i = 0; i < 1000000 && !targetReached(); i++) {
-                    look();
-                    int s = findBarrier();
-                    int a = this.lerningAlgorithmus.chooseAction(s);
-                    doAction(a);
-
-                    if (targetReached()) {
-                        this.reward = SimulationRobot.REWARD_DRIVE_TARGET;
-                    }
-
-                    look();
-                    int sNext = findBarrier();
-                    this.lerningAlgorithmus.learn(s, sNext, a, this.reward);
-                }
-
-                System.out.print("I: " + (j + 1) + " ");
-                if (targetReached()) {
-                    System.out.print("Ziel gefunden!");
-                } else {
-                    System.out.println("Ziel -nicht- gefunden!");
-                }
-                System.out.println();
-            }
-
-            System.out.println("----------------------------------- Lerndurchlauf 3 -----------------------------------");
-            System.out.println("----------------------------------- Kleines-Epsilon-lernen ----------------------------");
-            System.out.println("---------------------------------------------------------------------------------------");
-            this.lerningAlgorithmus.setEpsilon(0.1);
-            for (int j = 0; j < 100; j++) {
-                setRobotBackToStartPosition();
-
-                for (int i = 0; i < 1000000 && !targetReached(); i++) {
-                    look();
-                    int s = findBarrier();
-                    int a = this.lerningAlgorithmus.chooseAction(s);
-                    doAction(a);
-
-                    if (targetReached()) {
-                        this.reward = SimulationRobot.REWARD_DRIVE_TARGET;
-                    }
-
-                    look();
-                    int sNext = findBarrier();
-                    this.lerningAlgorithmus.learn(s, sNext, a, this.reward);
-                }
-
-                System.out.print("I: " + (j + 1) + " ");
-                if (targetReached()) {
-                    System.out.print("Ziel gefunden!");
-                } else {
-                    System.out.println("Ziel -nicht- gefunden!");
-                }
-                System.out.println();
-            }
-
-            System.out.println("----------------------------------- Lerndurchlauf 4 -----------------------------------");
-            System.out.println("----------------------------------- Q-Tabelle lernen ----------------------------------");
-            System.out.println("---------------------------------------------------------------------------------------");
-            this.lerningAlgorithmus.setEpsilon(0);
-            for (int j = 0; j < 100; j++) {
-                setRobotBackToStartPosition();
-
-                for (int i = 0; i < 1000000 && !targetReached(); i++) {
-                    look();
-                    int s = findBarrier();
-                    int a = this.lerningAlgorithmus.chooseAction(s);
-                    doAction(a);
-
-                    if (targetReached()) {
-                        this.reward = SimulationRobot.REWARD_DRIVE_TARGET;
-                    }
-
-                    look();
-                    int sNext = findBarrier();
-                    this.lerningAlgorithmus.learn(s, sNext, a, this.reward);
-                }
-
-                System.out.print("I: " + (j + 1) + " ");
-                if (targetReached()) {
-                    System.out.print("Ziel gefunden!");
-                } else {
-                    System.out.print("Ziel -nicht- gefunden!");
-                }
-                System.out.println();
-            }
-
-            System.out.println("----------------------------------- Probedurchlauf ------------------------------------");
-            System.out.println("---------------------------------------------------------------------------------------");
-
-            this.drived_look = 0;
-            this.drived_rotateLeft = 0;
-            this.drived_backward = 0;
-            this.drived_rotateRight = 0;
-            this.drived_forward = 0;
-            this.try_drived_forward = 0;
-            this.try_drived_backward = 0;
-            this.try_drived_rotateLeft = 0;
-            this.try_drived_rotateRight = 0;
-
-            this.stateBumped = 0;
-            this.stateFront = 0;
-            this.stateLeft = 0;
-            this.stateRight = 0;
-            this.stateFrontLeft = 0;
-            this.stateFrontRight = 0;
-            this.stateLeftRight = 0;
-            this.stateFrontLeftRight = 0;
-
-            this.lerningAlgorithmus.setEpsilon(0);
-            int j = 0;
+        System.out.println("----------------------------------- Lerndurchlauf 1 -----------------------------------");
+        System.out.println("----------------------------------- Epsilon-lernen ------------------------------------");
+        System.out.println("---------------------------------------------------------------------------------------");
+        this.lerningAlgorithmus.setEpsilon(1);
+        for (int j = 0; j < 100; j++) {
             setRobotBackToStartPosition();
-            for (int i = 0; i < 1000000 && !targetReached(); i++, j++) {
+            for (int i = 0; i < 1000000 && !targetReached(); i++) {
+                look();
+                int s = findBarrier();
+                int a = this.lerningAlgorithmus.chooseAction(s);
+                doAction(a);
+
+                if (targetReached()) {
+                    this.reward = SimulationRobot.REWARD_DRIVE_TARGET;
+                }
+
+                look();
+                int sNext = findBarrier();
+                this.lerningAlgorithmus.learn(s, sNext, a, this.reward);
+            }
+            System.out.print("I: " + (j + 1) + " ");
+            if (targetReached()) {
+                System.out.print("Ziel gefunden!");
+            } else {
+                System.out.print("Ziel -nicht- gefunden!");
+            }
+            System.out.println();
+        }
+
+        System.out.println("----------------------------------- Lerndurchlauf 2 -----------------------------------");
+        System.out.println("----------------------------------- Degradierendes-Epsilon-lernen ---------------------");
+        System.out.println("---------------------------------------------------------------------------------------");
+        this.lerningAlgorithmus.setEpsilon(1);
+        for (int j = 0, e = 0; j < 100; j++, e += 0.01) {
+            setRobotBackToStartPosition();
+
+            double newEpsilon = this.lerningAlgorithmus.getEpsilon() - e;
+            this.lerningAlgorithmus.setEpsilon(newEpsilon);
+            if (this.lerningAlgorithmus.getEpsilon() < 0) {
+                this.lerningAlgorithmus.setEpsilon(1);
+                e = 0;
+            }
+
+            for (int i = 0; i < 1000000 && !targetReached(); i++) {
                 look();
                 int s = findBarrier();
                 int a = this.lerningAlgorithmus.chooseAction(s);
@@ -662,37 +550,153 @@ public class SimulationRobot implements Roboter {
                 this.lerningAlgorithmus.learn(s, sNext, a, this.reward);
             }
 
-            if (!targetReached()) {
-                System.out.println("Ziel -nicht- gefunden!");
+            System.out.print("I: " + (j + 1) + " ");
+            if (targetReached()) {
+                System.out.print("Ziel gefunden!");
             } else {
-                System.out.println("Ziel gefunden");
+                System.out.println("Ziel -nicht- gefunden!");
+            }
+            System.out.println();
+        }
+
+        System.out.println("----------------------------------- Lerndurchlauf 3 -----------------------------------");
+        System.out.println("----------------------------------- Kleines-Epsilon-lernen ----------------------------");
+        System.out.println("---------------------------------------------------------------------------------------");
+        this.lerningAlgorithmus.setEpsilon(0.1);
+        for (int j = 0; j < 100; j++) {
+            setRobotBackToStartPosition();
+
+            for (int i = 0; i < 1000000 && !targetReached(); i++) {
+                look();
+                int s = findBarrier();
+                int a = this.lerningAlgorithmus.chooseAction(s);
+                doAction(a);
+
+                if (targetReached()) {
+                    this.reward = SimulationRobot.REWARD_DRIVE_TARGET;
+                }
+
+                look();
+                int sNext = findBarrier();
+                this.lerningAlgorithmus.learn(s, sNext, a, this.reward);
             }
 
-            new Thread(updateGui).start();
-            this.lerningAlgorithmus.printQTable();
-            System.out.println("Bewegungsmuster:");
-            System.out.println("vorwärts: " + this.drived_forward);
-            System.out.println("vorwärts angestoßen: " + this.try_drived_forward);
-            System.out.println("Zurück:" + this.drived_backward);
-            System.out.println("hinten angestoßen: " + this.try_drived_backward);
-            System.out.println("Rechtsrotation: " + this.drived_rotateRight);
-            System.out.println("Bei Rechtsrotation angestoßen: " + this.try_drived_rotateRight);
-            System.out.println("Linksrotation: " + this.drived_rotateLeft);
-            System.out.println("Bei Linksrotation angestoßen: " + this.try_drived_rotateLeft);
-            System.out.println("Iterationen: " + (j + 1));
-            System.out.println("Angestoßen: " + (this.try_drived_forward + this.try_drived_backward + this.try_drived_rotateRight + this.try_drived_rotateLeft));
-            System.out.println("Fehlerquote: " + ((this.try_drived_forward + this.try_drived_backward + this.try_drived_rotateRight + this.try_drived_rotateLeft) * 100 / j) + "%");
+            System.out.print("I: " + (j + 1) + " ");
+            if (targetReached()) {
+                System.out.print("Ziel gefunden!");
+            } else {
+                System.out.println("Ziel -nicht- gefunden!");
+            }
             System.out.println();
-            System.out.println("Zustandsmuster:");
-            System.out.println("Barriere Vorne: " + this.stateFront);
-            System.out.println("Barriere Links: " + this.stateLeft);
-            System.out.println("Barriere Rechts: " + this.stateRight);
-            System.out.println("Barriere Vorne&Links: " + this.stateFrontLeft);
-            System.out.println("Barriere Vorne&Rechts: " + this.stateFrontRight);
-            System.out.println("Barriere Links&Rechts: " + this.stateLeftRight);
-            System.out.println("Barriere Vorne&Links&Rechts: " + this.stateFrontLeftRight);
-            System.out.println("Zustand Angestoßen: " + this.stateBumped);
         }
+
+        System.out.println("----------------------------------- Lerndurchlauf 4 -----------------------------------");
+        System.out.println("----------------------------------- Q-Tabelle lernen ----------------------------------");
+        System.out.println("---------------------------------------------------------------------------------------");
+        this.lerningAlgorithmus.setEpsilon(0);
+        for (int j = 0; j < 100; j++) {
+            setRobotBackToStartPosition();
+
+            for (int i = 0; i < 1000000 && !targetReached(); i++) {
+                look();
+                int s = findBarrier();
+                int a = this.lerningAlgorithmus.chooseAction(s);
+                doAction(a);
+
+                if (targetReached()) {
+                    this.reward = SimulationRobot.REWARD_DRIVE_TARGET;
+                }
+
+                look();
+                int sNext = findBarrier();
+                this.lerningAlgorithmus.learn(s, sNext, a, this.reward);
+            }
+
+            System.out.print("I: " + (j + 1) + " ");
+            if (targetReached()) {
+                System.out.print("Ziel gefunden!");
+            } else {
+                System.out.print("Ziel -nicht- gefunden!");
+            }
+            System.out.println();
+        }
+
+        System.out.println("----------------------------------- Probedurchlauf ------------------------------------");
+        System.out.println("---------------------------------------------------------------------------------------");
+
+        this.drived_look = 0;
+        this.drived_rotateLeft = 0;
+        this.drived_backward = 0;
+        this.drived_rotateRight = 0;
+        this.drived_forward = 0;
+        this.try_drived_forward = 0;
+        this.try_drived_backward = 0;
+        this.try_drived_rotateLeft = 0;
+        this.try_drived_rotateRight = 0;
+
+        this.stateBumped = 0;
+        this.stateFront = 0;
+        this.stateLeft = 0;
+        this.stateRight = 0;
+        this.stateFrontLeft = 0;
+        this.stateFrontRight = 0;
+        this.stateLeftRight = 0;
+        this.stateFrontLeftRight = 0;
+        this.stateNoBarrier = 0;
+
+        this.lerningAlgorithmus.setEpsilon(0);
+        int j = 0;
+        setRobotBackToStartPosition();
+        for (int i = 0; i < 1000000 && !targetReached(); i++, j++) {
+            look();
+            int s = findBarrier();
+            int a = this.lerningAlgorithmus.chooseAction(s);
+            doAction(a);
+
+            if (targetReached()) {
+                this.reward = SimulationRobot.REWARD_DRIVE_TARGET;
+            }
+
+            look();
+            int sNext = findBarrier();
+            this.lerningAlgorithmus.learn(s, sNext, a, this.reward);
+        }
+
+        if (!targetReached()) {
+            System.out.println("Ziel -nicht- gefunden!");
+        } else {
+            System.out.println("Ziel gefunden");
+        }
+
+        new Thread(updateGui).start();
+        this.lerningAlgorithmus.printQTable();
+        System.out.println("Bewegungsmuster:");
+        System.out.println("vorwärts: " + this.drived_forward);
+        System.out.println("vorwärts angestoßen: " + this.try_drived_forward);
+        System.out.println("Zurück:" + this.drived_backward);
+        System.out.println("hinten angestoßen: " + this.try_drived_backward);
+        System.out.println("Rechtsrotation: " + this.drived_rotateRight);
+        System.out.println("Bei Rechtsrotation angestoßen: " + this.try_drived_rotateRight);
+        System.out.println("Linksrotation: " + this.drived_rotateLeft);
+        System.out.println("Bei Linksrotation angestoßen: " + this.try_drived_rotateLeft);
+        System.out.println("Iterationen: " + (j + 1));
+        System.out.println("Angestoßen: " + (this.try_drived_forward + this.try_drived_backward + this.try_drived_rotateRight + this.try_drived_rotateLeft));
+        if (j > 0) {
+            System.out.println("Fehlerquote: " + ((this.try_drived_forward + this.try_drived_backward + this.try_drived_rotateRight + this.try_drived_rotateLeft) * 100 / j) + "%");
+        } else {
+            System.out.println("Fehlerquote: " + ((this.try_drived_forward + this.try_drived_backward + this.try_drived_rotateRight + this.try_drived_rotateLeft) * 100) + "%");
+        }
+        System.out.println();
+        System.out.println("Zustandsmuster:");
+        System.out.println("Barriere Vorne: " + this.stateFront);
+        System.out.println("Barriere Links: " + this.stateLeft);
+        System.out.println("Barriere Rechts: " + this.stateRight);
+        System.out.println("Barriere Vorne&Links: " + this.stateFrontLeft);
+        System.out.println("Barriere Vorne&Rechts: " + this.stateFrontRight);
+        System.out.println("Barriere Links&Rechts: " + this.stateLeftRight);
+        System.out.println("Barriere Vorne&Links&Rechts: " + this.stateFrontLeftRight);
+        System.out.println("Zustand keine Barriere: " + this.stateNoBarrier);
+        System.out.println("Zustand Angestoßen: " + this.stateBumped);
     }
 
     // Roboter Interface Methods
