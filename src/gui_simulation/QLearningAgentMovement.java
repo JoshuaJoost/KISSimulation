@@ -98,7 +98,6 @@ public class QLearningAgentMovement {
             a = (int) (Math.random() * 4);
 //            System.out.print("Zufälliger Zug: " + a + " ");
         } else {
-            //TODO wenn er die auswahlt zwischen verschiedenen Aktionen hat random zwischen diesen auswählen
             ArrayList<Integer> indexActionsWithBestRating = new ArrayList<>(actionWithBestRating(s));
             //indexActionsWithBestRating.addAll(actionWithBestRating(s));
             //a = actionWithBestRating(s);
@@ -111,31 +110,31 @@ public class QLearningAgentMovement {
             }
         }
 
-        String table = "| ";
-        for(double i : this.q[s]){
-            table += i + " | ";
-        }
-        SimulationRobot.movementHistorie += table;
-        switch (a) {
-            case SimulationRobot.DRIVE_FORWARD:
-//                System.out.print(table + "\t -> " + a + " Forward");
-                SimulationRobot.movementHistorie += "\t -> " + a + " Forward";
-                break;
-            case SimulationRobot.DRIVE_BACKWARD:
-//                System.out.print(table + "\t -> " + a + " Backward");
-                SimulationRobot.movementHistorie += "\t -> " + a + " Backward";
-                break;
-            case SimulationRobot.DRIVE_ROTATE_LEFT:
-//                System.out.print(table + "\t -> " + a + " RLeft");
-                SimulationRobot.movementHistorie += "\t -> " + a + " RLeft";
-                break;
-            case SimulationRobot.DRIVE_ROTATE_RIGHT:
-//                System.out.print(table + "\t -> " + a + " RRight");
-                SimulationRobot.movementHistorie += "\t -> " + a + " RRight";
-                break;
-            default:
-//                System.out.print("Ungültige Aktion");
-        }
+//        String table = "| ";
+//        for(double i : this.q[s]){
+//            table += i + " | ";
+//        }
+//        SimulationRobot.movementHistorie += table;
+//        switch (a) {
+//            case SimulationRobot.DRIVE_FORWARD:
+////                System.out.print(table + "\t -> " + a + " Forward");
+//                SimulationRobot.movementHistorie += "\t -> " + a + " Forward";
+//                break;
+//            case SimulationRobot.DRIVE_BACKWARD:
+////                System.out.print(table + "\t -> " + a + " Backward");
+//                SimulationRobot.movementHistorie += "\t -> " + a + " Backward";
+//                break;
+//            case SimulationRobot.DRIVE_ROTATE_LEFT:
+////                System.out.print(table + "\t -> " + a + " RLeft");
+//                SimulationRobot.movementHistorie += "\t -> " + a + " RLeft";
+//                break;
+//            case SimulationRobot.DRIVE_ROTATE_RIGHT:
+////                System.out.print(table + "\t -> " + a + " RRight");
+//                SimulationRobot.movementHistorie += "\t -> " + a + " RRight";
+//                break;
+//            default:
+////                System.out.print("Ungültige Aktion");
+//        }
 
         return a;
     }

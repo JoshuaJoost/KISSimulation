@@ -1,11 +1,12 @@
 package gui_simulation;
 
+import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class QLearningAgent {
-    private double epsilon = 1;
-    private double alpha = 0.5; // Lernrate (0..1)
-    private double gamma = 0.8; // Bewertungsfaktor (0..1)
+    private double epsilon = 0.2;
+    private double alpha = 0.1; // Lernrate (0..1)
+    private double gamma = 0.9; // Bewertungsfaktor (0..1)
     private double q[][]; // Q-Learning-Array
     private static final int POSSIBLE_ACTIONS = 4;
     /*
@@ -15,16 +16,13 @@ public class QLearningAgent {
     private static final int BARRIER_LOCATIONS = 8;
     // is the robot bumped or not? 1 state for the barrier bumped and one state for the location not bumped
     // dhort of no barrier
-    private static final int BUMPED = 10;
+    private static final int BUMPED = 1;
     /*
      * 8 barrier states: no barrier, front, left, right, front+left, front+right, right+left, front+right+left
      */
-    private static final int CAN_ROTATE = 3; //left, right, right & Left
-
 
     public QLearningAgent() {
-        System.out.println("Initialisiere QTable");
-        this.q = new double[BARRIER_LOCATIONS+BUMPED+CAN_ROTATE][POSSIBLE_ACTIONS];
+        this.q = new double[BARRIER_LOCATIONS+BUMPED][POSSIBLE_ACTIONS];
         // initalize q
         for(int i = 0; i < this.q.length; i++) {
             for(int j=0; j < this.q[i].length; j++) {
@@ -32,16 +30,16 @@ public class QLearningAgent {
                 this.q[i][j] = Math.random() / 10;
             }
         }
-        printQTable();
+//		printQTable();
     }
 
     public QLearningAgent(double [][] array) {
         this.q = array;
-        printQTable();
+//		printQTable();
     }
 
     public void printQTable() {
-        for (int i = 0; i < BARRIER_LOCATIONS+BUMPED+CAN_ROTATE; i++) {
+        for (int i = 0; i < BARRIER_LOCATIONS+BUMPED; i++) {
             for (int j=0; j < POSSIBLE_ACTIONS; j++) {
                 System.out.print(this.q[i][j] + ",");
             }
@@ -50,38 +48,52 @@ public class QLearningAgent {
     }
 
     /**
-     * Lernt durch die übergebenen Zustände, ob die Aktion erfolgreich war und
+     * Lernt durch die Ã¼bergebenen ZustÃ¤nde, ob die Aktion erfolgreich war und
      * speichert die Werte in das q-array.
-     * @param s: Aktueller Zustand
-     * @param s_next: Nächster Zustand
-     * @param a: Aktion
-     * @param r: Belohnung
+     * @param actualState: Aktueller Zustand
+     * @param nextState: NÃ¤chster Zustand
+     * @param action: Aktion
+     * @param reward: Belohnung
      */
-    public void learn(int s, int s_next, int a, double r) {
-        this.q[s][a] += this.alpha * (r + this.gamma * (this.q[s_next][actionWithBestRating(s_next)]) - q[s][a]);
+    public void learn(int actualState, int nextState, int action, double reward) {
+        ArrayList<Integer> nextActions = new ArrayList<>();
+        nextActions.addAll(actionWithBestRating(nextState));
+
+        Integer nextAction = null;
+        if(nextActions.size() > 1){
+            int rnd = (int)(Math.random() * nextActions.size());
+            nextAction = nextActions.get(rnd);
+        } else {
+            nextAction = nextActions.get(0);
+        }
+
+
+        this.q[actualState][action] += this.alpha * (reward + this.gamma * (this.q[nextState][nextAction]) - q[actualState][action]);
     }
 
     /**
-     * Wählt die Aktion mit der besten Rate aus
+     * WÃ¤hlt die Aktion mit der besten Rate aus
      * @param s: Zustand s
-     * @return: Gibt die Aktion als int zurück.
+     * @return: Gibt die Aktion als int zurÃ¼ck.
      */
-    public int actionWithBestRating(int s) {
-        double max = 0;
-        int index = 0;
+    public ArrayList<Integer> actionWithBestRating(int s) {
+        ArrayList<Integer> indexActionsWithBestRating = new ArrayList<>();
+        double max = Integer.MIN_VALUE;
+
         for (int i = 0; i < POSSIBLE_ACTIONS; i++) {
-            if (this.q[s][i] > max) {
+            if (this.q[s][i] >= max) {
                 max = this.q[s][i];
-                index = i;
+                indexActionsWithBestRating.add(i);
             }
         }
-        return index;
+//        return index;
+        return indexActionsWithBestRating;
     }
 
     /**
-     * Wählt eine zufällige Aktion anhand des Zustands aus
+     * WÃ¤hlt eine zufÃ¤llige Aktion anhand des Zustands aus
      * @param s: Zustand
-     * @return: Gibt die Aktion als int zurück.
+     * @return: Gibt die Aktion als int zurÃ¼ck.
      */
     public int chooseAction(int s) {
         int a = 0;
@@ -89,8 +101,26 @@ public class QLearningAgent {
             // + 1 to have the last inclusive
             a = ThreadLocalRandom.current().nextInt(0, POSSIBLE_ACTIONS);
         } else {
-            a = actionWithBestRating(s);
+            ArrayList<Integer> indexActionsWithBestRating = new ArrayList<>(actionWithBestRating(s));
+            //indexActionsWithBestRating.addAll(actionWithBestRating(s));
+            //a = actionWithBestRating(s);
+            if(indexActionsWithBestRating.size() > 1){
+                int rnd = (int)(Math.random() * indexActionsWithBestRating.size());
+                a = indexActionsWithBestRating.get(rnd);
+//                System.out.print("Auswahl: \t\t" + a + " ");
+            } else {
+                a = indexActionsWithBestRating.get(0);
+            }
         }
+
         return a;
+    }
+
+    public void setEpsilon(double newEpsilonValue){
+        this.epsilon = newEpsilonValue;
+    }
+
+    public double getEpsilon(){
+        return this.epsilon;
     }
 }

@@ -26,7 +26,7 @@ public class SimulationMaze {
     private static int numberOfMazeFiles = 0;
     private static ArrayList<SimulationMaze> mazeFiles = new ArrayList<>();
     private static Integer selectedMazeIndexNumber = null;
-    private static final SimpleStringProperty SELECTED_TEXT = new SimpleStringProperty("yep");
+    private static final SimpleStringProperty SELECTED_TEXT = new SimpleStringProperty("ja");
     private static final SimpleStringProperty NOT_SELECTED_TEXT = new SimpleStringProperty("");
 
     // Labyrinth Table
