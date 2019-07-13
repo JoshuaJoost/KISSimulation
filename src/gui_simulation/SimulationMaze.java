@@ -17,6 +17,7 @@ public class SimulationMaze {
     public static final char mazeWallSymbol = '#';
     public static final char mazeVoidSymbol = ' ';
     public static final char mazeTargetSymbol = 't';
+    public static final char mazeCornerSymbol = 'e';
 
     public static final Color mazeVoidColor = Color.rgb(255, 255, 255);
     public static final Color mazeWallColor = Color.rgb(0, 0, 0);
@@ -353,12 +354,16 @@ public class SimulationMaze {
         int[] sortedPositions = robot.getPosition();
         Arrays.sort(sortedPositions);
 
+        // Prüfe, ob Zielposition frei ist
         boolean freeFields = true;
         for (int y = 0, x = 0; y < robot.getSizeY(); y++, x += robot.getSizeX()) {
             if (!(this.getIndexMazeFreeFields().contains(sortedPositions[x] - 1))) {
                 freeFields = false;
             }
         }
+
+        // Prüfe, ob Rotationsradius frei ist (nur für )
+
 
         return freeFields;
     }
@@ -367,6 +372,7 @@ public class SimulationMaze {
         int[] sortedPositions = robot.getPosition();
         Arrays.sort(sortedPositions);
 
+        // Prüfe ob Zielposition frei ist
         boolean freeFields = true;
         for (int x = robot.getSizeX() - 1, y = 0; y < robot.getSizeY(); y++, x += robot.getSizeX()) {
             if (!(this.getIndexMazeFreeFields().contains(sortedPositions[x] + 1))) {

@@ -498,7 +498,7 @@ public class Labyrinth {
     }
 
     public static void main(String[] args) {
-        Labyrinth l = new Labyrinth("./src/simulation/maze1");
+        Labyrinth l = new Labyrinth("./src/simulation/maze_Target-Pos5");
         int[][] position = l.getRobotStartingPosition();
         SimRoboter r = new SimRoboter(position[0][0], position[1]);
         System.out.println("Head: " + r.getHeadPosition());
