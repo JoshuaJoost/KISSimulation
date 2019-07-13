@@ -31,8 +31,8 @@ import java.util.ResourceBundle;
 
 public class Controller_MainGUI implements Initializable {
     // Initialisierungprobleme
-    private static final int mazePaneX = 500;
-    private static final int mazePaneY = 500;
+    private static final int mazePaneX = 570;
+    private static final int mazePaneY = 570;
 
     private final Color mazeWallColor = Color.rgb(0, 0, 0);
     private final Color mazeVoidColor = Color.rgb(255, 255, 255);
@@ -279,37 +279,31 @@ public class Controller_MainGUI implements Initializable {
                 case "RIGHT":
                 case "D":
                     SimulationMaze.getSelectedMaze().getSelectedRobot().keyboardMoveRight();
-                    updateMaze(true);
                     break;
                 case "LEFT":
                 case "A":
                     SimulationMaze.getSelectedMaze().getSelectedRobot().keyboardMoveLeft();
-                    updateMaze(true);
                     break;
                 case "DOWN":
                 case "S":
                     SimulationMaze.getSelectedMaze().getSelectedRobot().keyboardMoveDown();
-                    updateMaze(true);
                     break;
                 case "UP":
                 case "W":
                     SimulationMaze.getSelectedMaze().getSelectedRobot().keyboardMoveUp();
-                    updateMaze(true);
                     break;
                 case "Q":
                     SimulationMaze.getSelectedMaze().getSelectedRobot().keyboardRotateForwardLeft();
-                    updateMaze(true);
                     break;
                 case "E":
                     SimulationMaze.getSelectedMaze().getSelectedRobot().keyboardRotateForwardRight();
-                    updateMaze(true);
                     break;
                 case "Y":
                 case "Z":
                     SimulationMaze.getSelectedMaze().getSelectedRobot().keyboardLook();
-                    updateMaze(true);
                     break;
             }
+            updateMaze(true);
         }
     }
 

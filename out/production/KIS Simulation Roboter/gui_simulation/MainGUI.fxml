@@ -8,20 +8,25 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#mazeMoveRobotKeyboard" prefHeight="700.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui_simulation.Controller_MainGUI">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#mazeMoveRobotKeyboard" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui_simulation.Controller_MainGUI">
    <children>
-      <AnchorPane prefHeight="520.0" prefWidth="500.0">
+      <AnchorPane layoutX="10.0" layoutY="10.0" minHeight="590.0" minWidth="570.0" prefHeight="590.0" prefWidth="570.0">
          <children>
             <Label fx:id="mazeLable" prefHeight="20.0" text="Labyrinth: &lt;keines ausgewählt&gt;" />
-            <Pane fx:id="mazePane" focusTraversable="true" layoutY="20.0" onMouseClicked="#focusMazePane" prefHeight="500.0" prefWidth="500.0" />
+            <Pane fx:id="mazePane" focusTraversable="true" layoutY="20.0" minHeight="570.0" minWidth="570.0" onMouseClicked="#focusMazePane" prefHeight="570.0" prefWidth="570.0" />
          </children>
       </AnchorPane>
-      <AnchorPane layoutY="520.0" prefHeight="180.0" prefWidth="500.0">
+      <AnchorPane layoutX="10.0" layoutY="600.0" minHeight="190.0" minWidth="570.0" prefHeight="190.0" prefWidth="570.0">
          <children>
+            <Button fx:id="addNewRobot" focusTraversable="false" minHeight="20.0" minWidth="20.0" mnemonicParsing="false" onAction="#addNewRobot" prefHeight="20.0" prefWidth="20.0" text="+" textOverrun="CLIP">
+               <font>
+                  <Font size="9.0" />
+               </font>
+            </Button>
             <Label fx:id="robotSelectedLable" layoutX="50.0" prefHeight="20.0" text="Roboter &lt;keiner ausgewählt&gt;" />
-            <Pane fx:id="robotPane" layoutY="20.0" prefHeight="160.0" prefWidth="500.0">
+            <Pane fx:id="robotPane" layoutY="20.0" prefHeight="170.0" prefWidth="500.0">
                <children>
-                  <TableView fx:id="robotTable" focusTraversable="false" onMouseClicked="#selectNewRobot" prefHeight="160.0" prefWidth="290.0">
+                  <TableView fx:id="robotTable" focusTraversable="false" onMouseClicked="#selectNewRobot" prefHeight="170.0" prefWidth="290.0">
                     <columns>
                       <TableColumn fx:id="robotTableNr" editable="false" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" resizable="false" text="Nr" />
                       <TableColumn fx:id="robotTableName" editable="false" maxWidth="170.0" minWidth="170.0" prefWidth="170.0" resizable="false" text="Name" />
@@ -36,41 +41,37 @@
                      </children>
                   </AnchorPane>
                </children></Pane>
-            <Button fx:id="addNewRobot" focusTraversable="false" minHeight="20.0" minWidth="20.0" mnemonicParsing="false" onAction="#addNewRobot" prefHeight="20.0" prefWidth="20.0" text="+" textOverrun="CLIP">
-               <font>
-                  <Font size="9.0" />
-               </font>
-            </Button>
          </children>
       </AnchorPane>
-      <AnchorPane layoutX="500.0" layoutY="200.0" prefHeight="500.0" prefWidth="300.0">
+      <AnchorPane layoutX="580.0" layoutY="10.0" minHeight="200.0" minWidth="410.0" prefHeight="200.0" prefWidth="410.0">
+         <children>
+            <Pane layoutY="20.0" prefHeight="180.0" prefWidth="410.0">
+               <children>
+                  <TableView fx:id="mazefileTable" focusTraversable="false" onMouseClicked="#selectNewMaze" prefHeight="180.0" prefWidth="410.0">
+                    <columns>
+                      <TableColumn fx:id="mazefileTableNr" editable="false" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" resizable="false" text="Nr" />
+                      <TableColumn fx:id="mazefileTableFilename" editable="false" maxWidth="270.0" minWidth="270.0" prefWidth="270.0" resizable="false" text="Dateiname" />
+                        <TableColumn fx:id="mazefileTableSelected" editable="false" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" resizable="false" text="Ausgewählt" />
+                    </columns>
+                  </TableView>
+               </children>
+            </Pane>
+            <Label fx:id="mazeSelectedLabel" prefHeight="20.0" text="Labyrinth Datei" />
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="580.0" layoutY="210.0" minHeight="580.0" minWidth="410.0" prefHeight="580.0" prefWidth="410.0">
          <children>
             <Label prefHeight="20.0" text="Historie" />
-            <Pane fx:id="historyPane" layoutY="20.0" prefHeight="480.0" prefWidth="300.0">
+            <Pane fx:id="historyPane" layoutY="20.0" prefHeight="560.0" prefWidth="410.0">
                <children>
-                  <TableView fx:id="historyTable" focusTraversable="false" prefHeight="480.0" prefWidth="300.0">
+                  <TableView fx:id="historyTable" focusTraversable="false" prefHeight="560.0" prefWidth="410.0">
                     <columns>
-                      <TableColumn fx:id="historyTableNr" editable="false" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" resizable="false" text="Nr" />
-                      <TableColumn fx:id="historyTableAction" editable="false" maxWidth="135.0" minWidth="135.0" prefWidth="135.0" resizable="false" text="Action" />
-                        <TableColumn fx:id="historyTableFeedback" editable="false" maxWidth="135.0" minWidth="135.0" prefWidth="135.0" resizable="false" text="Feedback" />
+                      <TableColumn fx:id="historyTableNr" editable="false" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" resizable="false" text="Nr" />
+                      <TableColumn fx:id="historyTableAction" editable="false" maxWidth="160.0" minWidth="160.0" prefWidth="160.0" resizable="false" text="Action" />
+                        <TableColumn fx:id="historyTableFeedback" editable="false" maxWidth="210.0" minWidth="210.0" prefWidth="210.0" resizable="false" text="Feedback" />
                     </columns>
                   </TableView>
                </children></Pane>
-         </children>
-      </AnchorPane>
-      <AnchorPane layoutX="500.0" prefHeight="200.0" prefWidth="300.0">
-         <children>
-            <Pane layoutY="20.0" prefHeight="180.0" prefWidth="300.0">
-               <children>
-                  <TableView fx:id="mazefileTable" focusTraversable="false" onMouseClicked="#selectNewMaze" prefHeight="180.0" prefWidth="300.0">
-                    <columns>
-                      <TableColumn fx:id="mazefileTableNr" editable="false" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" resizable="false" text="Nr" />
-                      <TableColumn fx:id="mazefileTableFilename" editable="false" maxWidth="180.0" minWidth="180.0" prefWidth="180.0" resizable="false" text="Dateiname" />
-                        <TableColumn fx:id="mazefileTableSelected" editable="false" maxWidth="90.0" minWidth="90.0" prefWidth="90.0" resizable="false" text="Ausgewählt" />
-                    </columns>
-                  </TableView>
-               </children></Pane>
-            <Label fx:id="mazeSelectedLabel" prefHeight="20.0" text="Labyrinth Datei" />
          </children>
       </AnchorPane>
    </children>

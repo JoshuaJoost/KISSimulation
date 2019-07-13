@@ -12,8 +12,8 @@ import java.util.TimerTask;
 
 public class Main extends Application {
 
-    private static final int WINDOW_WIDTH = 800;
-    private static final int WINDOW_HEIGHT = 700;
+    private static final int WINDOW_WIDTH = 1000;
+    private static final int WINDOW_HEIGHT = 800;
 
     @Override
     public void start(Stage primaryStage) throws Exception {

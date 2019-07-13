@@ -2,29 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a44a8a50-6fbd-4bcc-afba-98189aabe9ac" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/gui_simulation/mazeFiles/mazeOriginal_V2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/Labyrinth.java" beforeDir="false" afterPath="$PROJECT_DIR$/code/Labyrinth.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/Labyrinth.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/Labyrinth.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/Roboter.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/Roboter.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/SimRoboter.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/SimRoboter.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/gui_simulation/Controller_MainGUI.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/gui_simulation/Controller_MainGUI.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/gui_simulation/Controller_SetRobot.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/gui_simulation/Controller_SetRobot.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/gui_simulation/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/gui_simulation/Main.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/gui_simulation/OwnUtils.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/gui_simulation/OwnUtils.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/gui_simulation/QLearningAgent.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/gui_simulation/QLearningAgent.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/gui_simulation/QLearningAgentMovement.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/gui_simulation/QLearningAgentMovement.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/gui_simulation/Roboter.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/gui_simulation/Roboter.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/gui_simulation/SimulationMaze.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/gui_simulation/SimulationMaze.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/gui_simulation/SimulationRobot$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/gui_simulation/SimulationRobot$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/gui_simulation/SimulationRobot.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/gui_simulation/SimulationRobot.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/gui_simulation/mazeFiles/maze1" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/gui_simulation/mazeFiles/mazeTarget" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui_simulation/QLearningAgent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui_simulation/QLearningAgent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui_simulation/Controller_MainGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui_simulation/Controller_MainGUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui_simulation/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui_simulation/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui_simulation/MainGUI.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui_simulation/MainGUI.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/gui_simulation/SimulationMaze.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui_simulation/SimulationMaze.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui_simulation/mazeFiles/maze1" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui_simulation/mazeFiles/maze_Target-Pos5" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui_simulation/mazeFiles/mazeTarget" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui_simulation/mazeFiles/maze_Target-Pos0" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui_simulation/mazeFiles/mazeOriginal" beforeDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -41,7 +23,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/gui_simulation/SimulationRobot.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="13572">
+            <state relative-caret-position="916">
               <caret line="795" column="32" selection-start-line="795" selection-start-column="32" selection-end-line="795" selection-end-column="32" />
             </state>
           </provider>
@@ -50,7 +32,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/gui_simulation/mazeFiles/maze_Target-Pos5">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
+            <state relative-caret-position="255">
               <caret line="15" column="15" selection-start-line="15" selection-start-column="15" selection-end-line="15" selection-end-column="15" />
             </state>
           </provider>
@@ -59,40 +41,43 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/gui_simulation/mazeFiles/maze_Target-Pos0">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="342">
+            <state relative-caret-position="323">
               <caret line="19" column="20" selection-start-line="19" selection-start-column="20" selection-end-line="19" selection-end-column="20" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/gui_simulation/mazeFiles/mazeOriginal">
+        <entry file="file://$PROJECT_DIR$/src/gui_simulation/mazeFiles/mazeOriginal_V2">
           <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/gui_simulation/mazeFiles/mazeOriginal_V2">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret lean-forward="true" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/gui_simulation/Controller_MainGUI.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="162">
-              <caret line="39" column="64" lean-forward="true" selection-start-line="39" selection-start-column="64" selection-end-line="39" selection-end-column="64" />
+            <state relative-caret-position="425">
+              <caret line="45" column="67" selection-start-line="45" selection-start-column="67" selection-end-line="45" selection-end-column="67" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/gui_simulation/SimulationMaze.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="198">
-              <caret line="19" column="50" selection-start-line="19" selection-start-column="50" selection-end-line="19" selection-end-column="50" />
+            <state relative-caret-position="489">
+              <caret line="82" column="52" lean-forward="true" selection-start-line="82" selection-start-column="52" selection-end-line="82" selection-end-column="52" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/gui_simulation/Main.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="255">
+              <caret line="15" column="48" selection-start-line="15" selection-start-column="48" selection-end-line="15" selection-end-column="48" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -100,7 +85,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/gui_simulation/QLearningAgent.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="720">
+            <state relative-caret-position="680">
               <caret line="41" column="79" selection-start-line="41" selection-start-column="79" selection-end-line="41" selection-end-column="79" />
             </state>
           </provider>
@@ -148,6 +133,8 @@
         <option value="$PROJECT_DIR$/src/gui_simulation/mazeFiles/maze_Target-Pos0" />
         <option value="$PROJECT_DIR$/src/gui_simulation/mazeFiles/mazeOriginal_V2" />
         <option value="$PROJECT_DIR$/src/gui_simulation/SimulationMaze.java" />
+        <option value="$PROJECT_DIR$/src/gui_simulation/Main.java" />
+        <option value="$PROJECT_DIR$/src/gui_simulation/Controller_MainGUI.java" />
       </list>
     </option>
   </component>
@@ -275,10 +262,10 @@
     <option name="totallyTimeSpent" value="22426000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <frame x="-8" y="-8" width="1936" height="1176" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.15355521" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.15511727" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -286,8 +273,8 @@
       <window_info id="Capture Tool" order="5" />
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.3289689" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.1898527" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32885906" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.25503355" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -324,40 +311,16 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/gui_simulation/Main.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="183">
-          <caret line="17" column="13" lean-forward="true" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="13" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/gui_simulation/SimulationRobot.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="13572">
-          <caret line="795" column="32" selection-start-line="795" selection-start-column="32" selection-end-line="795" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/gui_simulation/mazeFiles/maze_Target-Pos5">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
+        <state relative-caret-position="255">
           <caret line="15" column="15" selection-start-line="15" selection-start-column="15" selection-end-line="15" selection-end-column="15" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/gui_simulation/QLearningAgent.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="720">
-          <caret line="41" column="79" selection-start-line="41" selection-start-column="79" selection-end-line="41" selection-end-column="79" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/gui_simulation/mazeFiles/maze_Target-Pos0">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="342">
+        <state relative-caret-position="323">
           <caret line="19" column="20" selection-start-line="19" selection-start-column="20" selection-end-line="19" selection-end-column="20" />
         </state>
       </provider>
@@ -366,23 +329,43 @@
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/src/gui_simulation/mazeFiles/mazeOriginal_V2">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/gui_simulation/QLearningAgent.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret lean-forward="true" />
+        <state relative-caret-position="680">
+          <caret line="41" column="79" selection-start-line="41" selection-start-column="79" selection-end-line="41" selection-end-column="79" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/gui_simulation/Controller_MainGUI.java">
+    <entry file="file://$PROJECT_DIR$/src/gui_simulation/SimulationRobot.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="39" column="64" lean-forward="true" selection-start-line="39" selection-start-column="64" selection-end-line="39" selection-end-column="64" />
+        <state relative-caret-position="916">
+          <caret line="795" column="32" selection-start-line="795" selection-start-column="32" selection-end-line="795" selection-end-column="32" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/gui_simulation/SimulationMaze.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="19" column="50" selection-start-line="19" selection-start-column="50" selection-end-line="19" selection-end-column="50" />
+        <state relative-caret-position="489">
+          <caret line="82" column="52" lean-forward="true" selection-start-line="82" selection-start-column="52" selection-end-line="82" selection-end-column="52" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/gui_simulation/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="15" column="48" selection-start-line="15" selection-start-column="48" selection-end-line="15" selection-end-column="48" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/gui_simulation/Controller_MainGUI.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="425">
+          <caret line="45" column="67" selection-start-line="45" selection-start-column="67" selection-end-line="45" selection-end-column="67" />
         </state>
       </provider>
     </entry>

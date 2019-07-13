@@ -22,6 +22,7 @@ public class SimulationMaze {
     public static final Color mazeVoidColor = Color.rgb(255, 255, 255);
     public static final Color mazeWallColor = Color.rgb(0, 0, 0);
     public static final Color mazeTargetColor = Color.rgb(255,0,0);
+    public static final Color mazeCornerColor = Color.rgb(166, 175, 189);
     public static final Color mazeErrorColor = Color.rgb(0,255,246);
 
     private static int numberOfMazeFiles = 0;
@@ -75,8 +76,8 @@ public class SimulationMaze {
             String[] mazeStringParts = sb.toString().split(System.lineSeparator());
 
             // Setze Pixelgröße einzelner Labyrinthbausteine
-            int mazePixelX = mazePaneX / mazeStringParts.length;
-            int mazePixelY = mazePaneY / mazeStringParts[0].length();
+            int mazePixelX = (int) Math.floor((double) mazePaneX / (double) mazeStringParts.length);
+            int mazePixelY = (int) Math.floor((double) mazePaneY / (double) mazeStringParts[0].length());
 
             mazeSizeX = mazeStringParts.length;
             mazeSizeY = mazeStringParts[0].length();
@@ -86,6 +87,8 @@ public class SimulationMaze {
                     Rectangle mazeDrawField = new Rectangle(x * mazePixelX, y * mazePixelY, mazePixelX, mazePixelY);
                     if(mazeStringParts[y].charAt(x) == SimulationMaze.mazeWallSymbol){
                         mazeDrawField.setFill(SimulationMaze.mazeWallColor);
+                    } else if(mazeStringParts[y].charAt(x) == SimulationMaze.mazeCornerSymbol){
+                        mazeDrawField.setFill(SimulationMaze.mazeCornerColor);
                     } else if(mazeStringParts[y].charAt(x) == SimulationMaze.mazeVoidSymbol){
                         mazeDrawField.setFill(SimulationMaze.mazeVoidColor);
                         indexMazeFreeFields.add(mazeDrawFields.size());
