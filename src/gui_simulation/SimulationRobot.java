@@ -456,6 +456,7 @@ public class SimulationRobot implements Roboter {
             ArrayList<Integer> newPosition = new ArrayList<>();
             switch(this.headDirection){
                 case 0:
+                    printRobotArrayIndexNumbers();
                     for(int y = 0, i = this.sizeX * this.sizeY - this.sizeX - y; y / this.sizeX < this.sizeX; y += this.sizeX, i = this.sizeX * this.sizeY - this.sizeX - y){
                         for(int xi = this.sizeY; xi > 0; xi--){
                             newPosition.add(this.position[i] - xi);
@@ -463,6 +464,7 @@ public class SimulationRobot implements Roboter {
                     }
                     break;
                 case 1:
+                    printRobotArrayIndexNumbers();
                     for(int x = 0, i = x; x < this.sizeY; x++, i = x){
                         for(int y = this.sizeX; y > 0; y--){
                             newPosition.add(this.position[i] - y * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY());
@@ -470,6 +472,7 @@ public class SimulationRobot implements Roboter {
                     }
                     break;
                 case 2:
+                    printRobotArrayIndexNumbers();
                     for(int y = 1, i = y * this.sizeX - 1; y - 1 < this.sizeX; y++, i = y * this.sizeX - 1){
                         for(int x = this.sizeY; x > 0; x--){
                             newPosition.add(this.position[i] + x);
@@ -477,6 +480,7 @@ public class SimulationRobot implements Roboter {
                     }
                     break;
                 case 3:
+                    printRobotArrayIndexNumbers();
                     for(int x = 0, i = this.sizeX * this.sizeY - 1 - x; x < this.sizeY; x++, i = this.sizeX * this.sizeY - 1 - x){
                         for(int y = this.sizeX; y > 0; y--){
                             newPosition.add(this.position[i] + y * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY());
@@ -1205,14 +1209,20 @@ public class SimulationRobot implements Roboter {
     /*
     * Debugg Funktionen
     * */
-    private void printRobotArrayIndexPositions(){
-        System.out.println("RobotArray");
-        for(int i = 0; i < this.position.length; i++){
-            System.out.print(i + " | ");
+    private void printRobotArrayIndexNumbers(){
+        int maxLength = ("" + this.position.length).length();
 
-            if(i > 1 && this.sizeY > this.sizeX ? (i + 1) % this.sizeX == 0 : (i + 1) % this.sizeY == 0){
-                // Java Systemfehler i = 0 geht durch Schleifenbedinung!
-                if(i != 0){
+        for(int i = 0; i < this.position.length; i++) {
+            String indexNumber = "" + i;
+
+            while(indexNumber.length() < maxLength){
+                indexNumber = " " + indexNumber;
+            }
+
+            System.out.print(indexNumber + " | ");
+
+            if(i > 0) {
+                if((i + 1) % this.sizeX == 0){
                     System.out.println();
                 }
             }
