@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="a44a8a50-6fbd-4bcc-afba-98189aabe9ac" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/gui_simulation/Controller_MainGUI.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/gui_simulation/Controller_MainGUI.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/gui_simulation/SimulationRobot$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/gui_simulation/SimulationRobot$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/gui_simulation/SimulationRobot.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/gui_simulation/SimulationRobot.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/gui_simulation/Controller_MainGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui_simulation/Controller_MainGUI.java" afterDir="false" />
@@ -24,8 +23,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/gui_simulation/SimulationRobot.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="562">
-              <caret line="1221" column="50" selection-start-line="1221" selection-start-column="50" selection-end-line="1221" selection-end-column="50" />
+            <state relative-caret-position="340">
+              <caret line="514" column="23" selection-start-line="514" selection-start-column="23" selection-end-line="514" selection-end-column="23" />
             </state>
           </provider>
         </entry>
@@ -56,8 +55,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/gui_simulation/Controller_MainGUI.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-6278">
-              <caret line="215" column="2" selection-start-line="215" selection-start-column="2" selection-end-line="215" selection-end-column="2" />
+            <state relative-caret-position="335">
+              <caret line="175" column="31" selection-start-line="175" selection-start-column="31" selection-end-line="175" selection-end-column="31" />
             </state>
           </provider>
         </entry>
@@ -270,7 +269,14 @@
       <option name="project" value="LOCAL" />
       <updated>1563118682157</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="- Debugg Funktion: printRobotArrayIndexNumbers">
+      <created>1563120061684</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1563120061684</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -349,7 +355,8 @@
     <MESSAGE value="versucht code zu verstehen + fehlerdetection" />
     <MESSAGE value="MainGUI.fxml vergrößert + Abstand zum Rand hinzugefügt" />
     <MESSAGE value="- Linksvorwärtsrotation überarbeitet&#10;- Setzen der Headposition überarbeitet" />
-    <option name="LAST_COMMIT_MESSAGE" value="- Linksvorwärtsrotation überarbeitet&#10;- Setzen der Headposition überarbeitet" />
+    <MESSAGE value="- Debugg Funktion: printRobotArrayIndexNumbers" />
+    <option name="LAST_COMMIT_MESSAGE" value="- Debugg Funktion: printRobotArrayIndexNumbers" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/gui_simulation/QLearningAgentMovement.java">
@@ -403,15 +410,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/gui_simulation/Controller_MainGUI.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-6278">
-          <caret line="215" column="2" selection-start-line="215" selection-start-column="2" selection-end-line="215" selection-end-column="2" />
+        <state relative-caret-position="335">
+          <caret line="175" column="31" selection-start-line="175" selection-start-column="31" selection-end-line="175" selection-end-column="31" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/gui_simulation/SimulationRobot.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="562">
-          <caret line="1221" column="50" selection-start-line="1221" selection-start-column="50" selection-end-line="1221" selection-end-column="50" />
+        <state relative-caret-position="340">
+          <caret line="514" column="23" selection-start-line="514" selection-start-column="23" selection-end-line="514" selection-end-column="23" />
         </state>
       </provider>
     </entry>

@@ -505,91 +505,43 @@ public class SimulationRobot implements Roboter {
             isBumped();
         }
     }
-//    @Override
-//    public void left() {
-//        clearDistanceData();
-//        if (rotationLeftFree()) {
-//            switch (this.headDirection) {
-//                case 0:
-//                    for (int y = 1, x = 0, xd = -1, yd = 0; y < this.sizeY + 1; y++, x = 0, xd = xd + this.sizeX - 2 + 1, yd = yd + this.sizeX + 2 - 1) {
-//                        for (int xi = 0; xi < this.sizeX; xi++, x++, xd--, yd--) {
-//                            this.position[this.sizeY * this.sizeX - y * this.sizeX + x] = this.position[this.sizeY * this.sizeX - y * this.sizeX + x] + xd + yd * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY();
-//                        }
-//                    }
-//                    break;
-//                case 1:
-//                    for (int y = 0, x = 0, xd = 0, yd = -1; y < this.sizeY; y++, x = 0, xd = xd + this.sizeX + 1, yd = yd + this.sizeX - 1) {
-//                        for (int xi = 0; xi < this.sizeX; xi++, x++, xd--, yd--) {
-//                            this.position[y * (this.sizeY + 1) + x] = this.position[y * (this.sizeY + 1) + x] + xd + yd * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY();
-//                        }
-//                    }
-//                    break;
-//                case 2:
-//                    for (int y = 1, x = 0, xd = 1, yd = 0; y < this.sizeY + 1; y++, x = 0, xd = xd - this.sizeX + 2 - 1, yd = yd - this.sizeX - 1) {
-//                        for (int xi = 0; xi < this.sizeX; xi++, x--, yd++, xd++) {
-//                            this.position[y * this.sizeX - 1 + x] = this.position[y * this.sizeX - 1 + x] + xd + yd * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY();
-//                        }
-//                    }
-//                    break;
-//                case 3:
-//                    for (int y = 0, x = 0, xd = 0, yd = 1; y < this.sizeY; y++, x = 0, xd = xd - this.sizeX - 1, yd = yd - this.sizeX + 1) {
-//                        for (int xi = 0; xi < this.sizeX; xi++, x--, xd++, yd++) {
-//                            this.position[this.sizeY * this.sizeX - 1 - y * this.sizeX + x] = this.position[this.sizeY * this.sizeX - 1 - y * this.sizeX + x] + xd + yd * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY();
-//                        }
-//                    }
-//                    break;
-//            }
-//
-//            this.headDirection--;
-//            if (this.headDirection < 0) {
-//                this.headDirection = 3;
-//            }
-//
-//            int tmpSizeX = this.sizeX;
-//            this.sizeX = sizeY;
-//            this.sizeY = tmpSizeX;
-//
-//            changeHeadPosition();
-//            this.isBumped = false;
-//        } else {
-//            isBumped();
-//        }
-//    }
 
     @Override
-    public void right() {
+    public void right(){
         clearDistanceData();
-        if (rotationRightFree()) {
-            switch (this.headDirection) {
+        if(rotationRightFree()){
+            ArrayList<Integer> newPosition = new ArrayList<>();
+            switch(this.headDirection){
                 case 0:
-                    for (int y = 0, x = -1, xv = 1, yv = 0; y < this.sizeY; y++, x = -1, xv = xv - this.sizeX + 2 - 1, yv = yv + this.sizeX + 1) {
-                        for (int xi = 0; xi < this.sizeX; xi++, x--, xv++, yv--) {
-                            this.position[this.sizeX * this.sizeY - y * this.sizeX + x] = this.position[this.sizeX * this.sizeY - y * this.sizeX + x] + xv + yv * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY();
+                    for(int y = 0, i = this.sizeX * this.sizeY - 1 - y; y / this.sizeX < this.sizeX; y += this.sizeX, i = this.sizeX * this.sizeY - 1 - y){
+                        for(int x = 1; x < this.sizeY + 1; x++){
+                            newPosition.add(this.position[i] + x);
                         }
                     }
                     break;
                 case 1:
-                    for (int y = 1, x = 0, xv = 0, yv = 1; y < this.sizeY + 1; y++, x = 0, xv = xv + this.sizeX + 1, yv = yv - this.sizeX + 2 - 1) {
-                        for (int xi = 0; xi < this.sizeX; xi++, x++, xv--, yv++) {
-                            this.position[this.sizeX * this.sizeY - y * this.sizeX + x] = this.position[this.sizeX * this.sizeY - y * this.sizeX + x] + xv + yv * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY();
+                    for(int x = 0, i = this.sizeX * this.sizeY - this.sizeX + x; x < this.sizeY; x++, i = this.sizeX * this.sizeY - this.sizeX + x){
+                        for(int y = 1; y < this.sizeX + 1; y++){
+                            newPosition.add(this.position[i] + y * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY());
                         }
                     }
                     break;
                 case 2:
-                    for (int y = 0, x = 0, xv = -1, yv = 0; y < this.sizeY; y++, x = 0, xv = xv + this.sizeX - 2 + 1, yv = yv - this.sizeX - 1) {
-                        for (int xi = 0; xi < this.sizeX; xi++, x++, xv--, yv++) {
-                            this.position[y * (this.sizeY - 1) + x] = this.position[y * (this.sizeY - 1) + x] + xv + yv * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY();
+                    for(int y = 0, i = y * this.sizeX; y < this.sizeX; y++, i = y * this.sizeX){
+                        for(int x = 1; x < this.sizeY + 1; x++){
+                            newPosition.add(this.position[i] - x);
                         }
                     }
                     break;
                 case 3:
-                    for (int y = 1, x = 0, xv = 0, yv = -1; y < this.sizeY + 1; y++, x = 0, xv = xv - this.sizeX - 1, yv = yv + this.sizeX - 2 + 1) {
-                        for (int xi = 0; xi < this.sizeX; xi++, x--, xv++, yv--) {
-                            this.position[y * this.sizeX - 1 + x] = this.position[y * this.sizeX - 1 + x] + xv + yv * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY();
+                    for(int x = 0, i = this.sizeX - this.sizeY + x; x < this.sizeY; x++, i = this.sizeX - this.sizeY + x){
+                        for(int y = 1; y < this.sizeX + 1; y++){
+                            newPosition.add(this.position[i] - y * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY());
                         }
                     }
                     break;
             }
+            this.position = OwnUtils.convertArrayListToIntArray(newPosition);
 
             this.headDirection++;
             if (this.headDirection > 3) {
@@ -606,6 +558,56 @@ public class SimulationRobot implements Roboter {
             isBumped();
         }
     }
+//    @Override
+//    public void right() {
+//        clearDistanceData();
+//        if (rotationRightFree()) {
+//            switch (this.headDirection) {
+//                case 0:
+//                    for (int y = 0, x = -1, xv = 1, yv = 0; y < this.sizeY; y++, x = -1, xv = xv - this.sizeX + 2 - 1, yv = yv + this.sizeX + 1) {
+//                        for (int xi = 0; xi < this.sizeX; xi++, x--, xv++, yv--) {
+//                            this.position[this.sizeX * this.sizeY - y * this.sizeX + x] = this.position[this.sizeX * this.sizeY - y * this.sizeX + x] + xv + yv * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY();
+//                        }
+//                    }
+//                    break;
+//                case 1:
+//                    for (int y = 1, x = 0, xv = 0, yv = 1; y < this.sizeY + 1; y++, x = 0, xv = xv + this.sizeX + 1, yv = yv - this.sizeX + 2 - 1) {
+//                        for (int xi = 0; xi < this.sizeX; xi++, x++, xv--, yv++) {
+//                            this.position[this.sizeX * this.sizeY - y * this.sizeX + x] = this.position[this.sizeX * this.sizeY - y * this.sizeX + x] + xv + yv * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY();
+//                        }
+//                    }
+//                    break;
+//                case 2:
+//                    for (int y = 0, x = 0, xv = -1, yv = 0; y < this.sizeY; y++, x = 0, xv = xv + this.sizeX - 2 + 1, yv = yv - this.sizeX - 1) {
+//                        for (int xi = 0; xi < this.sizeX; xi++, x++, xv--, yv++) {
+//                            this.position[y * (this.sizeY - 1) + x] = this.position[y * (this.sizeY - 1) + x] + xv + yv * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY();
+//                        }
+//                    }
+//                    break;
+//                case 3:
+//                    for (int y = 1, x = 0, xv = 0, yv = -1; y < this.sizeY + 1; y++, x = 0, xv = xv - this.sizeX - 1, yv = yv + this.sizeX - 2 + 1) {
+//                        for (int xi = 0; xi < this.sizeX; xi++, x--, xv++, yv--) {
+//                            this.position[y * this.sizeX - 1 + x] = this.position[y * this.sizeX - 1 + x] + xv + yv * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY();
+//                        }
+//                    }
+//                    break;
+//            }
+//
+//            this.headDirection++;
+//            if (this.headDirection > 3) {
+//                this.headDirection = 0;
+//            }
+//
+//            int tmpSizeX = this.sizeX;
+//            this.sizeX = this.sizeY;
+//            this.sizeY = tmpSizeX;
+//
+//            changeHeadPosition();
+//            this.isBumped = false;
+//        } else {
+//            isBumped();
+//        }
+//    }
 
     /*
      * Bewegungen prüfen
