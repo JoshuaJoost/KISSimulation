@@ -357,16 +357,48 @@ public class SimulationMaze {
         // Prüfe, ob Zielposition und Rotationsumgebung frei ist
         switch(robot.getHeadDirection()){
             case 0:
-
+                for(int y = 0, i = robot.getSizeX() * robot.getSizeY() - robot.getSizeX() - y; y / robot.getSizeX() < robot.getSizeY(); y += robot.getSizeX(), i = robot.getSizeX() * robot.getSizeY() - robot.getSizeX() - y){
+                    for(int x = 1; x < robot.getSizeY() + 1; x++){
+                        if(!(this.getIndexMazeFreeFields().contains(robot.getPosition()[i] - x))){
+                            return false;
+                        } else {
+                            this.getMazeDrawFields().get(robot.getPosition()[i] - x).setFill(Color.rgb(255,255,0));
+                        }
+                    }
+                }
                 break;
             case 1:
-
+                for(int x = 0, i = x; x < robot.getSizeX(); x++, i = x){
+                    for(int y = 1; y < robot.getSizeX() + 1; y++){
+                        if(!(this.getIndexMazeFreeFields().contains(robot.getPosition()[i] - y * this.getMazeSizeY()))){
+                            return false;
+                        } else {
+                            this.getMazeDrawFields().get(robot.getPosition()[i] - y * this.getMazeSizeY()).setFill(Color.rgb(255,255,0));
+                        }
+                    }
+                }
                 break;
             case 2:
-
+                for(int y = 0, i = robot.getSizeX() - 1 + y; y / robot.getSizeX() < robot.getSizeY(); y += robot.getSizeX(), i = robot.getSizeX() - 1 + y){
+                    for(int x = 1; x < robot.getSizeY() + 1; x++){
+                        if(!(this.getIndexMazeFreeFields().contains(robot.getPosition()[i] + x))){
+                            return false;
+                        } else {
+                            this.getMazeDrawFields().get(robot.getPosition()[i] + x).setFill(Color.rgb(255,255,0));
+                        }
+                    }
+                }
                 break;
             case 3:
-
+                for(int x = 0, i = robot.getSizeX() * robot.getSizeY() - 1 + x; -x < robot.getSizeX(); x--, i = robot.getSizeX() * robot.getSizeY() - 1 + x){
+                    for(int y = 1; y < robot.getSizeX() + 1; y++){
+                        if(!(this.getIndexMazeFreeFields().contains(robot.getPosition()[i] + y * this.getMazeSizeY()))){
+                            return false;
+                        } else {
+                            this.getMazeDrawFields().get(robot.getPosition()[i] + y * this.getMazeSizeY()).setFill(Color.rgb(255,255,0));
+                        }
+                    }
+                }
                 break;
         }
 
@@ -406,10 +438,10 @@ public class SimulationMaze {
             case 1:
                 for(int x = 0, i = robot.getSizeX() * robot.getSizeY() - robot.getSizeX() + x; x < robot.getSizeX(); x++, i = robot.getSizeX() * robot.getSizeY() - robot.getSizeX() + x){
                     for(int y = 1; y < robot.getSizeX() + 1; y++){
-                        if(!(this.getIndexMazeFreeFields().contains(robot.getPosition()[i] + y * SimulationMaze.getMazeFiles().get(robot.getRobotMazeIndexNumber()).getMazeSizeY()))){
+                        if(!(this.getIndexMazeFreeFields().contains(robot.getPosition()[i] + y * this.getMazeSizeY()))){
                             return false;
                         } else {
-                            this.getMazeDrawFields().get(robot.getPosition()[i] + y * SimulationMaze.getMazeFiles().get(robot.getRobotMazeIndexNumber()).getMazeSizeY()).setFill(Color.rgb(255,255,0));
+                            this.getMazeDrawFields().get(robot.getPosition()[i] + y * this.getMazeSizeY()).setFill(Color.rgb(255,255,0));
                         }
                     }
                 }
@@ -428,10 +460,10 @@ public class SimulationMaze {
             case 3:
                 for(int x = 0, i = robot.getSizeX() - 1 + x; -x < robot.getSizeX(); x--, i = robot.getSizeX() - 1 + x){
                     for(int y = 1; y < robot.getSizeX() + 1; y++){
-                        if(!(this.getIndexMazeFreeFields().contains(robot.getPosition()[i] - y * SimulationMaze.getMazeFiles().get(robot.getRobotMazeIndexNumber()).getMazeSizeY()))){
+                        if(!(this.getIndexMazeFreeFields().contains(robot.getPosition()[i] - y * this.getMazeSizeY()))){
                             return false;
                         } else {
-                            this.getMazeDrawFields().get(robot.getPosition()[i] - y * SimulationMaze.getMazeFiles().get(robot.getRobotMazeIndexNumber()).getMazeSizeY()).setFill(Color.rgb(255,255,0));
+                            this.getMazeDrawFields().get(robot.getPosition()[i] - y * this.getMazeSizeY()).setFill(Color.rgb(255,255,0));
                         }
                     }
                 }
