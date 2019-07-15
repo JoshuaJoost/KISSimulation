@@ -616,17 +616,144 @@ public class SimulationMaze {
         }
 
         // Prüfe, ob Rotationsradius frei ist
+        int radiusRound = (int) Math.ceil(Math.sqrt(Math.pow(robot.getSizeX(), 2) + Math.pow(robot.getSizeY(), 2)));
+        double radius = Math.sqrt(Math.pow(robot.getSizeX(), 2) + Math.pow(robot.getSizeY(), 2));
+        int delta;
         switch (robot.getHeadDirection()) {
             case 0:
+                delta = radiusRound - robot.getSizeY();
+
+                // Prüfe Felder oberhalb
+                for(int y = 1; y < delta + 1; y++){
+                    for(int x = 0; x < robot.getSizeX() * 2 - y + 1; x++){
+                        if(!(this.getIndexMazeFreeFields().contains(robot.getPosition()[0] - y * this.mazeSizeY + x + y - 1))){
+                            return false;
+                        } else {
+                            if(showRightRotation){
+                                this.getMazeDrawFields().get(robot.getPosition()[0] - y * this.mazeSizeY + x + y - 1).setFill(SimulationMaze.mazeRotationTopColor);
+                            }
+                        }
+                    }
+                }
+
+                // Prüfe Felder rechts
+                for(int i = 0, y = 0, index = robot.getSizeX() - 1 + y; i < robot.getSizeY() - robot.getSizeX(); i++, y += robot.getSizeX(), index = robot.getSizeX() - 1 + y){
+                    // Java Rechenfehler korrigieren, indem letzte Stelle abgeschnitten wird
+                    String distanceString = "" + Math.sqrt(Math.pow(radius, 2) - Math.pow(robot.getSizeY() - 1 - i, 2));
+                    int distance = (int) Math.ceil(Double.parseDouble(distanceString.substring(0, distanceString.length() - 1)));
+
+                    for(int x = 1; x < distance + 1; x++){
+                        if(!(this.getIndexMazeFreeFields().contains(robot.getPosition()[index] + x))){
+                            return false;
+                        } else {
+                            if(showRightRotation){
+                                this.getMazeDrawFields().get(robot.getPosition()[index] + x).setFill(SimulationMaze.mazeRotationSideColor);
+                            }
+                        }
+                    }
+                }
 
                 break;
             case 1:
+                delta = radiusRound - robot.getSizeX();
+
+                // Prüfe Felder rechts
+                for(int x = 1; x < delta + 1; x++){
+                    for(int y = 0; y < robot.getSizeY() * 2 - x + 1; y++){
+                        if(!(this.getIndexMazeFreeFields().contains(robot.getPosition()[robot.getSizeX() - 1] + x + (y + x - 1) * this.mazeSizeY))){
+                            return false;
+                        } else {
+                            if(showRightRotation){
+                                this.getMazeDrawFields().get(robot.getPosition()[robot.getSizeX() - 1] + x + (y + x - 1) * this.mazeSizeY).setFill(SimulationMaze.mazeRotationTopColor);
+                            }
+                        }
+                    }
+                }
+
+                // Prüfe Felder unten
+                for(int i = 0, x = 0, index = robot.getSizeX() * robot.getSizeY() - 1 - x; i < robot.getSizeX() - robot.getSizeY(); i++, x++, index = robot.getSizeX() * robot.getSizeY() - 1 - x){
+                    // Java Rechenfehler korrigieren, indem letzte Stelle abgeschnitten wird
+                    String distanceString = "" + Math.sqrt(Math.pow(radius, 2) - Math.pow(robot.getSizeX() - 1 - i, 2));
+                    int distance = (int) Math.ceil(Double.parseDouble(distanceString.substring(0, distanceString.length() - 1)));
+
+                    for(int y = 1; y < distance + 1; y++){
+                        if(!(this.getIndexMazeFreeFields().contains(robot.getPosition()[index] + y * this.mazeSizeY))){
+                            return false;
+                        } else {
+                            if(showRightRotation){
+                                this.getMazeDrawFields().get(robot.getPosition()[index] + y * this.mazeSizeY).setFill(SimulationMaze.mazeRotationSideColor);
+                            }
+                        }
+                    }
+                }
 
                 break;
             case 2:
+                delta = radiusRound - robot.getSizeY();
+
+                // Prüfe Felder unten
+                for(int y = 1; y < delta + 1; y++){
+                    for(int x = 0; x < robot.getSizeX() * 2 - y + 1; x++){
+                        if(!(this.getIndexMazeFreeFields().contains(robot.getPosition()[robot.getSizeX() * robot.getSizeY() - 1] + y * this.mazeSizeY - x - y + 1))){
+                            return false;
+                        } else {
+                            if(showRightRotation){
+                                this.getMazeDrawFields().get(robot.getPosition()[robot.getSizeX() * robot.getSizeY() - 1] + y * this.mazeSizeY - x - y + 1).setFill(SimulationMaze.mazeRotationTopColor);
+                            }
+                        }
+                    }
+                }
+
+                // Prüfe Felder links
+                for(int i = 0, y = 0, index = robot.getSizeX() * robot.getSizeY() - robot.getSizeX() - y; i < robot.getSizeY() - robot.getSizeX(); i++, y += robot.getSizeX(), index = robot.getSizeX() * robot.getSizeY() - robot.getSizeX() - y){
+                    // Java Rechenfehler korrigieren, indem letzte Stelle abgeschnitten wird
+                    String distanceString = "" + Math.sqrt(Math.pow(radius, 2) - Math.pow(robot.getSizeY() - 1 - i, 2));
+                    int distance = (int) Math.ceil(Double.parseDouble(distanceString.substring(0, distanceString.length() - 1)));
+
+                    for(int x = 1; x < distance + 1; x++){
+                        if(!(this.getIndexMazeFreeFields().contains(robot.getPosition()[index] - x))){
+                            return false;
+                        } else {
+                            if(showRightRotation){
+                                this.getMazeDrawFields().get(robot.getPosition()[index] - x).setFill(SimulationMaze.mazeRotationSideColor);
+                            }
+                        }
+                    }
+                }
 
                 break;
             case 3:
+                delta = radiusRound - robot.getSizeX();
+
+                // Prüfe Felder links
+                for(int x = 1; x < delta + 1; x++){
+                    for(int y = 0; y < robot.getSizeY() * 2 - x + 1; y++){
+                        if(!(this.getIndexMazeFreeFields().contains(robot.getPosition()[robot.getSizeX() * robot.getSizeY() - robot.getSizeX()] - x - (y + x - 1) * this.mazeSizeY))){
+                            return false;
+                        } else {
+                            if(showRightRotation){
+                                this.getMazeDrawFields().get(robot.getPosition()[robot.getSizeX() * robot.getSizeY() - robot.getSizeX()] - x - (y + x - 1) * this.mazeSizeY).setFill(SimulationMaze.mazeRotationTopColor);
+                            }
+                        }
+                    }
+                }
+
+                // Prüfe Felder oben
+                for(int i = 0, x = 0, index = x; i < robot.getSizeX() - robot.getSizeY(); i++, x++, index = x){
+                    // Java Rechenfehler korrigieren, indem letzte Stelle abgeschnitten wird
+                    String distanceString = "" + Math.sqrt(Math.pow(radius, 2) - Math.pow(robot.getSizeX() - 1 - i, 2));
+                    int distance = (int) Math.ceil(Double.parseDouble(distanceString.substring(0, distanceString.length() - 1)));
+
+                    for(int y = 1; y < distance + 1; y++){
+                        if(!(this.getIndexMazeFreeFields().contains(robot.getPosition()[index] - y * this.mazeSizeY))){
+                            return false;
+                        } else {
+                            if(showRightRotation){
+                                this.getMazeDrawFields().get(robot.getPosition()[index] - y * this.mazeSizeY).setFill(SimulationMaze.mazeRotationSideColor);
+                            }
+                        }
+                    }
+                }
 
                 break;
         }
