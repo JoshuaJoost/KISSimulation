@@ -354,10 +354,10 @@ public class SimulationMaze {
 //    }
 //
     public boolean rotationForwardLeftFree(SimulationRobot robot){
-        // Prüfe, ob Zielposition und Rotationsumgebung frei ist
+        // Prüfe, ob Zielposition frei ist
         switch(robot.getHeadDirection()){
             case 0:
-                for(int y = 0, i = robot.getSizeX() * robot.getSizeY() - robot.getSizeX() - y; y / robot.getSizeX() < robot.getSizeY(); y += robot.getSizeX(), i = robot.getSizeX() * robot.getSizeY() - robot.getSizeX() - y){
+                for(int y = 0, i = robot.getSizeX() * robot.getSizeY() - robot.getSizeX() - y; y / robot.getSizeX() < robot.getSizeX(); y += robot.getSizeX(), i = robot.getSizeX() * robot.getSizeY() - robot.getSizeX() - y){
                     for(int x = 1; x < robot.getSizeY() + 1; x++){
                         if(!(this.getIndexMazeFreeFields().contains(robot.getPosition()[i] - x))){
                             return false;
@@ -368,7 +368,7 @@ public class SimulationMaze {
                 }
                 break;
             case 1:
-                for(int x = 0, i = x; x < robot.getSizeX(); x++, i = x){
+                for(int x = 0, i = x; x < robot.getSizeY(); x++, i = x){
                     for(int y = 1; y < robot.getSizeX() + 1; y++){
                         if(!(this.getIndexMazeFreeFields().contains(robot.getPosition()[i] - y * this.getMazeSizeY()))){
                             return false;
@@ -379,7 +379,7 @@ public class SimulationMaze {
                 }
                 break;
             case 2:
-                for(int y = 0, i = robot.getSizeX() - 1 + y; y / robot.getSizeX() < robot.getSizeY(); y += robot.getSizeX(), i = robot.getSizeX() - 1 + y){
+                for(int y = 0, i = robot.getSizeX() - 1 + y; y / robot.getSizeX() < robot.getSizeX(); y += robot.getSizeX(), i = robot.getSizeX() - 1 + y){
                     for(int x = 1; x < robot.getSizeY() + 1; x++){
                         if(!(this.getIndexMazeFreeFields().contains(robot.getPosition()[i] + x))){
                             return false;
@@ -390,7 +390,7 @@ public class SimulationMaze {
                 }
                 break;
             case 3:
-                for(int x = 0, i = robot.getSizeX() * robot.getSizeY() - 1 + x; -x < robot.getSizeX(); x--, i = robot.getSizeX() * robot.getSizeY() - 1 + x){
+                for(int x = 0, i = robot.getSizeX() * robot.getSizeY() - 1 + x; -x < robot.getSizeY(); x--, i = robot.getSizeX() * robot.getSizeY() - 1 + x){
                     for(int y = 1; y < robot.getSizeX() + 1; y++){
                         if(!(this.getIndexMazeFreeFields().contains(robot.getPosition()[i] + y * this.getMazeSizeY()))){
                             return false;
@@ -403,18 +403,31 @@ public class SimulationMaze {
         }
 
         // Prüfe, ob Rotationsradius frei ist
+        int radius = (int) Math.ceil(Math.sqrt(Math.pow(robot.getSizeX(), 2) + Math.pow(robot.getSizeY(), 2)));
+        int delta;
         switch(robot.getHeadDirection()){
             case 0:
+                delta = radius - robot.getSizeY();
 
+                //Prüfe darüberliegende Felder
+                for(int y = 1; y < delta + 1; y++){
+                    for(int x = 0; x < robot.getSizeX() * 2 - y + 1; x++){
+                        if(!(this.getIndexMazeFreeFields().contains(robot.getPosition()[robot.getSizeX() - 1] - y * this.getMazeSizeY() - x - y + 1))){
+                            return false;
+                        } else {
+                            this.getMazeDrawFields().get(robot.getPosition()[robot.getSizeX() - 1] - y * this.getMazeSizeY() - x - y + 1).setFill(Color.rgb(255,150,150));
+                        }
+                    }
+                }
                 break;
             case 1:
-
+                delta = radius - robot.getSizeX();
                 break;
             case 2:
-
+                delta = radius - robot.getSizeY();
                 break;
             case 3:
-
+                delta = radius - robot.getSizeX();
                 break;
         }
 
@@ -422,10 +435,10 @@ public class SimulationMaze {
     }
 
     public boolean rotationForwardRightFree(SimulationRobot robot){
-        // Prüfe, ob Zielposition und Rotationsumgebung frei ist
+        // Prüfe, ob Zielposition frei ist
         switch(robot.getHeadDirection()){
             case 0:
-                for(int y = 0, i = robot.getSizeX() * robot.getSizeY() - 1 - y; y / robot.getSizeX() < robot.getSizeY(); y += robot.getSizeX(), i = robot.getSizeX() * robot.getSizeY() - 1 - y){
+                for(int y = 0, i = robot.getSizeX() * robot.getSizeY() - 1 - y; y / robot.getSizeX() < robot.getSizeX(); y += robot.getSizeX(), i = robot.getSizeX() * robot.getSizeY() - 1 - y){
                     for(int x = 1; x < robot.getSizeY() + 1; x++){
                         if(!(this.getIndexMazeFreeFields().contains(robot.getPosition()[i] + x))){
                             return false;
@@ -436,7 +449,7 @@ public class SimulationMaze {
                 }
                 break;
             case 1:
-                for(int x = 0, i = robot.getSizeX() * robot.getSizeY() - robot.getSizeX() + x; x < robot.getSizeX(); x++, i = robot.getSizeX() * robot.getSizeY() - robot.getSizeX() + x){
+                for(int x = 0, i = robot.getSizeX() * robot.getSizeY() - robot.getSizeX() + x; x < robot.getSizeY(); x++, i = robot.getSizeX() * robot.getSizeY() - robot.getSizeX() + x){
                     for(int y = 1; y < robot.getSizeX() + 1; y++){
                         if(!(this.getIndexMazeFreeFields().contains(robot.getPosition()[i] + y * this.getMazeSizeY()))){
                             return false;
@@ -447,7 +460,7 @@ public class SimulationMaze {
                 }
                 break;
             case 2:
-                for(int y = 0, i = y * robot.getSizeX(); y < robot.getSizeY(); y++, i = y * robot.getSizeX()){
+                for(int y = 0, i = y * robot.getSizeX(); y < robot.getSizeX(); y++, i = y * robot.getSizeX()){
                     for(int x = 1; x < robot.getSizeY() + 1; x++){
                         if(!(this.getIndexMazeFreeFields().contains(robot.getPosition()[i] - x))){
                             return false;
@@ -458,7 +471,7 @@ public class SimulationMaze {
                 }
                 break;
             case 3:
-                for(int x = 0, i = robot.getSizeX() - 1 + x; -x < robot.getSizeX(); x--, i = robot.getSizeX() - 1 + x){
+                for(int x = 0, i = robot.getSizeX() - 1 + x; -x < robot.getSizeY(); x--, i = robot.getSizeX() - 1 + x){
                     for(int y = 1; y < robot.getSizeX() + 1; y++){
                         if(!(this.getIndexMazeFreeFields().contains(robot.getPosition()[i] - y * this.getMazeSizeY()))){
                             return false;
