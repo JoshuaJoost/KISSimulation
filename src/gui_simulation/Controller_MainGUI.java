@@ -172,8 +172,8 @@ public class Controller_MainGUI implements Initializable {
     void addNewRobot(ActionEvent event) {
         if (SimulationMaze.getSelectedMazeIndexNumber() != null) {
             // Definiere Roboterwerte
-            int robotSizeX = 13;//13 - 3;
-            int robotSizeY = 18;//18 - 4;
+            int robotSizeX = 3;//13 - 3;
+            int robotSizeY = 6;//18 - 4;
 
             // Roboter versuchen auf das Labyrinth zu setzen
             ArrayList<Integer> robotPositions = new ArrayList<>();
@@ -272,7 +272,7 @@ public class Controller_MainGUI implements Initializable {
 
     @FXML
     void mazeMoveRobotKeyboard(KeyEvent event) {
-        System.out.println(":" + event.getCode());
+        // System.out.println(":" + event.getCode());
 
         if (SimulationMaze.getMazeFiles().size() > 0 && SimulationMaze.getSelectedMazeIndexNumber() != null && SimulationMaze.getSelectedMaze().getMazeRobots().size() > 0) {
             switch (event.getCode().toString()) {
@@ -437,178 +437,10 @@ public class Controller_MainGUI implements Initializable {
 
     }
 
-//    public static boolean mazeFreeFieldsUp(SimulationMaze maze, SimulationRobot robot) {
-//        int[] sortedPositions = robot.getPosition();
-//        Arrays.sort(sortedPositions);
-//
-//        boolean freeFields = true;
-//        for (int x = 0; x < robot.getSizeX(); x++) {
-//            if (!(maze.getIndexMazeFreeFields().contains(sortedPositions[x] - maze.getMazeSizeY()))) {
-//                freeFields = false;
-//            }
-//
-//            // mazeFields.get(sortedPositions[x] - maze.getMazeSizeY()).setFill(Color.rgb(238, 244, 66));
-//        }
-//
-//        return freeFields;
-//    }
-
-//    public static boolean mazeFreeFieldsDown(SimulationMaze maze, SimulationRobot robot) {
-//        int[] sortedPositions = robot.getPosition();
-//        Arrays.sort(sortedPositions);
-//
-//        boolean freeFields = true;
-//        for (int x = 0; x < robot.getSizeX(); x++) {
-//            if (!(maze.getIndexMazeFreeFields().contains(sortedPositions[sortedPositions.length - 1 - x] + maze.getMazeSizeY()))) {
-//                freeFields = false;
-//            }
-//
-//            // mazeFields.get(sortedPositions[sortedPositions.length - 1 - x] + maze.getMazeSizeY()).setFill(Color.rgb(238, 244, 66));
-//        }
-//
-//        return freeFields;
-//    }
-
-//    public static boolean mazeFreeFieldsRight(SimulationMaze maze, SimulationRobot robot) {
-//        int[] sortedPositions = robot.getPosition();
-//        Arrays.sort(sortedPositions);
-//
-//        boolean freeFields = true;
-//        for (int x = robot.getSizeX() - 1, y = 0; y < robot.getSizeY(); y++, x += robot.getSizeX()) {
-//            if (!(maze.getIndexMazeFreeFields().contains(sortedPositions[x] + 1))) {
-//                freeFields = false;
-//            }
-//            // mazeFields.get(sortedPositions[x] + 1).setFill(Color.rgb(255,255,0));
-//        }
-//
-//        return freeFields;
-//    }
-
-//    public static boolean mazeFreeFieldsLeft(SimulationMaze maze, SimulationRobot robot) {
-//        int[] sortedPositions = robot.getPosition();
-//        Arrays.sort(sortedPositions);
-//
-//        boolean freeFields = true;
-//        for (int y = 0, x = 0; y < robot.getSizeY(); y++, x += robot.getSizeX()) {
-//            if (!(maze.getIndexMazeFreeFields().contains(sortedPositions[x] - 1))) {
-//                freeFields = false;
-//            }
-//        }
-//
-//        return freeFields;
-//    }
-
-//    public static boolean mazeFreeFieldsRotateLeftForward(SimulationMaze maze, SimulationRobot robot) {
-//        int[] sortedPositions = robot.getPosition();
-//        Arrays.sort(sortedPositions);
-//
-//        boolean freeFields = true;
-//        // Prüfe, ob Zielposition frei ist
-//        switch (robot.getHeadDirection()) {
-//            case 0:
-//                for(int y = 1, x = 0, xd = -1, yd = 0; freeFields && y < robot.getSizeY() + 1; y++, x = 0, xd = xd + robot.getSizeX() - 2 + 1, yd = yd + robot.getSizeX() + 2 - 1){
-//                    for(int xi = 0; freeFields && xi < robot.getSizeX(); xi++, x++, xd--, yd--){
-//                        if(!(maze.getIndexMazeFreeFields().contains(robot.getPosition()[robot.getSizeY() * robot.getSizeX() - y * robot.getSizeX() + x] + xd + yd * SimulationMaze.getMazeFiles().get(robot.getRobotMazeIndexNumber()).getMazeSizeY()))){
-//                            freeFields = false;
-//                        }
-////                         maze.getMazeDrawFields().get(robot.getPosition()[robot.getSizeY() * robot.getSizeX() - y * robot.getSizeX() + x] + xd + yd * SimulationMaze.getMazeFiles().get(robot.getRobotMazeIndexNumber()).getMazeSizeY()).setFill(Color.rgb(255,255,0));
-//                    }
-//                }
-//                break;
-//            case 1:
-//                for(int y = 0, x = 0, xd = 0, yd = -1; freeFields && y < robot.getSizeY(); y++, x = 0, xd = xd + robot.getSizeX() + 1, yd = yd + robot.getSizeX() - 1){
-//                    for(int xi = 0; freeFields && xi < robot.getSizeX(); xi++, x++, xd--, yd--){
-//                        if(!(maze.getIndexMazeFreeFields().contains(robot.getPosition()[y * (robot.getSizeY() + 1) + x] + xd + yd * SimulationMaze.getMazeFiles().get(robot.getRobotMazeIndexNumber()).getMazeSizeY()))){
-//                            freeFields = false;
-//                        }
-////                         maze.getMazeDrawFields().get(robot.getPosition()[y * (robot.getSizeY() + 1) + x] + xd + yd * SimulationMaze.getMazeFiles().get(robot.getRobotMazeIndexNumber()).getMazeSizeY()).setFill(Color.rgb(255,255,0));
-//                    }
-//                }
-//                break;
-//            case 2:
-//                for(int y = 1, x = 0, xd = 1, yd = 0; freeFields && y < robot.getSizeY() + 1; y++, x = 0, xd = xd - robot.getSizeX() + 2 - 1, yd = yd - robot.getSizeX() - 1){
-//                    for(int xi = 0; freeFields && xi < robot.getSizeX(); xi++, x--, yd++, xd++){
-//                        if(!(maze.getIndexMazeFreeFields().contains(robot.getPosition()[y * robot.getSizeX() - 1 + x] + xd + yd * SimulationMaze.getMazeFiles().get(robot.getRobotMazeIndexNumber()).getMazeSizeY()))){
-//                            freeFields = false;
-//                        }
-//                         // maze.getMazeDrawFields().get(robot.getPosition()[y * robot.getSizeX() - 1 + x] + xd + yd * SimulationMaze.getMazeFiles().get(robot.getRobotMazeIndexNumber()).getMazeSizeY()).setFill(Color.rgb(255,255,0));
-//                    }
-//                }
-//                break;
-//            case 3:
-//                for(int y = 0, x = 0, xd = 0, yd = 1; freeFields && y < robot.getSizeY(); y++, x = 0, xd = xd - robot.getSizeX() - 1, yd = yd - robot.getSizeX() + 1){
-//                    for(int xi = 0; freeFields && xi < robot.getSizeX(); xi++, x--, xd++, yd++){
-//                        if(!(maze.getIndexMazeFreeFields().contains(robot.getPosition()[robot.getSizeY() * robot.getSizeX() - 1 - y * robot.getSizeX() + x] + xd + yd * SimulationMaze.getMazeFiles().get(robot.getRobotMazeIndexNumber()).getMazeSizeY()))){
-//                            freeFields = false;
-//                        }
-//                         // maze.getMazeDrawFields().get(robot.getPosition()[robot.getSizeY() * robot.getSizeX() - 1 - y * robot.getSizeX() + x] + xd + yd * SimulationMaze.getMazeFiles().get(robot.getRobotMazeIndexNumber()).getMazeSizeY()).setFill(Color.rgb(255,255,0));
-//                    }
-//                }
-//                break;
-//        }
-//
-//        return freeFields;
-//    }
-
-//    public static boolean mazeFreeFieldsRotateRightForward(SimulationMaze maze, SimulationRobot robot){
-//        int[] sortedPositions = robot.getPosition();
-//        Arrays.sort(sortedPositions);
-//
-//        boolean freeFields = true;
-//        // Prüfe, ob Zielposition frei ist
-//        switch(robot.getHeadDirection()){
-//            case 0:
-//                for(int y = 0, x = -1, xv = 1, yv = 0; freeFields && y < robot.getSizeY(); y++, x = -1, xv = xv - robot.getSizeX() + 2 - 1, yv = yv + robot.getSizeX() + 1){
-//                    for(int xi = 0; freeFields && xi < robot.getSizeX(); xi++, x--, xv++, yv--){
-//                        if(!(maze.getIndexMazeFreeFields().contains(robot.getPosition()[robot.getSizeX() * robot.getSizeY() - y * robot.getSizeX() + x] + xv + yv * SimulationMaze.getMazeFiles().get(robot.getRobotMazeIndexNumber()).getMazeSizeY()))){
-//                            freeFields = false;
-//                        }
-//                        // maze.getMazeDrawFields().get(robot.getPosition()[robot.getSizeX() * robot.getSizeY() - y * robot.getSizeX() + x] + xv + yv * SimulationMaze.getMazeFiles().get(robot.getRobotMazeIndexNumber()).getMazeSizeY()).setFill(Color.rgb(255,255,0));
-//                    }
-//                }
-//                break;
-//            case 1:
-//                for(int y = 1, x = 0, xv = 0, yv = 1; freeFields && y < robot.getSizeY() + 1; y++, x = 0, xv = xv + robot.getSizeX() + 1, yv = yv - robot.getSizeX() + 2 - 1){
-//                    for(int xi = 0; freeFields && xi < robot.getSizeX(); xi++, x++, xv--, yv++){
-//                        if(!(maze.getIndexMazeFreeFields().contains(robot.getPosition()[robot.getSizeX() * robot.getSizeY() - y * robot.getSizeX() + x] + xv + yv * SimulationMaze.getMazeFiles().get(robot.getRobotMazeIndexNumber()).getMazeSizeY()))){
-//                            freeFields = false;
-//                        }
-////                         maze.getMazeDrawFields().get(robot.getPosition()[robot.getSizeX() * robot.getSizeY() - y * robot.getSizeX() + x] + xv + yv * SimulationMaze.getMazeFiles().get(robot.getRobotMazeIndexNumber()).getMazeSizeY()).setFill(Color.rgb(255,255,0));
-//                    }
-//                }
-//                break;
-//            case 2:
-//                for(int y = 0, x = 0, xv = -1, yv = 0; freeFields && y < robot.getSizeY(); y++, x = 0, xv = xv + robot.getSizeX() - 2 + 1, yv = yv - robot.getSizeX() - 1){
-//                    for(int xi = 0; freeFields && xi < robot.getSizeX(); xi++, x++, xv--, yv++){
-//                        if(!(maze.getIndexMazeFreeFields().contains(robot.getPosition()[y * (robot.getSizeY() - 1) + x] + xv + yv * SimulationMaze.getMazeFiles().get(robot.getRobotMazeIndexNumber()).getMazeSizeY()))){
-//                            freeFields = false;
-//                        }
-////                         maze.getMazeDrawFields().get(robot.getPosition()[y * (robot.getSizeY() - 1) + x] + xv + yv * SimulationMaze.getMazeFiles().get(robot.getRobotMazeIndexNumber()).getMazeSizeY()).setFill(Color.rgb(255,255,0));
-//                    }
-//                }
-//                break;
-//            case 3:
-//                for(int y = 1, x = 0, xv = 0, yv = -1; freeFields && y < robot.getSizeY() + 1; y++, x = 0, xv = xv - robot.getSizeX() - 1, yv = yv + robot.getSizeX() - 2 + 1){
-//                    for(int xi = 0; freeFields && xi < robot.getSizeX(); xi++, x--, xv++, yv--){
-//                        if(!(maze.getIndexMazeFreeFields().contains(robot.getPosition()[y * robot.getSizeX() - 1 + x] + xv + yv * SimulationMaze.getMazeFiles().get(robot.getRobotMazeIndexNumber()).getMazeSizeY()))){
-//                            freeFields = false;
-//                        }
-////                         maze.getMazeDrawFields().get(robot.getPosition()[y * robot.getSizeX() - 1 + x] + xv + yv * SimulationMaze.getMazeFiles().get(robot.getRobotMazeIndexNumber()).getMazeSizeY()).setFill(Color.rgb(255,255,0));
-//                    }
-//                }
-//                break;
-//        }
-//
-//        // Prüfe, ob Rotationsradius frei ist
-//
-//
-//        return freeFields;
-//    }
-
     /*
      * DEBUGG Funktionen
      * */
-    private void outMazeFreeFields() {
+    private void printMazeFreeFields() {
         for (int i = 0; i < mazeFields.size(); i++) {
             if (mazeFields.get(i).getFill() == mazeVoidColor) {
                 System.out.println(i + ": Frei");
@@ -616,7 +448,7 @@ public class Controller_MainGUI implements Initializable {
         }
     }
 
-    private void outCompareFreeFields(ArrayList<Integer> possibleFreeFields) {
+    private void printCompareFreeFields(ArrayList<Integer> possibleFreeFields) {
         int mazeFreeFields = 0;
 
         for (int i = 0; i < mazeFields.size(); i++) {
