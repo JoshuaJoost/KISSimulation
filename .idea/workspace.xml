@@ -3,10 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="a44a8a50-6fbd-4bcc-afba-98189aabe9ac" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/gui_simulation/Controller_MainGUI.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/gui_simulation/Controller_MainGUI.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/gui_simulation/SimulationMaze.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/gui_simulation/SimulationMaze.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/gui_simulation/SimulationRobot$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/gui_simulation/SimulationRobot$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/gui_simulation/SimulationRobot.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/gui_simulation/SimulationRobot.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/gui_simulation/Controller_MainGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui_simulation/Controller_MainGUI.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/gui_simulation/SimulationMaze.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui_simulation/SimulationMaze.java" afterDir="false" />
     </list>
@@ -25,7 +21,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/gui_simulation/SimulationRobot.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="521">
+            <state relative-caret-position="7395">
               <caret line="484" column="26" lean-forward="true" selection-start-line="484" selection-start-column="26" selection-end-line="484" selection-end-column="26" />
             </state>
           </provider>
@@ -34,8 +30,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/gui_simulation/SimulationMaze.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="314">
-              <caret line="411" column="46" selection-start-line="411" selection-start-column="46" selection-end-line="411" selection-end-column="46" />
+            <state relative-caret-position="416">
+              <caret line="457" column="118" selection-start-line="457" selection-start-column="118" selection-end-line="457" selection-end-column="118" />
             </state>
           </provider>
         </entry>
@@ -43,8 +39,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/gui_simulation/Controller_MainGUI.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="375">
-              <caret line="170" column="9" lean-forward="true" selection-start-line="170" selection-start-column="9" selection-end-line="170" selection-end-column="9" />
+            <state relative-caret-position="341">
+              <caret line="174" column="30" selection-start-line="174" selection-start-column="30" selection-end-line="174" selection-end-column="30" />
             </state>
           </provider>
         </entry>
@@ -213,7 +209,14 @@
       <option name="project" value="LOCAL" />
       <updated>1563189907913</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="- Linksvorwärtsrotation und Rechtsvorwärtsrotation Rotationsumgebung wird mit Rotationsradius geprüft">
+      <created>1563196140722</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1563196140722</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -296,7 +299,8 @@
     <MESSAGE value="- Rechtsvorwärtsrotation überarbeitet" />
     <MESSAGE value="- Rechtsvorwärtsrotation prüfen der Zielposition und Rotationsumgebung (es fehlt der Rotationsradius)" />
     <MESSAGE value="- Linksvorwärtsrotation prüfen der Zielposition und Rotationsumgebung (es fehlt der Rotationsradius)" />
-    <option name="LAST_COMMIT_MESSAGE" value="- Linksvorwärtsrotation prüfen der Zielposition und Rotationsumgebung (es fehlt der Rotationsradius)" />
+    <MESSAGE value="- Linksvorwärtsrotation und Rechtsvorwärtsrotation Rotationsumgebung wird mit Rotationsradius geprüft" />
+    <option name="LAST_COMMIT_MESSAGE" value="- Linksvorwärtsrotation und Rechtsvorwärtsrotation Rotationsumgebung wird mit Rotationsradius geprüft" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/gui_simulation/QLearningAgentMovement.java">
@@ -343,22 +347,22 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/gui_simulation/SimulationRobot.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="521">
+        <state relative-caret-position="7395">
           <caret line="484" column="26" lean-forward="true" selection-start-line="484" selection-start-column="26" selection-end-line="484" selection-end-column="26" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/gui_simulation/Controller_MainGUI.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="170" column="9" lean-forward="true" selection-start-line="170" selection-start-column="9" selection-end-line="170" selection-end-column="9" />
+        <state relative-caret-position="341">
+          <caret line="174" column="30" selection-start-line="174" selection-start-column="30" selection-end-line="174" selection-end-column="30" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/gui_simulation/SimulationMaze.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="314">
-          <caret line="411" column="46" selection-start-line="411" selection-start-column="46" selection-end-line="411" selection-end-column="46" />
+        <state relative-caret-position="416">
+          <caret line="457" column="118" selection-start-line="457" selection-start-column="118" selection-end-line="457" selection-end-column="118" />
         </state>
       </provider>
     </entry>

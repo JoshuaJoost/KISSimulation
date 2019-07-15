@@ -172,8 +172,8 @@ public class Controller_MainGUI implements Initializable {
     void addNewRobot(ActionEvent event) {
         if (SimulationMaze.getSelectedMazeIndexNumber() != null) {
             // Definiere Roboterwerte
-            int robotSizeX = 3;//13 - 3;
-            int robotSizeY = 8;//18 - 4;
+            int robotSizeX = 1;//13 - 3;
+            int robotSizeY = 7;//18 - 4;
 
             // Roboter versuchen auf das Labyrinth zu setzen
             ArrayList<Integer> robotPositions = new ArrayList<>();
