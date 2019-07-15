@@ -607,31 +607,27 @@ public class SimulationRobot implements Roboter {
     }
 
     public void keyboardMoveUp() {
-        if (SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).aboveFree(this)) {
+        if(SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).aboveFree(this)){
             moveUp();
         }
     }
 
     public void keyboardMoveDown() {
-        if (SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).belowFree(this)) {
+        if(SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).belowFree(this)){
             moveDown();
         }
     }
 
     public void keyboardMoveRight() {
-//        if (SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).rightFree(this)) {
-//            moveRight();
-//        }
-        //TODO
-        moveRight();
+        if (SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).rightFree(this)) {
+            moveRight();
+        }
     }
 
     public void keyboardMoveLeft() {
-//        if (SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).leftFree(this)) {
-//            moveLeft();
-//        }
-        //TODO
-        moveLeft();
+        if (SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).leftFree(this)) {
+            moveLeft();
+        }
     }
 
     public void keyboardRotateForwardLeft() {

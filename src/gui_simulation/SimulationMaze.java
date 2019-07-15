@@ -24,9 +24,14 @@ public class SimulationMaze {
     public static final Color mazeTargetColor = Color.rgb(255, 0, 0);
     public static final Color mazeCornerColor = Color.rgb(166, 175, 189);
     public static final Color mazeErrorColor = Color.rgb(0, 255, 246);
-    public static final Color mazeRotationTopColor = Color.rgb(155, 155, 0);
-    public static final Color mazeRotationSideColor = Color.rgb(155, 155, 0);
-    public static final Color mazeRotationTargetPositionColor = Color.rgb(155, 155, 0);
+    //Debug Colors
+    private static final Color debugMazeRotationTopColor = Color.rgb(155, 155, 0);
+    private static final Color debugMazeRotationSideColor = Color.rgb(155, 155, 0);
+    private static final Color debugMazeRotationTargetPositionColor = Color.rgb(155, 155, 0);
+    private static final Color debugMazeFrontColor = Color.rgb(155, 155, 0);
+    private static final Color debugMazeBackwardsColor = Color.rgb(155,155,0);
+    private static final Color debugMazeRightColor = Color.rgb(155,155,0);
+    private static final Color debugMazeLeftColor = Color.rgb(155,155,0);
 
     private static int numberOfMazeFiles = 0;
     private static ArrayList<SimulationMaze> mazeFiles = new ArrayList<>();
@@ -51,8 +56,12 @@ public class SimulationMaze {
     // Controller
     private final Controller_MainGUI FXML_MAIN_CONTROLLER;
     // Debugg
-    private static boolean showLeftRotation = false;
-    private static boolean showRightRotation = true;
+    private static boolean debugShowLeftRotation = false;
+    private static boolean debugShowRightRotation = false;
+    private static boolean debugShowFront = false;
+    private static boolean debugShowBelow = false;
+    private static boolean debugShowRight = false;
+    private static boolean debugShowLeft = false;
 
     private SimulationMaze(String filename, int mazePaneX, int mazePaneY, Controller_MainGUI fxmlMainController) {
         nr = (++numberOfMazeFiles);
@@ -222,12 +231,6 @@ public class SimulationMaze {
         return false;
     }
 
-//    public boolean changeSelectedRobot(int indexNewSelectedRobot){
-//        if(this.mazeRobots.size() > 0 && indexNewSelectedRobot <= this.mazeRobots.size()){
-//
-//        }
-//    }
-
     public Integer getMazeSizeX() {
         return this.mazeSizeX;
     }
@@ -252,113 +255,6 @@ public class SimulationMaze {
     /*
      * Bewegungen prüfen
      * */
-//    public boolean rotationForwardRightFree(SimulationRobot robot){
-//        int[] sortedPositions = robot.getPosition();
-//        Arrays.sort(sortedPositions);
-//
-//        boolean freeFields = true;
-//        // Prüfe, ob Zielposition frei ist
-//        switch(robot.getHeadDirection()){
-//            case 0:
-//                for(int y = 0, x = -1, xv = 1, yv = 0; freeFields && y < robot.getSizeY(); y++, x = -1, xv = xv - robot.getSizeX() + 2 - 1, yv = yv + robot.getSizeX() + 1){
-//                    for(int xi = 0; freeFields && xi < robot.getSizeX(); xi++, x--, xv++, yv--){
-//                        if(!(this.getIndexMazeFreeFields().contains(robot.getPosition()[robot.getSizeX() * robot.getSizeY() - y * robot.getSizeX() + x] + xv + yv * SimulationMaze.getMazeFiles().get(robot.getRobotMazeIndexNumber()).getMazeSizeY()))){
-//                            freeFields = false;
-//                        }
-//                        // this.getMazeDrawFields().get(robot.getPosition()[robot.getSizeX() * robot.getSizeY() - y * robot.getSizeX() + x] + xv + yv * SimulationMaze.getMazeFiles().get(robot.getRobotMazeIndexNumber()).getMazeSizeY()).setFill(Color.rgb(255,255,0));
-//                    }
-//                }
-//                break;
-//            case 1:
-//                for(int y = 1, x = 0, xv = 0, yv = 1; freeFields && y < robot.getSizeY() + 1; y++, x = 0, xv = xv + robot.getSizeX() + 1, yv = yv - robot.getSizeX() + 2 - 1){
-//                    for(int xi = 0; freeFields && xi < robot.getSizeX(); xi++, x++, xv--, yv++){
-//                        if(!(this.getIndexMazeFreeFields().contains(robot.getPosition()[robot.getSizeX() * robot.getSizeY() - y * robot.getSizeX() + x] + xv + yv * SimulationMaze.getMazeFiles().get(robot.getRobotMazeIndexNumber()).getMazeSizeY()))){
-//                            freeFields = false;
-//                        }
-////                         this.getMazeDrawFields().get(robot.getPosition()[robot.getSizeX() * robot.getSizeY() - y * robot.getSizeX() + x] + xv + yv * SimulationMaze.getMazeFiles().get(robot.getRobotMazeIndexNumber()).getMazeSizeY()).setFill(Color.rgb(255,255,0));
-//                    }
-//                }
-//                break;
-//            case 2:
-//                for(int y = 0, x = 0, xv = -1, yv = 0; freeFields && y < robot.getSizeY(); y++, x = 0, xv = xv + robot.getSizeX() - 2 + 1, yv = yv - robot.getSizeX() - 1){
-//                    for(int xi = 0; freeFields && xi < robot.getSizeX(); xi++, x++, xv--, yv++){
-//                        if(!(this.getIndexMazeFreeFields().contains(robot.getPosition()[y * (robot.getSizeY() - 1) + x] + xv + yv * SimulationMaze.getMazeFiles().get(robot.getRobotMazeIndexNumber()).getMazeSizeY()))){
-//                            freeFields = false;
-//                        }
-////                         this.getMazeDrawFields().get(robot.getPosition()[y * (robot.getSizeY() - 1) + x] + xv + yv * SimulationMaze.getMazeFiles().get(robot.getRobotMazeIndexNumber()).getMazeSizeY()).setFill(Color.rgb(255,255,0));
-//                    }
-//                }
-//                break;
-//            case 3:
-//                for(int y = 1, x = 0, xv = 0, yv = -1; freeFields && y < robot.getSizeY() + 1; y++, x = 0, xv = xv - robot.getSizeX() - 1, yv = yv + robot.getSizeX() - 2 + 1){
-//                    for(int xi = 0; freeFields && xi < robot.getSizeX(); xi++, x--, xv++, yv--){
-//                        if(!(this.getIndexMazeFreeFields().contains(robot.getPosition()[y * robot.getSizeX() - 1 + x] + xv + yv * SimulationMaze.getMazeFiles().get(robot.getRobotMazeIndexNumber()).getMazeSizeY()))){
-//                            freeFields = false;
-//                        }
-////                         this.getMazeDrawFields().get(robot.getPosition()[y * robot.getSizeX() - 1 + x] + xv + yv * SimulationMaze.getMazeFiles().get(robot.getRobotMazeIndexNumber()).getMazeSizeY()).setFill(Color.rgb(255,255,0));
-//                    }
-//                }
-//                break;
-//        }
-//
-//        // Prüfe, ob Rotationsradius frei ist
-//
-//
-//        return freeFields;
-//    }
-//
-//    public boolean rotationForwardLeftFree(SimulationRobot robot) {
-//        int[] sortedPositions = robot.getPosition();
-//        Arrays.sort(sortedPositions);
-//
-//        boolean freeFields = true;
-//        // Prüfe, ob Zielposition frei ist
-//        switch (robot.getHeadDirection()) {
-//            case 0:
-//                for(int y = 1, x = 0, xd = -1, yd = 0; freeFields && y < robot.getSizeY() + 1; y++, x = 0, xd = xd + robot.getSizeX() - 2 + 1, yd = yd + robot.getSizeX() + 2 - 1){
-//                    for(int xi = 0; freeFields && xi < robot.getSizeX(); xi++, x++, xd--, yd--){
-//                        if(!(this.getIndexMazeFreeFields().contains(robot.getPosition()[robot.getSizeY() * robot.getSizeX() - y * robot.getSizeX() + x] + xd + yd * SimulationMaze.getMazeFiles().get(robot.getRobotMazeIndexNumber()).getMazeSizeY()))){
-//                            freeFields = false;
-//                        }
-////                         this.getMazeDrawFields().get(robot.getPosition()[robot.getSizeY() * robot.getSizeX() - y * robot.getSizeX() + x] + xd + yd * SimulationMaze.getMazeFiles().get(robot.getRobotMazeIndexNumber()).getMazeSizeY()).setFill(Color.rgb(255,255,0));
-//                    }
-//                }
-//                break;
-//            case 1:
-//                for(int y = 0, x = 0, xd = 0, yd = -1; freeFields && y < robot.getSizeY(); y++, x = 0, xd = xd + robot.getSizeX() + 1, yd = yd + robot.getSizeX() - 1){
-//                    for(int xi = 0; freeFields && xi < robot.getSizeX(); xi++, x++, xd--, yd--){
-//                        if(!(this.getIndexMazeFreeFields().contains(robot.getPosition()[y * (robot.getSizeY() + 1) + x] + xd + yd * SimulationMaze.getMazeFiles().get(robot.getRobotMazeIndexNumber()).getMazeSizeY()))){
-//                            freeFields = false;
-//                        }
-////                         this.getMazeDrawFields().get(robot.getPosition()[y * (robot.getSizeY() + 1) + x] + xd + yd * SimulationMaze.getMazeFiles().get(robot.getRobotMazeIndexNumber()).getMazeSizeY()).setFill(Color.rgb(255,255,0));
-//                    }
-//                }
-//                break;
-//            case 2:
-//                for(int y = 1, x = 0, xd = 1, yd = 0; freeFields && y < robot.getSizeY() + 1; y++, x = 0, xd = xd - robot.getSizeX() + 2 - 1, yd = yd - robot.getSizeX() - 1){
-//                    for(int xi = 0; freeFields && xi < robot.getSizeX(); xi++, x--, yd++, xd++){
-//                        if(!(this.getIndexMazeFreeFields().contains(robot.getPosition()[y * robot.getSizeX() - 1 + x] + xd + yd * SimulationMaze.getMazeFiles().get(robot.getRobotMazeIndexNumber()).getMazeSizeY()))){
-//                            freeFields = false;
-//                        }
-//                        // this.getMazeDrawFields().get(robot.getPosition()[y * robot.getSizeX() - 1 + x] + xd + yd * SimulationMaze.getMazeFiles().get(robot.getRobotMazeIndexNumber()).getMazeSizeY()).setFill(Color.rgb(255,255,0));
-//                    }
-//                }
-//                break;
-//            case 3:
-//                for(int y = 0, x = 0, xd = 0, yd = 1; freeFields && y < robot.getSizeY(); y++, x = 0, xd = xd - robot.getSizeX() - 1, yd = yd - robot.getSizeX() + 1){
-//                    for(int xi = 0; freeFields && xi < robot.getSizeX(); xi++, x--, xd++, yd++){
-//                        if(!(this.getIndexMazeFreeFields().contains(robot.getPosition()[robot.getSizeY() * robot.getSizeX() - 1 - y * robot.getSizeX() + x] + xd + yd * SimulationMaze.getMazeFiles().get(robot.getRobotMazeIndexNumber()).getMazeSizeY()))){
-//                            freeFields = false;
-//                        }
-//                        // this.getMazeDrawFields().get(robot.getPosition()[robot.getSizeY() * robot.getSizeX() - 1 - y * robot.getSizeX() + x] + xd + yd * SimulationMaze.getMazeFiles().get(robot.getRobotMazeIndexNumber()).getMazeSizeY()).setFill(Color.rgb(255,255,0));
-//                    }
-//                }
-//                break;
-//        }
-//
-//        return freeFields;
-//    }
-//
     public boolean rotationForwardLeftFree(SimulationRobot robot) {
         // Prüfe, ob Zielposition frei ist
         switch (robot.getHeadDirection()) {
@@ -368,8 +264,8 @@ public class SimulationMaze {
                         if (!(this.getIndexMazeFreeFields().contains(robot.getPosition()[i] - x))) {
                             return false;
                         } else {
-                            if (SimulationMaze.showLeftRotation) {
-                                this.getMazeDrawFields().get(robot.getPosition()[i] - x).setFill(SimulationMaze.mazeRotationTargetPositionColor);
+                            if (SimulationMaze.debugShowLeftRotation) {
+                                this.getMazeDrawFields().get(robot.getPosition()[i] - x).setFill(SimulationMaze.debugMazeRotationTargetPositionColor);
                             }
                         }
                     }
@@ -381,8 +277,8 @@ public class SimulationMaze {
                         if (!(this.getIndexMazeFreeFields().contains(robot.getPosition()[i] - y * this.getMazeSizeY()))) {
                             return false;
                         } else {
-                            if (SimulationMaze.showLeftRotation) {
-                                this.getMazeDrawFields().get(robot.getPosition()[i] - y * this.getMazeSizeY()).setFill(SimulationMaze.mazeRotationTargetPositionColor);
+                            if (SimulationMaze.debugShowLeftRotation) {
+                                this.getMazeDrawFields().get(robot.getPosition()[i] - y * this.getMazeSizeY()).setFill(SimulationMaze.debugMazeRotationTargetPositionColor);
                             }
                         }
                     }
@@ -394,8 +290,8 @@ public class SimulationMaze {
                         if (!(this.getIndexMazeFreeFields().contains(robot.getPosition()[i] + x))) {
                             return false;
                         } else {
-                            if (SimulationMaze.showLeftRotation) {
-                                this.getMazeDrawFields().get(robot.getPosition()[i] + x).setFill(SimulationMaze.mazeRotationTargetPositionColor);
+                            if (SimulationMaze.debugShowLeftRotation) {
+                                this.getMazeDrawFields().get(robot.getPosition()[i] + x).setFill(SimulationMaze.debugMazeRotationTargetPositionColor);
                             }
                         }
                     }
@@ -407,8 +303,8 @@ public class SimulationMaze {
                         if (!(this.getIndexMazeFreeFields().contains(robot.getPosition()[i] + y * this.getMazeSizeY()))) {
                             return false;
                         } else {
-                            if (SimulationMaze.showLeftRotation) {
-                                this.getMazeDrawFields().get(robot.getPosition()[i] + y * this.getMazeSizeY()).setFill(SimulationMaze.mazeRotationTargetPositionColor);
+                            if (SimulationMaze.debugShowLeftRotation) {
+                                this.getMazeDrawFields().get(robot.getPosition()[i] + y * this.getMazeSizeY()).setFill(SimulationMaze.debugMazeRotationTargetPositionColor);
                             }
                         }
                     }
@@ -426,12 +322,12 @@ public class SimulationMaze {
 
                 //Prüfe darüberliegende Felder
                 for (int y = 1; y < delta + 1; y++) {
-                    for (int x = 0; x < robot.getSizeX() * 2 - y + 1; x++) {
+                    for (int x = 0; x < robot.getSizeX() * 2 - 2 * y + 2; x++) {
                         if (!(this.getIndexMazeFreeFields().contains(robot.getPosition()[robot.getSizeX() - 1] - y * this.getMazeSizeY() - x - y + 1))) {
                             return false;
                         } else {
-                            if (SimulationMaze.showLeftRotation) {
-                                this.getMazeDrawFields().get(robot.getPosition()[robot.getSizeX() - 1] - y * this.getMazeSizeY() - x - y + 1).setFill(SimulationMaze.mazeRotationTopColor);
+                            if (SimulationMaze.debugShowLeftRotation) {
+                                this.getMazeDrawFields().get(robot.getPosition()[robot.getSizeX() - 1] - y * this.getMazeSizeY() - x - y + 1).setFill(SimulationMaze.debugMazeRotationTopColor);
                             }
                         }
                     }
@@ -447,8 +343,8 @@ public class SimulationMaze {
                         if (!(this.getIndexMazeFreeFields().contains(robot.getPosition()[index] - x))) {
                             return false;
                         } else {
-                            if (SimulationMaze.showLeftRotation) {
-                                this.getMazeDrawFields().get(robot.getPosition()[index] - x).setFill(SimulationMaze.mazeRotationSideColor);
+                            if (SimulationMaze.debugShowLeftRotation) {
+                                this.getMazeDrawFields().get(robot.getPosition()[index] - x).setFill(SimulationMaze.debugMazeRotationSideColor);
                             }
                         }
                     }
@@ -459,12 +355,12 @@ public class SimulationMaze {
 
                 // Prüfe ob Felder rechts frei sind
                 for (int x = 1; x < delta + 1; x++) {
-                    for (int y = 0; y < robot.getSizeY() * 2 - x + 1; y++) {
+                    for (int y = 0; y < robot.getSizeY() * 2 - 2 * x + 2; y++) {
                         if (!(this.getIndexMazeFreeFields().contains(robot.getPosition()[robot.getSizeX() * robot.getSizeY() - 1] + x - (y + x - 1) * this.mazeSizeY))) {
                             return false;
                         } else {
-                            if (SimulationMaze.showLeftRotation) {
-                                this.getMazeDrawFields().get(robot.getPosition()[robot.getSizeX() * robot.getSizeY() - 1] + x - (y + x - 1) * this.mazeSizeY).setFill(SimulationMaze.mazeRotationTopColor);
+                            if (SimulationMaze.debugShowLeftRotation) {
+                                this.getMazeDrawFields().get(robot.getPosition()[robot.getSizeX() * robot.getSizeY() - 1] + x - (y + x - 1) * this.mazeSizeY).setFill(SimulationMaze.debugMazeRotationTopColor);
                             }
                         }
                     }
@@ -480,8 +376,8 @@ public class SimulationMaze {
                         if (!(this.getIndexMazeFreeFields().contains(robot.getPosition()[index] - y * this.mazeSizeY))) {
                             return false;
                         } else {
-                            if (SimulationMaze.showLeftRotation) {
-                                this.getMazeDrawFields().get(robot.getPosition()[index] - y * this.mazeSizeY).setFill(SimulationMaze.mazeRotationSideColor);
+                            if (SimulationMaze.debugShowLeftRotation) {
+                                this.getMazeDrawFields().get(robot.getPosition()[index] - y * this.mazeSizeY).setFill(SimulationMaze.debugMazeRotationSideColor);
                             }
                         }
                     }
@@ -492,12 +388,12 @@ public class SimulationMaze {
 
                 // Prüfe Felder darunter
                 for (int y = 1; y < delta + 1; y++) {
-                    for (int x = 0; x < robot.getSizeX() * 2 - y + 1; x++) {
+                    for (int x = 0; x < robot.getSizeX() * 2 - 2 * y + 2; x++) {
                         if (!(this.getIndexMazeFreeFields().contains(robot.getPosition()[robot.getSizeX() * robot.getSizeY() - robot.getSizeX()] + y * this.mazeSizeY + x + y - 1))) {
                             return false;
                         } else {
-                            if (SimulationMaze.showLeftRotation) {
-                                this.getMazeDrawFields().get(robot.getPosition()[robot.getSizeX() * robot.getSizeY() - robot.getSizeX()] + y * this.mazeSizeY + x + y - 1).setFill(SimulationMaze.mazeRotationTopColor);
+                            if (SimulationMaze.debugShowLeftRotation) {
+                                this.getMazeDrawFields().get(robot.getPosition()[robot.getSizeX() * robot.getSizeY() - robot.getSizeX()] + y * this.mazeSizeY + x + y - 1).setFill(SimulationMaze.debugMazeRotationTopColor);
                             }
                         }
                     }
@@ -513,8 +409,8 @@ public class SimulationMaze {
                         if (!(this.getIndexMazeFreeFields().contains(robot.getPosition()[index] + x))) {
                             return false;
                         } else {
-                            if (SimulationMaze.showLeftRotation) {
-                                this.getMazeDrawFields().get(robot.getPosition()[index] + x).setFill(SimulationMaze.mazeRotationSideColor);
+                            if (SimulationMaze.debugShowLeftRotation) {
+                                this.getMazeDrawFields().get(robot.getPosition()[index] + x).setFill(SimulationMaze.debugMazeRotationSideColor);
                             }
                         }
                     }
@@ -525,12 +421,12 @@ public class SimulationMaze {
 
                 // Prüfe Felder links
                 for (int x = 1; x < delta + 1; x++) {
-                    for (int y = 0; y < robot.getSizeY() * 2 - x + 1; y++) {
+                    for (int y = 0; y < robot.getSizeY() * 2 - 2 * x + 2; y++) {
                         if (!(this.getIndexMazeFreeFields().contains(robot.getPosition()[0] - x + (y + x - 1) * this.mazeSizeY))) {
                             return false;
                         } else {
-                            if (SimulationMaze.showLeftRotation) {
-                                this.getMazeDrawFields().get(robot.getPosition()[0] - x + (y + x - 1) * this.mazeSizeY).setFill(SimulationMaze.mazeRotationTopColor);
+                            if (SimulationMaze.debugShowLeftRotation) {
+                                this.getMazeDrawFields().get(robot.getPosition()[0] - x + (y + x - 1) * this.mazeSizeY).setFill(SimulationMaze.debugMazeRotationTopColor);
                             }
                         }
                     }
@@ -546,8 +442,8 @@ public class SimulationMaze {
                         if (!(this.getIndexMazeFreeFields().contains(robot.getPosition()[index] + y * this.mazeSizeY))) {
                             return false;
                         } else {
-                            if (SimulationMaze.showLeftRotation) {
-                                this.getMazeDrawFields().get(robot.getPosition()[index] + y * this.mazeSizeY).setFill(SimulationMaze.mazeRotationSideColor);
+                            if (SimulationMaze.debugShowLeftRotation) {
+                                this.getMazeDrawFields().get(robot.getPosition()[index] + y * this.mazeSizeY).setFill(SimulationMaze.debugMazeRotationSideColor);
                             }
                         }
                     }
@@ -567,8 +463,8 @@ public class SimulationMaze {
                         if (!(this.getIndexMazeFreeFields().contains(robot.getPosition()[i] + x))) {
                             return false;
                         } else {
-                            if (SimulationMaze.showRightRotation) {
-                                this.getMazeDrawFields().get(robot.getPosition()[i] + x).setFill(SimulationMaze.mazeRotationTargetPositionColor);
+                            if (SimulationMaze.debugShowRightRotation) {
+                                this.getMazeDrawFields().get(robot.getPosition()[i] + x).setFill(SimulationMaze.debugMazeRotationTargetPositionColor);
                             }
                         }
                     }
@@ -580,8 +476,8 @@ public class SimulationMaze {
                         if (!(this.getIndexMazeFreeFields().contains(robot.getPosition()[i] + y * this.getMazeSizeY()))) {
                             return false;
                         } else {
-                            if (SimulationMaze.showRightRotation) {
-                                this.getMazeDrawFields().get(robot.getPosition()[i] + y * this.getMazeSizeY()).setFill(SimulationMaze.mazeRotationTargetPositionColor);
+                            if (SimulationMaze.debugShowRightRotation) {
+                                this.getMazeDrawFields().get(robot.getPosition()[i] + y * this.getMazeSizeY()).setFill(SimulationMaze.debugMazeRotationTargetPositionColor);
                             }
                         }
                     }
@@ -593,8 +489,8 @@ public class SimulationMaze {
                         if (!(this.getIndexMazeFreeFields().contains(robot.getPosition()[i] - x))) {
                             return false;
                         } else {
-                            if (SimulationMaze.showRightRotation) {
-                                this.getMazeDrawFields().get(robot.getPosition()[i] - x).setFill(SimulationMaze.mazeRotationTargetPositionColor);
+                            if (SimulationMaze.debugShowRightRotation) {
+                                this.getMazeDrawFields().get(robot.getPosition()[i] - x).setFill(SimulationMaze.debugMazeRotationTargetPositionColor);
                             }
                         }
                     }
@@ -606,8 +502,8 @@ public class SimulationMaze {
                         if (!(this.getIndexMazeFreeFields().contains(robot.getPosition()[i] - y * this.getMazeSizeY()))) {
                             return false;
                         } else {
-                            if (SimulationMaze.showRightRotation) {
-                                this.getMazeDrawFields().get(robot.getPosition()[i] - y * this.getMazeSizeY()).setFill(SimulationMaze.mazeRotationTargetPositionColor);
+                            if (SimulationMaze.debugShowRightRotation) {
+                                this.getMazeDrawFields().get(robot.getPosition()[i] - y * this.getMazeSizeY()).setFill(SimulationMaze.debugMazeRotationTargetPositionColor);
                             }
                         }
                     }
@@ -625,12 +521,12 @@ public class SimulationMaze {
 
                 // Prüfe Felder oberhalb
                 for(int y = 1; y < delta + 1; y++){
-                    for(int x = 0; x < robot.getSizeX() * 2 - y + 1; x++){
+                    for(int x = 0; x < robot.getSizeX() * 2 - 2 * y + 2; x++){
                         if(!(this.getIndexMazeFreeFields().contains(robot.getPosition()[0] - y * this.mazeSizeY + x + y - 1))){
                             return false;
                         } else {
-                            if(showRightRotation){
-                                this.getMazeDrawFields().get(robot.getPosition()[0] - y * this.mazeSizeY + x + y - 1).setFill(SimulationMaze.mazeRotationTopColor);
+                            if(SimulationMaze.debugShowRightRotation){
+                                this.getMazeDrawFields().get(robot.getPosition()[0] - y * this.mazeSizeY + x + y - 1).setFill(SimulationMaze.debugMazeRotationTopColor);
                             }
                         }
                     }
@@ -646,8 +542,8 @@ public class SimulationMaze {
                         if(!(this.getIndexMazeFreeFields().contains(robot.getPosition()[index] + x))){
                             return false;
                         } else {
-                            if(showRightRotation){
-                                this.getMazeDrawFields().get(robot.getPosition()[index] + x).setFill(SimulationMaze.mazeRotationSideColor);
+                            if(SimulationMaze.debugShowRightRotation){
+                                this.getMazeDrawFields().get(robot.getPosition()[index] + x).setFill(SimulationMaze.debugMazeRotationSideColor);
                             }
                         }
                     }
@@ -659,12 +555,12 @@ public class SimulationMaze {
 
                 // Prüfe Felder rechts
                 for(int x = 1; x < delta + 1; x++){
-                    for(int y = 0; y < robot.getSizeY() * 2 - x + 1; y++){
+                    for(int y = 0; y < robot.getSizeY() * 2 - 2 * x + 2; y++){
                         if(!(this.getIndexMazeFreeFields().contains(robot.getPosition()[robot.getSizeX() - 1] + x + (y + x - 1) * this.mazeSizeY))){
                             return false;
                         } else {
-                            if(showRightRotation){
-                                this.getMazeDrawFields().get(robot.getPosition()[robot.getSizeX() - 1] + x + (y + x - 1) * this.mazeSizeY).setFill(SimulationMaze.mazeRotationTopColor);
+                            if(SimulationMaze.debugShowRightRotation){
+                                this.getMazeDrawFields().get(robot.getPosition()[robot.getSizeX() - 1] + x + (y + x - 1) * this.mazeSizeY).setFill(SimulationMaze.debugMazeRotationTopColor);
                             }
                         }
                     }
@@ -680,8 +576,8 @@ public class SimulationMaze {
                         if(!(this.getIndexMazeFreeFields().contains(robot.getPosition()[index] + y * this.mazeSizeY))){
                             return false;
                         } else {
-                            if(showRightRotation){
-                                this.getMazeDrawFields().get(robot.getPosition()[index] + y * this.mazeSizeY).setFill(SimulationMaze.mazeRotationSideColor);
+                            if(SimulationMaze.debugShowRightRotation){
+                                this.getMazeDrawFields().get(robot.getPosition()[index] + y * this.mazeSizeY).setFill(SimulationMaze.debugMazeRotationSideColor);
                             }
                         }
                     }
@@ -693,12 +589,12 @@ public class SimulationMaze {
 
                 // Prüfe Felder unten
                 for(int y = 1; y < delta + 1; y++){
-                    for(int x = 0; x < robot.getSizeX() * 2 - y + 1; x++){
+                    for(int x = 0; x < robot.getSizeX() * 2 - 2 * y + 2; x++){
                         if(!(this.getIndexMazeFreeFields().contains(robot.getPosition()[robot.getSizeX() * robot.getSizeY() - 1] + y * this.mazeSizeY - x - y + 1))){
                             return false;
                         } else {
-                            if(showRightRotation){
-                                this.getMazeDrawFields().get(robot.getPosition()[robot.getSizeX() * robot.getSizeY() - 1] + y * this.mazeSizeY - x - y + 1).setFill(SimulationMaze.mazeRotationTopColor);
+                            if(SimulationMaze.debugShowRightRotation){
+                                this.getMazeDrawFields().get(robot.getPosition()[robot.getSizeX() * robot.getSizeY() - 1] + y * this.mazeSizeY - x - y + 1).setFill(SimulationMaze.debugMazeRotationTopColor);
                             }
                         }
                     }
@@ -714,8 +610,8 @@ public class SimulationMaze {
                         if(!(this.getIndexMazeFreeFields().contains(robot.getPosition()[index] - x))){
                             return false;
                         } else {
-                            if(showRightRotation){
-                                this.getMazeDrawFields().get(robot.getPosition()[index] - x).setFill(SimulationMaze.mazeRotationSideColor);
+                            if(SimulationMaze.debugShowRightRotation){
+                                this.getMazeDrawFields().get(robot.getPosition()[index] - x).setFill(SimulationMaze.debugMazeRotationSideColor);
                             }
                         }
                     }
@@ -727,12 +623,12 @@ public class SimulationMaze {
 
                 // Prüfe Felder links
                 for(int x = 1; x < delta + 1; x++){
-                    for(int y = 0; y < robot.getSizeY() * 2 - x + 1; y++){
+                    for(int y = 0; y < robot.getSizeY() * 2 - 2 * x + 2; y++){
                         if(!(this.getIndexMazeFreeFields().contains(robot.getPosition()[robot.getSizeX() * robot.getSizeY() - robot.getSizeX()] - x - (y + x - 1) * this.mazeSizeY))){
                             return false;
                         } else {
-                            if(showRightRotation){
-                                this.getMazeDrawFields().get(robot.getPosition()[robot.getSizeX() * robot.getSizeY() - robot.getSizeX()] - x - (y + x - 1) * this.mazeSizeY).setFill(SimulationMaze.mazeRotationTopColor);
+                            if(SimulationMaze.debugShowRightRotation){
+                                this.getMazeDrawFields().get(robot.getPosition()[robot.getSizeX() * robot.getSizeY() - robot.getSizeX()] - x - (y + x - 1) * this.mazeSizeY).setFill(SimulationMaze.debugMazeRotationTopColor);
                             }
                         }
                     }
@@ -748,8 +644,8 @@ public class SimulationMaze {
                         if(!(this.getIndexMazeFreeFields().contains(robot.getPosition()[index] - y * this.mazeSizeY))){
                             return false;
                         } else {
-                            if(showRightRotation){
-                                this.getMazeDrawFields().get(robot.getPosition()[index] - y * this.mazeSizeY).setFill(SimulationMaze.mazeRotationSideColor);
+                            if(SimulationMaze.debugShowRightRotation){
+                                this.getMazeDrawFields().get(robot.getPosition()[index] - y * this.mazeSizeY).setFill(SimulationMaze.debugMazeRotationSideColor);
                             }
                         }
                     }
@@ -765,61 +661,68 @@ public class SimulationMaze {
         int[] sortedPositions = robot.getPosition();
         Arrays.sort(sortedPositions);
 
-        boolean freeFields = true;
         for (int y = 0, x = 0; y < robot.getSizeY(); y++, x += robot.getSizeX()) {
             if (!(this.getIndexMazeFreeFields().contains(sortedPositions[x] - 1))) {
-                freeFields = false;
+                return false;
+            } else {
+                if(SimulationMaze.debugShowLeft){
+                    this.getMazeDrawFields().get(sortedPositions[x] - 1).setFill(SimulationMaze.debugMazeLeftColor);
+                }
             }
         }
 
-        return freeFields;
+        return true;
     }
 
     public boolean rightFree(SimulationRobot robot) {
         int[] sortedPositions = robot.getPosition();
         Arrays.sort(sortedPositions);
 
-        boolean freeFields = true;
         for (int x = robot.getSizeX() - 1, y = 0; y < robot.getSizeY(); y++, x += robot.getSizeX()) {
             if (!(this.getIndexMazeFreeFields().contains(sortedPositions[x] + 1))) {
-                freeFields = false;
+                return false;
+            } else {
+                if(SimulationMaze.debugShowRight){
+                    this.getMazeDrawFields().get(sortedPositions[x] + 1).setFill(SimulationMaze.debugMazeRightColor);
+                }
             }
-            // mazeFields.get(sortedPositions[x] + 1).setFill(Color.rgb(255,255,0));
         }
 
-        return freeFields;
+        return true;
     }
 
     public boolean belowFree(SimulationRobot robot) {
         int[] sortedPositions = robot.getPosition();
         Arrays.sort(sortedPositions);
 
-        boolean freeFields = true;
         for (int x = 0; x < robot.getSizeX(); x++) {
             if (!(this.getIndexMazeFreeFields().contains(sortedPositions[sortedPositions.length - 1 - x] + this.getMazeSizeY()))) {
-                freeFields = false;
+                return false;
+            } else {
+                if(SimulationMaze.debugShowBelow){
+                    this.getMazeDrawFields().get(sortedPositions[sortedPositions.length - 1 - x] + this.mazeSizeY).setFill(SimulationMaze.debugMazeBackwardsColor);
+                }
             }
-
-            // mazeFields.get(sortedPositions[sortedPositions.length - 1 - x] + maze.getMazeSizeY()).setFill(Color.rgb(238, 244, 66));
         }
 
-        return freeFields;
+        return true;
     }
 
     public boolean aboveFree(SimulationRobot robot) {
         int[] sortedPositions = robot.getPosition();
         Arrays.sort(sortedPositions);
 
-        boolean freeFields = true;
         for (int x = 0; x < robot.getSizeX(); x++) {
-            if (!(this.getIndexMazeFreeFields().contains(sortedPositions[x] - this.getMazeSizeY()))) {
-                freeFields = false;
+            if (!(this.getIndexMazeFreeFields().contains(sortedPositions[x] - this.mazeSizeY))) {
+                return false;
+            } else {
+                if(SimulationMaze.debugShowFront){
+                    this.getMazeDrawFields().get(sortedPositions[x] - this.mazeSizeY).setFill(SimulationMaze.debugMazeFrontColor);
+                }
             }
-
-            // mazeFields.get(sortedPositions[x] - maze.getMazeSizeY()).setFill(Color.rgb(238, 244, 66));
         }
 
-        return freeFields;
+        return true;
     }
 
     /*
