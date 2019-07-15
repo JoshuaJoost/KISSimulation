@@ -51,8 +51,8 @@ public class SimulationMaze {
     // Controller
     private final Controller_MainGUI FXML_MAIN_CONTROLLER;
     // Debugg
-    private static boolean showLeftRotation = true;
-    private static boolean showRightRotation = false;
+    private static boolean showLeftRotation = false;
+    private static boolean showRightRotation = true;
 
     private SimulationMaze(String filename, int mazePaneX, int mazePaneY, Controller_MainGUI fxmlMainController) {
         nr = (++numberOfMazeFiles);
@@ -437,25 +437,10 @@ public class SimulationMaze {
                     }
                 }
 
-                //Prüfe Felder links
-//                for (int i = 0, y = robot.getSizeY() - 1, index = i * robot.getSizeX(); i < robot.getSizeY() - robot.getSizeX(); i++, y--, index = i * robot.getSizeX()) {
-//                    // Java Rechenfehler korrigieren, indem letzte Stelle abgeschnitten wird
-//                    String distanceString = "" + Math.sqrt(Math.pow(radius, 2) - Math.pow(y, 2));
-//                    int distance = (int) Math.ceil(Double.parseDouble(distanceString.substring(0, distanceString.length() - 1)));
-//
-//                    for (int x = 1; x < distance + 1; x++) {
-//                        if (!(this.getIndexMazeFreeFields().contains(robot.getPosition()[index] - x))) {
-//                            return false;
-//                        } else {
-//                            if (SimulationMaze.showLeftRotation) {
-//                                this.getMazeDrawFields().get(robot.getPosition()[index] - x).setFill(SimulationMaze.mazeRotationSideColor);
-//                            }
-//                        }
-//                    }
-//                }
+                // Prüfe darüberliegende Felder
                 for (int i = 0, y = 0, index = y * robot.getSizeX(); i < robot.getSizeY() - robot.getSizeX(); i++, y++, index = y * robot.getSizeX()) {
                     // Java Rechenfehler korrigieren, indem letzte Stelle abgeschnitten wird
-                    String distanceString = "" + Math.sqrt(Math.pow(radius, 2) - Math.pow(robot.getSizeY() - 1 - index, 2));
+                    String distanceString = "" + Math.sqrt(Math.pow(radius, 2) - Math.pow(robot.getSizeY() - 1 - i, 2));
                     int distance = (int) Math.ceil(Double.parseDouble(distanceString.substring(0, distanceString.length() - 1)));
 
                     for (int x = 1; x < distance + 1; x++) {
@@ -488,7 +473,7 @@ public class SimulationMaze {
                 // Prüfe Felder oberhalb
                 for (int i = 0, x = 0, index = robot.getSizeX() - 1 - x; i < robot.getSizeX() - robot.getSizeY(); i++, x++, index = robot.getSizeX() - 1 - x) {
                     // Java Rechenfehler korrigieren, indem letzte Stelle abgeschnitten wird
-                    String distanceString = "" + Math.sqrt(Math.pow(radius, 2) - Math.pow(index, 2));
+                    String distanceString = "" + Math.sqrt(Math.pow(radius, 2) - Math.pow(robot.getSizeX() - 1 - i, 2));
                     int distance = (int) Math.ceil(Double.parseDouble(distanceString.substring(0, distanceString.length() - 1)));
 
                     for (int y = 1; y < distance + 1; y++) {
@@ -521,7 +506,7 @@ public class SimulationMaze {
                 // Prüfe Felder rechts
                 for (int i = 0, y = 0, index = robot.getSizeX() * robot.getSizeY() - 1 - y; i < robot.getSizeY() - robot.getSizeX(); i++, y += robot.getSizeX(), index = robot.getSizeX() * robot.getSizeY() - 1 - y) {
                     // Java Rechenfehler korrigieren, indem letzte Stelle abgeschnitten wird
-                    String distanceString = "" + Math.sqrt(Math.pow(radius, 2) - Math.pow(index, 2));
+                    String distanceString = "" + Math.sqrt(Math.pow(radius, 2) - Math.pow(robot.getSizeY() - 1 - i, 2));
                     int distance = (int) Math.ceil(Double.parseDouble(distanceString.substring(0, distanceString.length() - 1)));
 
                     for (int x = 1; x < distance + 1; x++) {
@@ -554,7 +539,7 @@ public class SimulationMaze {
                 // Prüfe Felder unterhalb
                 for (int i = 0, x = 0, index = robot.getSizeX() * robot.getSizeY() - robot.getSizeX() + x; i < robot.getSizeX() - robot.getSizeY(); i++, x++, index = robot.getSizeX() * robot.getSizeY() - robot.getSizeX() + x) {
                     // Java Rechenfehler korrigieren, indem letzte Stelle abgeschnitten wird
-                    String distanceString = "" + Math.sqrt(Math.pow(radius, 2) - Math.pow(robot.getSizeX() - index - 1, 2));
+                    String distanceString = "" + Math.sqrt(Math.pow(radius, 2) - Math.pow(robot.getSizeX() - 1 - i, 2));
                     int distance = (int) Math.ceil(Double.parseDouble(distanceString.substring(0, distanceString.length() - 1)));
 
                     for (int y = 1; y < distance + 1; y++) {
