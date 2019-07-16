@@ -45,13 +45,29 @@ public class QLearningAgent {
     }
 
     public void printQTable() {
-        System.out.println("\t\t\t\t\t\t\t\t\t vorwärts \t\t\t\t\t links \t\t\t\t\t rechts \t\t\t\t\t rückwärts");
-        for (int i = 0; i < BARRIER_LOCATIONS+BUMPED; i++) {
-            System.out.print(QLearningAgent.stateText[i] + ": \t\t\t\t\t\t\t");
-            for (int j=0; j < POSSIBLE_ACTIONS; j++) {
-                System.out.print(this.q[i][j] + ",\t\t\t");
+        int longestStateText = 0;
+        for(int i = 0; i < QLearningAgent.stateText.length; i++){
+            if(QLearningAgent.stateText[i].length() > longestStateText){
+                longestStateText = QLearningAgent.stateText[i].length();
             }
-            System.out.println();
+        }
+
+        String distanceBetween = "     ";
+
+        String distance = "";
+        for(int i = 0; i < longestStateText + 5; i++){
+            distance += " ";
+        }
+        System.out.println(distance + "vorwärts" + "\t" + "links" + "\t\t" + "rechts" + "\t\t" + "rückwärts");
+        for (int i = 0; i < BARRIER_LOCATIONS+BUMPED; i++) {
+            String stateString = QLearningAgent.stateText[i];
+            for(int j = 0; j < longestStateText - QLearningAgent.stateText[i].length() + 5; j++){
+                stateString += " ";
+            }
+            for (int j=0; j < POSSIBLE_ACTIONS; j++) {
+                stateString += ("" + this.q[i][j]).substring(0, 5) + "\t\t";
+            }
+            System.out.println(stateString);
         }
     }
 

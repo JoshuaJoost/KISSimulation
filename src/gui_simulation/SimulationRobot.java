@@ -14,7 +14,7 @@ public class SimulationRobot implements Roboter {
     private static final Color DEFAULT_ROBOT_BODY_COLOR = Color.rgb(55, 109, 19);
     private static final Color DEFAULT_ROBOT_HEAD_COLOR = Color.rgb(255, 0, 0);
     private static final Color DEFAULT_MEASURE_DISTANCE = Color.rgb(255, 255, 0);
-    public static final int DRIVING_DISTANCE = 10;
+    public static final int DRIVING_DISTANCE = 1;
     public static final int MAXIMAL_MEASURE_DISTANCE = 100;
 
     // Roboter Bewegung
@@ -25,11 +25,11 @@ public class SimulationRobot implements Roboter {
 
     //Rewards - Learning Algorithmus
     private static final double REWARD_BUMPED = -1;
-    private static final double REWARD_DRIVE_BACK = 0;
+    private static final double REWARD_DRIVE_BACK = -0.25;
     private static final double REWARD_DRIVE_FORWARD = 0;
     private static final double REWARD_DRIVE_ROTATE_RIGHT = 0;
     private static final double REWARD_DRIVE_ROTATE_LEFT = 0;
-    private static final double REWARD_DRIVE_TARGET = 2;
+    private static final double REWARD_DRIVE_TARGET = 1;
 
     // Bewegungskontrolle
     private boolean isBumped = false;
@@ -471,6 +471,20 @@ public class SimulationRobot implements Roboter {
         this.isBumped = false;
     }
 
+    public void keyboardRotateForwardLeft() {
+        left();
+        this.isBumped = false;
+    }
+
+    public void keyboardRotateForwardRight() {
+        right();
+        this.isBumped = false;
+    }
+
+    public void keyboardLook() {
+        look();
+    }
+
     private void moveUp() {
         clearDistanceData();
         for (int i = 0; i < this.position.length; i++) {
@@ -664,18 +678,6 @@ public class SimulationRobot implements Roboter {
         return false;
     }
 
-    public void keyboardRotateForwardLeft() {
-        left();
-    }
-
-    public void keyboardRotateForwardRight() {
-        right();
-    }
-
-    public void keyboardLook() {
-        look();
-    }
-
     public boolean targetReached() {
         boolean reachedTarget = false;
 
@@ -737,7 +739,7 @@ public class SimulationRobot implements Roboter {
         this.lerningAlgorithmus.setEpsilon(1);
         for (int j = 0; j < 100; j++) {
             setRobotBackToStartPosition();
-            for (int i = 0; i < 500 && !targetReached(); i++) {
+            for (int i = 0; i < 10000 && !targetReached(); i++) {
                 look();
                 int s = findBarrier();
                 int a = this.lerningAlgorithmus.chooseAction(s);
@@ -774,7 +776,7 @@ public class SimulationRobot implements Roboter {
                 e = 0;
             }
 
-            for (int i = 0; i < 500 && !targetReached(); i++) {
+            for (int i = 0; i < 10000 && !targetReached(); i++) {
                 look();
                 int s = findBarrier();
                 int a = this.lerningAlgorithmus.chooseAction(s);
@@ -805,7 +807,7 @@ public class SimulationRobot implements Roboter {
         for (int j = 0; j < 100; j++) {
             setRobotBackToStartPosition();
 
-            for (int i = 0; i < 500 && !targetReached(); i++) {
+            for (int i = 0; i < 10000 && !targetReached(); i++) {
                 look();
                 int s = findBarrier();
                 int a = this.lerningAlgorithmus.chooseAction(s);
@@ -836,7 +838,7 @@ public class SimulationRobot implements Roboter {
         for (int j = 0; j < 100; j++) {
             setRobotBackToStartPosition();
 
-            for (int i = 0; i < 500 && !targetReached(); i++) {
+            for (int i = 0; i < 10000 && !targetReached(); i++) {
                 look();
                 int s = findBarrier();
                 int a = this.lerningAlgorithmus.chooseAction(s);
@@ -889,13 +891,8 @@ public class SimulationRobot implements Roboter {
         for (int i = 0; i < 10000 && !targetReached(); i++, j++) {
             look();
             int s = findBarrier();
-            int a = this.lerningAlgorithmus.chooseAction(s);
-            doAction(a);
 
-            if (targetReached()) {
-                this.reward = SimulationRobot.REWARD_DRIVE_TARGET;
-            }
-//            System.out.println("s:" + s);
+            System.out.println("s:" + s);
             switch (s) {
                 case 0:
                     this.stateNoBarrier++;
@@ -924,6 +921,13 @@ public class SimulationRobot implements Roboter {
                 case 8:
                     this.stateBumped++;
                     break;
+            }
+
+            int a = this.lerningAlgorithmus.chooseAction(s);
+            doAction(a);
+
+            if (targetReached()) {
+                this.reward = SimulationRobot.REWARD_DRIVE_TARGET;
             }
 
             look();
@@ -1026,81 +1030,170 @@ public class SimulationRobot implements Roboter {
 
     }
 
-
     @Override
-    public int findBarrier() {
-        // bumped
-        if (isBumped) {
-//            this.stateBumped++;
+    public int findBarrier(){
+        // Zustand 8: Angestoßen
+        if(this.isBumped){
             return 8;
         }
-        // front = 1
-        if (distanceData[0] >= DRIVING_DISTANCE && distanceData[1] < DRIVING_DISTANCE && distanceData[2] >= DRIVING_DISTANCE) {
-            // front + bumped
-//			if (isBumped()) {
-//				return 8;
-//			}
-//            System.out.println("Vorne");
-//            this.stateFront++;
+
+        // Zustand 1: Barriere vorne
+        if(this.distanceData[0] > SimulationRobot.DRIVING_DISTANCE && this.distanceData[1] <= SimulationRobot.DRIVING_DISTANCE && this.distanceData[2] > SimulationRobot.DRIVING_DISTANCE){
             return 1;
         }
-        // left = 2
-        if (distanceData[0] < DRIVING_DISTANCE && distanceData[1] >= DRIVING_DISTANCE && distanceData[2] >= DRIVING_DISTANCE) {
-            // left + bumped
-//			if (isBumped()) {
-//				return 9;
-//			}
-//            this.stateLeft++;
+
+        // Zustand 2: Barriere links
+        if(this.distanceData[0] <= SimulationRobot.DRIVING_DISTANCE && this.distanceData[1] > SimulationRobot.DRIVING_DISTANCE && this.distanceData[2] > SimulationRobot.DRIVING_DISTANCE){
             return 2;
         }
-        // right = 3
-        if (distanceData[0] >= DRIVING_DISTANCE && distanceData[1] >= DRIVING_DISTANCE && distanceData[2] < DRIVING_DISTANCE) {
-            // right + bumped
-//			if (isBumped()) {
-//				return 10;
-//			}
-//            this.stateRight++;
+
+        // Zustand 3: Barriere rechts
+        if(this.distanceData[0] > SimulationRobot.DRIVING_DISTANCE && this.distanceData[1] > SimulationRobot.DRIVING_DISTANCE && this.distanceData[2] <= SimulationRobot.DRIVING_DISTANCE){
             return 3;
         }
-        // front + left = 4
-        if (distanceData[0] < DRIVING_DISTANCE && distanceData[1] < DRIVING_DISTANCE && distanceData[2] >= DRIVING_DISTANCE) {
-            // front + left + bumped
-//			if (isBumped()) {
-//				return 11;
-//			}
-//            this.stateFrontLeft++;
+
+        // Zustand 4: Barriere vorne & links
+        if(this.distanceData[0] <= SimulationRobot.DRIVING_DISTANCE && this.distanceData[1] <= SimulationRobot.DRIVING_DISTANCE && this.distanceData[2] > SimulationRobot.DRIVING_DISTANCE){
             return 4;
         }
-        // front + right = 5
-        if (distanceData[0] >= DRIVING_DISTANCE && distanceData[1] < DRIVING_DISTANCE && distanceData[2] < DRIVING_DISTANCE) {
-            // front + right + bumped
-//			if (isBumped()) {
-//				return 12;
-//			}
-//            this.stateFrontRight++;
+
+        // Zustand 5: Barriere vorne & rechts
+        if(this.distanceData[0] > SimulationRobot.DRIVING_DISTANCE && this.distanceData[1] <= SimulationRobot.DRIVING_DISTANCE && this.distanceData[2] <= SimulationRobot.DRIVING_DISTANCE){
             return 5;
         }
-        // left + right = 6
-        if (distanceData[0] < DRIVING_DISTANCE && distanceData[1] >= DRIVING_DISTANCE && distanceData[2] < DRIVING_DISTANCE) {
-            // left + right + bumped
-//			if (isBumped()) {
-//				return 13;
-//			}
-//            this.stateLeftRight++;
+
+        // Zustand 6: Barriere links & rechts
+        if(this.distanceData[0] <= SimulationRobot.DRIVING_DISTANCE && this.distanceData[1] > SimulationRobot.DRIVING_DISTANCE && this.distanceData[2] <= SimulationRobot.DRIVING_DISTANCE){
             return 6;
         }
-        // front + left + right = 7
-        if (distanceData[0] < DRIVING_DISTANCE && distanceData[1] < DRIVING_DISTANCE && distanceData[2] < DRIVING_DISTANCE) {
-            // front + left + right + bumped
-//			if (isBumped()) {
-//				return 14;
-//			}
-//            this.stateFrontLeftRight++;
+
+        // Zustand 7: Barriere vorne & links & rechts
+        if(this.distanceData[0] <= SimulationRobot.DRIVING_DISTANCE && this.distanceData[1] <= SimulationRobot.DRIVING_DISTANCE && this.distanceData[2] <= SimulationRobot.DRIVING_DISTANCE){
             return 7;
         }
-//        this.stateNoBarrier++;
+
+        // Zustand 0: Keine Barriere
         return 0;
     }
+//    @Override
+//    public int findBarrier(){
+//        // Zustand 8: Angestoßen
+//        if(this.isBumped){
+//            return 8;
+//        }
+//
+//        // Zustand 1: Barriere vorne
+//        if(this.distanceData[0] >= SimulationRobot.DRIVING_DISTANCE && this.distanceData[1] < SimulationRobot.DRIVING_DISTANCE && this.distanceData[2] >= SimulationRobot.DRIVING_DISTANCE){
+//            return 1;
+//        }
+//
+//        // Zustand 2: Barriere links
+//        if(this.distanceData[0] < SimulationRobot.DRIVING_DISTANCE && this.distanceData[1] >= SimulationRobot.DRIVING_DISTANCE && this.distanceData[2] >= SimulationRobot.DRIVING_DISTANCE){
+//            return 2;
+//        }
+//
+//        // Zustand 3: Barriere rechts
+//        if(this.distanceData[0] >= SimulationRobot.DRIVING_DISTANCE && this.distanceData[1] >= SimulationRobot.DRIVING_DISTANCE && this.distanceData[2] < SimulationRobot.DRIVING_DISTANCE){
+//            return 3;
+//        }
+//
+//        // Zustand 4: Barriere vorne & links
+//        if(this.distanceData[0] < SimulationRobot.DRIVING_DISTANCE && this.distanceData[1] < SimulationRobot.DRIVING_DISTANCE && this.distanceData[2] >= SimulationRobot.DRIVING_DISTANCE){
+//            return 4;
+//        }
+//
+//        // Zustand 5: Barriere vorne & rechts
+//        if(this.distanceData[0] >= SimulationRobot.DRIVING_DISTANCE && this.distanceData[1] < SimulationRobot.DRIVING_DISTANCE && this.distanceData[2] < SimulationRobot.DRIVING_DISTANCE){
+//            return 5;
+//        }
+//
+//        // Zustand 6: Barriere links & rechts
+//        if(this.distanceData[0] < SimulationRobot.DRIVING_DISTANCE && this.distanceData[1] >= SimulationRobot.DRIVING_DISTANCE && this.distanceData[2] < SimulationRobot.DRIVING_DISTANCE){
+//            return 6;
+//        }
+//
+//        // Zustand 7: Barriere vorne & links & rechts
+//        if(this.distanceData[0] < SimulationRobot.DRIVING_DISTANCE && this.distanceData[1] < SimulationRobot.DRIVING_DISTANCE && this.distanceData[2] < SimulationRobot.DRIVING_DISTANCE){
+//            return 7;
+//        }
+//
+//        // Zustand 0: Keine Barriere
+//        return 0;
+//    }
+//    @Override
+//    public int findBarrier() {
+//        // bumped
+//        if (isBumped) {
+////            this.stateBumped++;
+//            return 8;
+//        }
+//        // front = 1
+//        if (distanceData[0] >= DRIVING_DISTANCE && distanceData[1] < DRIVING_DISTANCE && distanceData[2] >= DRIVING_DISTANCE) {
+//            // front + bumped
+////			if (isBumped()) {
+////				return 8;
+////			}
+////            System.out.println("Vorne");
+////            this.stateFront++;
+//            return 1;
+//        }
+//        // left = 2
+//        if (distanceData[0] < DRIVING_DISTANCE && distanceData[1] >= DRIVING_DISTANCE && distanceData[2] >= DRIVING_DISTANCE) {
+//            // left + bumped
+////			if (isBumped()) {
+////				return 9;
+////			}
+////            this.stateLeft++;
+//            return 2;
+//        }
+//        // right = 3
+//        if (distanceData[0] >= DRIVING_DISTANCE && distanceData[1] >= DRIVING_DISTANCE && distanceData[2] < DRIVING_DISTANCE) {
+//            // right + bumped
+////			if (isBumped()) {
+////				return 10;
+////			}
+////            this.stateRight++;
+//            return 3;
+//        }
+//        // front + left = 4
+//        if (distanceData[0] < DRIVING_DISTANCE && distanceData[1] < DRIVING_DISTANCE && distanceData[2] >= DRIVING_DISTANCE) {
+//            // front + left + bumped
+////			if (isBumped()) {
+////				return 11;
+////			}
+////            this.stateFrontLeft++;
+//            return 4;
+//        }
+//        // front + right = 5
+//        if (distanceData[0] >= DRIVING_DISTANCE && distanceData[1] < DRIVING_DISTANCE && distanceData[2] < DRIVING_DISTANCE) {
+//            // front + right + bumped
+////			if (isBumped()) {
+////				return 12;
+////			}
+////            this.stateFrontRight++;
+//            return 5;
+//        }
+//        // left + right = 6
+//        if (distanceData[0] < DRIVING_DISTANCE && distanceData[1] >= DRIVING_DISTANCE && distanceData[2] < DRIVING_DISTANCE) {
+//            // left + right + bumped
+////			if (isBumped()) {
+////				return 13;
+////			}
+////            this.stateLeftRight++;
+//            return 6;
+//        }
+//        // front + left + right = 7
+//        if (distanceData[0] < DRIVING_DISTANCE && distanceData[1] < DRIVING_DISTANCE && distanceData[2] < DRIVING_DISTANCE) {
+//            // front + left + right + bumped
+////			if (isBumped()) {
+////				return 14;
+////			}
+////            this.stateFrontLeftRight++;
+//            return 7;
+//        }
+////        this.stateNoBarrier++;
+//        return 0;
+//    }
 
     /*
      * Debugg Funktionen

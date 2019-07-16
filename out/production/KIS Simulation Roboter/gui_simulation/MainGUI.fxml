@@ -8,15 +8,15 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#mazeMoveRobotKeyboard" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui_simulation.Controller_MainGUI">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#mazeMoveRobotKeyboard" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui_simulation.Controller_MainGUI">
    <children>
-      <AnchorPane layoutX="10.0" layoutY="10.0" minHeight="590.0" minWidth="570.0" prefHeight="590.0" prefWidth="570.0">
+      <AnchorPane layoutX="10.0" layoutY="10.0" minHeight="450.0" minWidth="570.0" prefHeight="450.0" prefWidth="570.0">
          <children>
             <Label fx:id="mazeLable" prefHeight="20.0" text="Labyrinth: &lt;keines ausgewählt&gt;" />
-            <Pane fx:id="mazePane" focusTraversable="true" layoutY="20.0" minHeight="570.0" minWidth="570.0" onMouseClicked="#focusMazePane" prefHeight="570.0" prefWidth="570.0" />
+            <Pane fx:id="mazePane" focusTraversable="true" layoutY="20.0" minHeight="430.0" minWidth="430.0" onMouseClicked="#focusMazePane" prefHeight="430.0" prefWidth="430.0" />
          </children>
       </AnchorPane>
-      <AnchorPane layoutX="10.0" layoutY="600.0" minHeight="190.0" minWidth="570.0" prefHeight="190.0" prefWidth="570.0">
+      <AnchorPane layoutX="10.0" layoutY="460.0" minHeight="130.0" minWidth="570.0" prefHeight="130.0" prefWidth="570.0">
          <children>
             <Button fx:id="addNewRobot" focusTraversable="false" minHeight="20.0" minWidth="20.0" mnemonicParsing="false" onAction="#addNewRobot" prefHeight="20.0" prefWidth="20.0" text="+" textOverrun="CLIP">
                <font>
@@ -24,20 +24,20 @@
                </font>
             </Button>
             <Label fx:id="robotSelectedLable" layoutX="50.0" prefHeight="20.0" text="Roboter &lt;keiner ausgewählt&gt;" />
-            <Pane fx:id="robotPane" layoutY="20.0" prefHeight="170.0" prefWidth="500.0">
+            <Pane fx:id="robotPane" layoutY="20.0" prefHeight="108.0" prefWidth="500.0">
                <children>
-                  <TableView fx:id="robotTable" focusTraversable="false" onMouseClicked="#selectNewRobot" prefHeight="170.0" prefWidth="290.0">
+                  <TableView fx:id="robotTable" focusTraversable="false" onMouseClicked="#selectNewRobot" prefHeight="108.0" prefWidth="290.0">
                     <columns>
                       <TableColumn fx:id="robotTableNr" editable="false" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" resizable="false" text="Nr" />
                       <TableColumn fx:id="robotTableName" editable="false" maxWidth="170.0" minWidth="170.0" prefWidth="170.0" resizable="false" text="Name" />
                         <TableColumn fx:id="robotTableSelected" editable="false" maxWidth="90.0" minWidth="90.0" prefWidth="90.0" resizable="false" text="Ausgewählt" />
                     </columns>
                   </TableView>
-                  <AnchorPane layoutX="290.0" prefHeight="160.0" prefWidth="210.0">
+                  <AnchorPane layoutX="290.0" prefHeight="108.0" prefWidth="210.0">
                      <children>
                         <Button fx:id="robotStartStop" focusTraversable="false" mnemonicParsing="false" onAction="#robotStartStop" text="Start/ Stopp" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" />
-                        <Button fx:id="robotGetMatrix" focusTraversable="false" layoutY="50.0" mnemonicParsing="false" onAction="#robotGetMatrix" text="Runterladen" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" />
-                        <Button fx:id="robotDelete" focusTraversable="false" layoutY="100.0" mnemonicParsing="false" onAction="#robotDelete" text="Löschen" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" />
+                        <Button fx:id="robotGetMatrix" focusTraversable="false" layoutX="50.0" layoutY="40.0" mnemonicParsing="false" onAction="#robotGetMatrix" text="Runterladen" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" />
+                        <Button fx:id="robotDelete" focusTraversable="false" layoutX="50.0" layoutY="80.0" mnemonicParsing="false" onAction="#robotDelete" text="Löschen" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" />
                      </children>
                   </AnchorPane>
                </children></Pane>
@@ -59,12 +59,12 @@
             <Label fx:id="mazeSelectedLabel" prefHeight="20.0" text="Labyrinth Datei" />
          </children>
       </AnchorPane>
-      <AnchorPane layoutX="580.0" layoutY="210.0" minHeight="580.0" minWidth="410.0" prefHeight="580.0" prefWidth="410.0">
+      <AnchorPane layoutX="580.0" layoutY="210.0" minHeight="380.0" minWidth="410.0" prefHeight="380.0" prefWidth="410.0">
          <children>
             <Label prefHeight="20.0" text="Historie" />
-            <Pane fx:id="historyPane" layoutY="20.0" prefHeight="560.0" prefWidth="410.0">
+            <Pane fx:id="historyPane" layoutY="20.0" prefHeight="359.0" prefWidth="410.0">
                <children>
-                  <TableView fx:id="historyTable" focusTraversable="false" prefHeight="560.0" prefWidth="410.0">
+                  <TableView fx:id="historyTable" focusTraversable="false" prefHeight="360.0" prefWidth="410.0">
                     <columns>
                       <TableColumn fx:id="historyTableNr" editable="false" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" resizable="false" text="Nr" />
                       <TableColumn fx:id="historyTableAction" editable="false" maxWidth="160.0" minWidth="160.0" prefWidth="160.0" resizable="false" text="Action" />
