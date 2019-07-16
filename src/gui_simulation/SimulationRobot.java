@@ -14,7 +14,7 @@ public class SimulationRobot implements Roboter {
     private static final Color DEFAULT_ROBOT_BODY_COLOR = Color.rgb(55, 109, 19);
     private static final Color DEFAULT_ROBOT_HEAD_COLOR = Color.rgb(255, 0, 0);
     private static final Color DEFAULT_MEASURE_DISTANCE = Color.rgb(255, 255, 0);
-    private static final int MIN_DISTANCE = 1;
+    public static final int DRIVING_DISTANCE = 2;
 
     // Roboter Bewegung
     public static final int DRIVE_FORWARD = 0;
@@ -416,7 +416,7 @@ public class SimulationRobot implements Roboter {
     private void moveUp() {
         clearDistanceData();
         for (int i = 0; i < this.position.length; i++) {
-            this.position[i] = this.position[i] - SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY();
+            this.position[i] = this.position[i] - SimulationRobot.DRIVING_DISTANCE * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY();
         }
 
         changeHeadPosition();
@@ -425,7 +425,7 @@ public class SimulationRobot implements Roboter {
     private void moveRight() {
         clearDistanceData();
         for (int i = 0; i < this.position.length; i++) {
-            this.position[i] = this.position[i] + 1;
+            this.position[i] = this.position[i] + SimulationRobot.DRIVING_DISTANCE;
         }
 
         changeHeadPosition();
@@ -434,7 +434,7 @@ public class SimulationRobot implements Roboter {
     private void moveDown() {
         clearDistanceData();
         for (int i = 0; i < this.position.length; i++) {
-            this.position[i] = this.position[i] + SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY();
+            this.position[i] = this.position[i] + SimulationRobot.DRIVING_DISTANCE * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY();
         }
 
         changeHeadPosition();
@@ -443,7 +443,7 @@ public class SimulationRobot implements Roboter {
     private void moveLeft() {
         clearDistanceData();
         for (int i = 0; i < this.position.length; i++) {
-            this.position[i] = this.position[i] - 1;
+            this.position[i] = this.position[i] - SimulationRobot.DRIVING_DISTANCE;
         }
 
         changeHeadPosition();
@@ -1080,7 +1080,7 @@ public class SimulationRobot implements Roboter {
             return 8;
         }
         // front = 1
-        if (distanceData[0] >= MIN_DISTANCE && distanceData[1] < MIN_DISTANCE && distanceData[2] >= MIN_DISTANCE) {
+        if (distanceData[0] >= DRIVING_DISTANCE && distanceData[1] < DRIVING_DISTANCE && distanceData[2] >= DRIVING_DISTANCE) {
             // front + bumped
 //			if (isBumped()) {
 //				return 8;
@@ -1090,7 +1090,7 @@ public class SimulationRobot implements Roboter {
             return 1;
         }
         // left = 2
-        if (distanceData[0] < MIN_DISTANCE && distanceData[1] >= MIN_DISTANCE && distanceData[2] >= MIN_DISTANCE) {
+        if (distanceData[0] < DRIVING_DISTANCE && distanceData[1] >= DRIVING_DISTANCE && distanceData[2] >= DRIVING_DISTANCE) {
             // left + bumped
 //			if (isBumped()) {
 //				return 9;
@@ -1099,7 +1099,7 @@ public class SimulationRobot implements Roboter {
             return 2;
         }
         // right = 3
-        if (distanceData[0] >= MIN_DISTANCE && distanceData[1] >= MIN_DISTANCE && distanceData[2] < MIN_DISTANCE) {
+        if (distanceData[0] >= DRIVING_DISTANCE && distanceData[1] >= DRIVING_DISTANCE && distanceData[2] < DRIVING_DISTANCE) {
             // right + bumped
 //			if (isBumped()) {
 //				return 10;
@@ -1108,7 +1108,7 @@ public class SimulationRobot implements Roboter {
             return 3;
         }
         // front + left = 4
-        if (distanceData[0] < MIN_DISTANCE && distanceData[1] < MIN_DISTANCE && distanceData[2] >= MIN_DISTANCE) {
+        if (distanceData[0] < DRIVING_DISTANCE && distanceData[1] < DRIVING_DISTANCE && distanceData[2] >= DRIVING_DISTANCE) {
             // front + left + bumped
 //			if (isBumped()) {
 //				return 11;
@@ -1117,7 +1117,7 @@ public class SimulationRobot implements Roboter {
             return 4;
         }
         // front + right = 5
-        if (distanceData[0] >= MIN_DISTANCE && distanceData[1] < MIN_DISTANCE && distanceData[2] < MIN_DISTANCE) {
+        if (distanceData[0] >= DRIVING_DISTANCE && distanceData[1] < DRIVING_DISTANCE && distanceData[2] < DRIVING_DISTANCE) {
             // front + right + bumped
 //			if (isBumped()) {
 //				return 12;
@@ -1126,7 +1126,7 @@ public class SimulationRobot implements Roboter {
             return 5;
         }
         // left + right = 6
-        if (distanceData[0] < MIN_DISTANCE && distanceData[1] >= MIN_DISTANCE && distanceData[2] < MIN_DISTANCE) {
+        if (distanceData[0] < DRIVING_DISTANCE && distanceData[1] >= DRIVING_DISTANCE && distanceData[2] < DRIVING_DISTANCE) {
             // left + right + bumped
 //			if (isBumped()) {
 //				return 13;
@@ -1135,7 +1135,7 @@ public class SimulationRobot implements Roboter {
             return 6;
         }
         // front + left + right = 7
-        if (distanceData[0] < MIN_DISTANCE && distanceData[1] < MIN_DISTANCE && distanceData[2] < MIN_DISTANCE) {
+        if (distanceData[0] < DRIVING_DISTANCE && distanceData[1] < DRIVING_DISTANCE && distanceData[2] < DRIVING_DISTANCE) {
             // front + left + right + bumped
 //			if (isBumped()) {
 //				return 14;

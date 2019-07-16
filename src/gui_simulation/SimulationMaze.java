@@ -661,12 +661,14 @@ public class SimulationMaze {
         int[] sortedPositions = robot.getPosition();
         Arrays.sort(sortedPositions);
 
-        for (int y = 0, x = 0; y < robot.getSizeY(); y++, x += robot.getSizeX()) {
-            if (!(this.getIndexMazeFreeFields().contains(sortedPositions[x] - 1))) {
-                return false;
-            } else {
-                if(SimulationMaze.debugShowLeft){
-                    this.getMazeDrawFields().get(sortedPositions[x] - 1).setFill(SimulationMaze.debugMazeLeftColor);
+        for(int xi = 1; xi < SimulationRobot.DRIVING_DISTANCE + 1; xi++) {
+            for (int y = 0, x = 0; y < robot.getSizeY(); y++, x += robot.getSizeX()) {
+                if (!(this.getIndexMazeFreeFields().contains(sortedPositions[x] - xi))) {
+                    return false;
+                } else {
+                    if (SimulationMaze.debugShowLeft) {
+                        this.getMazeDrawFields().get(sortedPositions[x] - xi).setFill(SimulationMaze.debugMazeLeftColor);
+                    }
                 }
             }
         }
@@ -678,12 +680,14 @@ public class SimulationMaze {
         int[] sortedPositions = robot.getPosition();
         Arrays.sort(sortedPositions);
 
-        for (int x = robot.getSizeX() - 1, y = 0; y < robot.getSizeY(); y++, x += robot.getSizeX()) {
-            if (!(this.getIndexMazeFreeFields().contains(sortedPositions[x] + 1))) {
-                return false;
-            } else {
-                if(SimulationMaze.debugShowRight){
-                    this.getMazeDrawFields().get(sortedPositions[x] + 1).setFill(SimulationMaze.debugMazeRightColor);
+        for(int xi = 1; xi < SimulationRobot.DRIVING_DISTANCE + 1; xi++) {
+            for (int x = robot.getSizeX() - 1, y = 0; y < robot.getSizeY(); y++, x += robot.getSizeX()) {
+                if (!(this.getIndexMazeFreeFields().contains(sortedPositions[x] + xi))) {
+                    return false;
+                } else {
+                    if (SimulationMaze.debugShowRight) {
+                        this.getMazeDrawFields().get(sortedPositions[x] + xi).setFill(SimulationMaze.debugMazeRightColor);
+                    }
                 }
             }
         }
@@ -695,12 +699,14 @@ public class SimulationMaze {
         int[] sortedPositions = robot.getPosition();
         Arrays.sort(sortedPositions);
 
-        for (int x = 0; x < robot.getSizeX(); x++) {
-            if (!(this.getIndexMazeFreeFields().contains(sortedPositions[sortedPositions.length - 1 - x] + this.getMazeSizeY()))) {
-                return false;
-            } else {
-                if(SimulationMaze.debugShowBelow){
-                    this.getMazeDrawFields().get(sortedPositions[sortedPositions.length - 1 - x] + this.mazeSizeY).setFill(SimulationMaze.debugMazeBackwardsColor);
+        for(int y = 1; y < SimulationRobot.DRIVING_DISTANCE + 1; y++) {
+            for (int x = 0; x < robot.getSizeX(); x++) {
+                if (!(this.getIndexMazeFreeFields().contains(sortedPositions[sortedPositions.length - 1 - x] + y * this.getMazeSizeY()))) {
+                    return false;
+                } else {
+                    if (SimulationMaze.debugShowBelow) {
+                        this.getMazeDrawFields().get(sortedPositions[sortedPositions.length - 1 - x] + y * this.mazeSizeY).setFill(SimulationMaze.debugMazeBackwardsColor);
+                    }
                 }
             }
         }
@@ -712,12 +718,14 @@ public class SimulationMaze {
         int[] sortedPositions = robot.getPosition();
         Arrays.sort(sortedPositions);
 
-        for (int x = 0; x < robot.getSizeX(); x++) {
-            if (!(this.getIndexMazeFreeFields().contains(sortedPositions[x] - this.mazeSizeY))) {
-                return false;
-            } else {
-                if(SimulationMaze.debugShowFront){
-                    this.getMazeDrawFields().get(sortedPositions[x] - this.mazeSizeY).setFill(SimulationMaze.debugMazeFrontColor);
+        for(int y = 1; y < SimulationRobot.DRIVING_DISTANCE + 1; y++) {
+            for (int x = 0; x < robot.getSizeX(); x++) {
+                if (!(this.getIndexMazeFreeFields().contains(sortedPositions[x] - y * this.mazeSizeY))) {
+                    return false;
+                } else {
+                    if (SimulationMaze.debugShowFront) {
+                        this.getMazeDrawFields().get(sortedPositions[x] - y * this.mazeSizeY).setFill(SimulationMaze.debugMazeFrontColor);
+                    }
                 }
             }
         }

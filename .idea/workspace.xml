@@ -4,8 +4,11 @@
     <list default="true" id="a44a8a50-6fbd-4bcc-afba-98189aabe9ac" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/gui_simulation/SimulationMaze.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/gui_simulation/SimulationMaze.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/gui_simulation/SimulationRobot$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/gui_simulation/SimulationRobot$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/gui_simulation/SimulationRobot.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/gui_simulation/SimulationRobot.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/gui_simulation/Controller_MainGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui_simulation/Controller_MainGUI.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/gui_simulation/SimulationMaze.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui_simulation/SimulationMaze.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui_simulation/SimulationRobot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui_simulation/SimulationRobot.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -22,25 +25,25 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/gui_simulation/SimulationRobot.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="7548">
-              <caret line="484" column="26" lean-forward="true" selection-start-line="484" selection-start-column="26" selection-end-line="484" selection-end-column="26" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/gui_simulation/SimulationMaze.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="322">
-              <caret line="707" column="173" selection-start-line="707" selection-start-column="173" selection-end-line="707" selection-end-column="173" />
+            <state relative-caret-position="459">
+              <caret line="445" column="82" selection-start-line="445" selection-start-column="82" selection-end-line="445" selection-end-column="82" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/gui_simulation/SimulationMaze.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="420">
+              <caret line="63" column="48" selection-start-line="63" selection-start-column="48" selection-end-line="63" selection-end-column="48" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/gui_simulation/Controller_MainGUI.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="460">
+            <state relative-caret-position="229">
               <caret line="175" column="30" selection-start-line="175" selection-start-column="30" selection-end-line="175" selection-end-column="30" />
             </state>
           </provider>
@@ -87,9 +90,9 @@
         <option value="$PROJECT_DIR$/src/gui_simulation/mazeFiles/maze_Target-Pos0" />
         <option value="$PROJECT_DIR$/src/gui_simulation/mazeFiles/mazeOriginal_V2" />
         <option value="$PROJECT_DIR$/src/gui_simulation/Main.java" />
+        <option value="$PROJECT_DIR$/src/gui_simulation/Controller_MainGUI.java" />
         <option value="$PROJECT_DIR$/src/gui_simulation/SimulationRobot.java" />
         <option value="$PROJECT_DIR$/src/gui_simulation/SimulationMaze.java" />
-        <option value="$PROJECT_DIR$/src/gui_simulation/Controller_MainGUI.java" />
       </list>
     </option>
   </component>
@@ -231,7 +234,21 @@
       <option name="project" value="LOCAL" />
       <updated>1563217730159</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="- Rechtsvorwärtsrotation: Rotationsradius wird überprüft">
+      <created>1563223809097</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1563223809097</updated>
+    </task>
+    <task id="LOCAL-00012" summary="- Bewegungsfunktionen optimiert und Debugmöglichkeit hinzugefügt&#10;- Rotationen verbessert, Radius genauer">
+      <created>1563227868878</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1563227868878</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -317,7 +334,9 @@
     <MESSAGE value="- Linksvorwärtsrotation und Rechtsvorwärtsrotation Rotationsumgebung wird mit Rotationsradius geprüft" />
     <MESSAGE value="- Linksvorwärtsrotation Überprüfung des Rotationsradius fertig" />
     <MESSAGE value="- Linksvorwärtsrotation: Fehler in Distanzbestimmung bei Rotation behoben" />
-    <option name="LAST_COMMIT_MESSAGE" value="- Linksvorwärtsrotation: Fehler in Distanzbestimmung bei Rotation behoben" />
+    <MESSAGE value="- Rechtsvorwärtsrotation: Rotationsradius wird überprüft" />
+    <MESSAGE value="- Bewegungsfunktionen optimiert und Debugmöglichkeit hinzugefügt&#10;- Rotationen verbessert, Radius genauer" />
+    <option name="LAST_COMMIT_MESSAGE" value="- Bewegungsfunktionen optimiert und Debugmöglichkeit hinzugefügt&#10;- Rotationen verbessert, Radius genauer" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/gui_simulation/QLearningAgentMovement.java">
@@ -362,24 +381,24 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/gui_simulation/Controller_MainGUI.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="229">
+          <caret line="175" column="30" selection-start-line="175" selection-start-column="30" selection-end-line="175" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/gui_simulation/SimulationRobot.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="7548">
-          <caret line="484" column="26" lean-forward="true" selection-start-line="484" selection-start-column="26" selection-end-line="484" selection-end-column="26" />
+        <state relative-caret-position="459">
+          <caret line="445" column="82" selection-start-line="445" selection-start-column="82" selection-end-line="445" selection-end-column="82" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/gui_simulation/SimulationMaze.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="322">
-          <caret line="707" column="173" selection-start-line="707" selection-start-column="173" selection-end-line="707" selection-end-column="173" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/gui_simulation/Controller_MainGUI.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="460">
-          <caret line="175" column="30" selection-start-line="175" selection-start-column="30" selection-end-line="175" selection-end-column="30" />
+        <state relative-caret-position="420">
+          <caret line="63" column="48" selection-start-line="63" selection-start-column="48" selection-end-line="63" selection-end-column="48" />
         </state>
       </provider>
     </entry>
