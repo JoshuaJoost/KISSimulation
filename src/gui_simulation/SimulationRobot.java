@@ -14,7 +14,7 @@ public class SimulationRobot implements Roboter {
     private static final Color DEFAULT_ROBOT_BODY_COLOR = Color.rgb(55, 109, 19);
     private static final Color DEFAULT_ROBOT_HEAD_COLOR = Color.rgb(255, 0, 0);
     private static final Color DEFAULT_MEASURE_DISTANCE = Color.rgb(255, 255, 0);
-    public static final int DRIVING_DISTANCE = 4;
+    public static final int DRIVING_DISTANCE = 5;
     public static final int MAXIMAL_MEASURE_DISTANCE = 100;
 
     // Roboter Bewegung
@@ -381,52 +381,100 @@ public class SimulationRobot implements Roboter {
 
     @Override
     public void forward() {
-        if (forwardFree()) {
-            switch (this.headDirection) {
-                case 0:
-                    moveUp();
-                    break;
-                case 1:
-                    moveRight();
-                    break;
-                case 2:
-                    moveDown();
-                    break;
-                case 3:
-                    moveLeft();
-                    break;
+        for(int i = 0; !this.isBumped && i < SimulationRobot.DRIVING_DISTANCE; i++) {
+            if (forwardFree()) {
+                switch (this.headDirection) {
+                    case 0:
+                        moveUp();
+                        break;
+                    case 1:
+                        moveRight();
+                        break;
+                    case 2:
+                        moveDown();
+                        break;
+                    case 3:
+                        moveLeft();
+                        break;
+                }
+            } else {
+                this.isBumped = true;
             }
-        } else {
-            this.isBumped = true;
         }
     }
 
     @Override
     public void backward() {
-        if (backwardFree()) {
-            switch (this.headDirection) {
-                case 0:
-                    moveDown();
-                    break;
-                case 1:
-                    moveLeft();
-                    break;
-                case 2:
-                    moveUp();
-                    break;
-                case 3:
-                    moveRight();
-                    break;
+        for(int i = 0; !this.isBumped && i < SimulationRobot.DRIVING_DISTANCE; i++) {
+            if (backwardFree()) {
+                switch (this.headDirection) {
+                    case 0:
+                        moveDown();
+                        break;
+                    case 1:
+                        moveLeft();
+                        break;
+                    case 2:
+                        moveUp();
+                        break;
+                    case 3:
+                        moveRight();
+                        break;
+                }
+            } else {
+                this.isBumped = true;
             }
-        } else {
-            this.isBumped = true;
         }
+    }
+
+    public void keyboardMoveUp() {
+        for(int i = 0; !this.isBumped && i < SimulationRobot.DRIVING_DISTANCE; i++) {
+            if (SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).aboveFree(this)) {
+                moveUp();
+            } else {
+                this.isBumped = true;
+            }
+        }
+        this.isBumped = false;
+    }
+
+    public void keyboardMoveDown() {
+        for(int i = 0; !this.isBumped && i < SimulationRobot.DRIVING_DISTANCE; i++) {
+            if (SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).belowFree(this)) {
+                moveDown();
+            } else {
+                this.isBumped = true;
+            }
+        }
+        this.isBumped = false;
+    }
+
+    public void keyboardMoveRight() {
+        for(int i = 0; !this.isBumped && i < SimulationRobot.DRIVING_DISTANCE; i++) {
+            if (SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).rightFree(this)) {
+                moveRight();
+            } else {
+                this.isBumped = true;
+            }
+        }
+        this.isBumped = false;
+    }
+
+    public void keyboardMoveLeft() {
+        for(int i = 0; !this.isBumped && i < SimulationRobot.DRIVING_DISTANCE; i++) {
+            if (SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).leftFree(this)) {
+                moveLeft();
+            } else {
+                this.isBumped = true;
+            }
+        }
+        this.isBumped = false;
     }
 
     private void moveUp() {
         clearDistanceData();
         for (int i = 0; i < this.position.length; i++) {
-            this.position[i] = this.position[i] - SimulationRobot.DRIVING_DISTANCE * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY();
+            this.position[i] = this.position[i] - SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY();
         }
 
         changeHeadPosition();
@@ -435,7 +483,7 @@ public class SimulationRobot implements Roboter {
     private void moveRight() {
         clearDistanceData();
         for (int i = 0; i < this.position.length; i++) {
-            this.position[i] = this.position[i] + SimulationRobot.DRIVING_DISTANCE;
+            this.position[i] = this.position[i] + 1;
         }
 
         changeHeadPosition();
@@ -444,7 +492,7 @@ public class SimulationRobot implements Roboter {
     private void moveDown() {
         clearDistanceData();
         for (int i = 0; i < this.position.length; i++) {
-            this.position[i] = this.position[i] + SimulationRobot.DRIVING_DISTANCE * SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY();
+            this.position[i] = this.position[i] + SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).getMazeSizeY();
         }
 
         changeHeadPosition();
@@ -453,7 +501,7 @@ public class SimulationRobot implements Roboter {
     private void moveLeft() {
         clearDistanceData();
         for (int i = 0; i < this.position.length; i++) {
-            this.position[i] = this.position[i] - SimulationRobot.DRIVING_DISTANCE;
+            this.position[i] = this.position[i] - 1;
         }
 
         changeHeadPosition();
@@ -614,30 +662,6 @@ public class SimulationRobot implements Roboter {
     @Override
     public boolean isGoal() {
         return false;
-    }
-
-    public void keyboardMoveUp() {
-        if(SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).aboveFree(this)){
-            moveUp();
-        }
-    }
-
-    public void keyboardMoveDown() {
-        if(SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).belowFree(this)){
-            moveDown();
-        }
-    }
-
-    public void keyboardMoveRight() {
-        if (SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).rightFree(this)) {
-            moveRight();
-        }
-    }
-
-    public void keyboardMoveLeft() {
-        if (SimulationMaze.getMazeFiles().get(this.robotMazeIndexNumber).leftFree(this)) {
-            moveLeft();
-        }
     }
 
     public void keyboardRotateForwardLeft() {

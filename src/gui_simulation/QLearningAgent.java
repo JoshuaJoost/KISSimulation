@@ -49,7 +49,7 @@ public class QLearningAgent {
         for (int i = 0; i < BARRIER_LOCATIONS+BUMPED; i++) {
             System.out.print(QLearningAgent.stateText[i] + ": ");
             for (int j=0; j < POSSIBLE_ACTIONS; j++) {
-                System.out.print(this.q[i][j] + ",\t\t");
+                System.out.print(this.q[i][j] + ",\t\t\t\t\t\t\t\t\t");
             }
             System.out.println();
         }
