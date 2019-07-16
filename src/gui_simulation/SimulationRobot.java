@@ -77,12 +77,10 @@ public class SimulationRobot implements Roboter {
     private int sizeX;
     private int sizeY;
     private int[] position;
-    private int[] startPosition;
     private Color robotBodyColor = null;
     private Color robotHeadColor = null;
     private Color measureDistanceColor = null;
     private Integer headDirection; // 0 = Nord, im Uhrzeigersinn
-    private Integer startHeadDirection;
     private ArrayList<Integer> headPosition = new ArrayList<>();
     private final int headSize;
     private final int uniqueIndexNumberOfMazeRobot;
@@ -91,6 +89,12 @@ public class SimulationRobot implements Roboter {
     private ArrayList<Integer> distanceDataFieldsLeft = new ArrayList<>();
     private ArrayList<Integer> distanceDataFieldsFront = new ArrayList<>();
     private ArrayList<Integer> distanceDataFieldsRight = new ArrayList<>();
+
+    // Start values
+    private int[] startPosition;
+    private Integer startHeadDirection;
+    private int startSizeX;
+    private int startSizeY;
     // QLearningAgent
     private QLearningAgent lerningAlgorithmus = new QLearningAgent();
     private double reward = 0;
@@ -104,12 +108,12 @@ public class SimulationRobot implements Roboter {
         for (int i : this.position) {
             tmpPositions.add(i);
         }
-
-        this.startPosition = OwnUtils.convertArrayListToIntArray(tmpPositions);
         this.headDirection = robotPixelX > robotPixelY ? 1 : 0;
 
-        int headDircetionTmp = this.headDirection;
-        this.startHeadDirection = headDircetionTmp;
+        this.startPosition = OwnUtils.convertArrayListToIntArray(tmpPositions);
+        this.startHeadDirection = this.headDirection;
+        this.startSizeX = this.sizeX;
+        this.startSizeY = this.sizeY;
 
         this.uniqueIndexNumberOfMazeRobot = SimulationMaze.getSelectedMaze().getAndSetUniqueIndexNumberOfMazeRobot();
         this.robotNumber = this.uniqueIndexNumberOfMazeRobot + 1;
@@ -662,35 +666,35 @@ public class SimulationRobot implements Roboter {
         return reachedTarget;
     }
 
+    // TODO
     private void setRobotBackToStartPosition() {
-        for (int i = 0; i < this.startPosition.length; i++) {
+        // Setze Körpergröße zurück
+        this.sizeX = this.startSizeX;
+        this.sizeY = this.startSizeY;
+
+        // Setze Position zurück
+        for(int i = 0; i < this.startPosition.length; i++){
             this.position[i] = this.startPosition[i];
         }
 
-        int tmpHeadDirection = this.startHeadDirection;
-        this.headDirection = tmpHeadDirection;
-
+        // Setze Kopf zurück
+        this.headDirection = this.startHeadDirection;
         changeHeadPosition();
+    }
 
-        switch (this.headDirection) {
-            case 0:
-            case 2:
-                this.sizeX = 3;
-                this.sizeY = 4;
-                break;
-            case 1:
-            case 3:
-                this.sizeX = 4;
-                this.sizeY = 3;
-                break;
+    private void setActualPositionToStartPosition(){
+        for (int i = 0; i < this.position.length; i++) {
+            this.startPosition[i] = this.position[i];
         }
+
+        this.startHeadDirection = this.headDirection;
+        this.startSizeX = this.sizeX;
+        this.startSizeY = this.sizeY;
     }
 
     public void start() {
         // Setze aktuelle Position zu Startpositon, so wird Position nach Tastaturbewegung zu Startposition
-        for (int i = 0; i < this.position.length; i++) {
-            this.startPosition[i] = this.position[i];
-        }
+        setActualPositionToStartPosition();
 
         // Bei langen Rechenoperationen blockiert der GUI-Thread, um auf dieser wieder Code
         // zum Laufen zu bekommen muss man einem Task ein Platform.runlater() übergeben
@@ -709,7 +713,7 @@ public class SimulationRobot implements Roboter {
         this.lerningAlgorithmus.setEpsilon(1);
         for (int j = 0; j < 100; j++) {
             setRobotBackToStartPosition();
-            for (int i = 0; i < 1000000 && !targetReached(); i++) {
+            for (int i = 0; i < 500 && !targetReached(); i++) {
                 look();
                 int s = findBarrier();
                 int a = this.lerningAlgorithmus.chooseAction(s);
@@ -725,9 +729,9 @@ public class SimulationRobot implements Roboter {
             }
             System.out.print("I: " + (j + 1) + " ");
             if (targetReached()) {
-                System.out.print("Ziel gefunden!");
+                System.out.print(" >> Ziel gefunden!");
             } else {
-                System.out.print("Ziel -nicht- gefunden!");
+                System.out.print(" >> Ziel -nicht- gefunden!");
             }
             System.out.println();
         }
@@ -746,7 +750,7 @@ public class SimulationRobot implements Roboter {
                 e = 0;
             }
 
-            for (int i = 0; i < 1000000 && !targetReached(); i++) {
+            for (int i = 0; i < 500 && !targetReached(); i++) {
                 look();
                 int s = findBarrier();
                 int a = this.lerningAlgorithmus.chooseAction(s);
@@ -763,9 +767,9 @@ public class SimulationRobot implements Roboter {
 
             System.out.print("I: " + (j + 1) + " ");
             if (targetReached()) {
-                System.out.print("Ziel gefunden!");
+                System.out.print(" >> Ziel gefunden!");
             } else {
-                System.out.println("Ziel -nicht- gefunden!");
+                System.out.print(" >> Ziel -nicht- gefunden!");
             }
             System.out.println();
         }
@@ -777,7 +781,7 @@ public class SimulationRobot implements Roboter {
         for (int j = 0; j < 100; j++) {
             setRobotBackToStartPosition();
 
-            for (int i = 0; i < 1000000 && !targetReached(); i++) {
+            for (int i = 0; i < 500 && !targetReached(); i++) {
                 look();
                 int s = findBarrier();
                 int a = this.lerningAlgorithmus.chooseAction(s);
@@ -794,9 +798,9 @@ public class SimulationRobot implements Roboter {
 
             System.out.print("I: " + (j + 1) + " ");
             if (targetReached()) {
-                System.out.print("Ziel gefunden!");
+                System.out.print(" >> Ziel gefunden!");
             } else {
-                System.out.println("Ziel -nicht- gefunden!");
+                System.out.print(" >> Ziel -nicht- gefunden!");
             }
             System.out.println();
         }
@@ -808,7 +812,7 @@ public class SimulationRobot implements Roboter {
         for (int j = 0; j < 100; j++) {
             setRobotBackToStartPosition();
 
-            for (int i = 0; i < 1000000 && !targetReached(); i++) {
+            for (int i = 0; i < 500 && !targetReached(); i++) {
                 look();
                 int s = findBarrier();
                 int a = this.lerningAlgorithmus.chooseAction(s);
@@ -825,9 +829,9 @@ public class SimulationRobot implements Roboter {
 
             System.out.print("I: " + (j + 1) + " ");
             if (targetReached()) {
-                System.out.print("Ziel gefunden!");
+                System.out.print(" >> Ziel gefunden!");
             } else {
-                System.out.print("Ziel -nicht- gefunden!");
+                System.out.print(" >> Ziel -nicht- gefunden!");
             }
             System.out.println();
         }
@@ -858,7 +862,7 @@ public class SimulationRobot implements Roboter {
         this.lerningAlgorithmus.setEpsilon(0);
         int j = 0;
         setRobotBackToStartPosition();
-        for (int i = 0; i < 1000000 && !targetReached(); i++, j++) {
+        for (int i = 0; i < 10000 && !targetReached(); i++, j++) {
             look();
             int s = findBarrier();
             int a = this.lerningAlgorithmus.chooseAction(s);

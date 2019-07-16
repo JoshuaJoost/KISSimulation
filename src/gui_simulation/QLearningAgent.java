@@ -9,6 +9,12 @@ public class QLearningAgent {
     private double gamma = 0.9; // Bewertungsfaktor (0..1)
     private double q[][]; // Q-Learning-Array
     private static final int POSSIBLE_ACTIONS = 4;
+
+    private static final String[] stateText = {
+            "Keine Barriere", "Barriere vorne", "Barriere links",
+            "Barriere rechts", "Barriere vorne + links", "Barriere vorne + rechts", "Barriere links + rechts",
+            "Barriere links + vorne + rechts", "Angestoßen"
+    };
     /*
      * possible actions: DRIVE_FORWARD = 0, DRIVE_LEFT = 1,
      * DRIVE_RIGHT = 2, DRIVE_BACKWARD = 3
@@ -39,9 +45,9 @@ public class QLearningAgent {
     }
 
     public void printQTable() {
-        System.out.println("\t\t\t vorwärts \t\t\t\t\t links \t\t\t\t\t rechts \t\t\t\t\t rückwärts");
+        System.out.println("\t\t\t\t\t\t\t\t\t vorwärts \t\t\t\t\t links \t\t\t\t\t rechts \t\t\t\t\t rückwärts");
         for (int i = 0; i < BARRIER_LOCATIONS+BUMPED; i++) {
-            System.out.print("Zustand " + i + ": ");
+            System.out.print(QLearningAgent.stateText[i] + ": ");
             for (int j=0; j < POSSIBLE_ACTIONS; j++) {
                 System.out.print(this.q[i][j] + ",\t\t");
             }
