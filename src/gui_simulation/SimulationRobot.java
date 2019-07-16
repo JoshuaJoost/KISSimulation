@@ -14,7 +14,7 @@ public class SimulationRobot implements Roboter {
     private static final Color DEFAULT_ROBOT_BODY_COLOR = Color.rgb(55, 109, 19);
     private static final Color DEFAULT_ROBOT_HEAD_COLOR = Color.rgb(255, 0, 0);
     private static final Color DEFAULT_MEASURE_DISTANCE = Color.rgb(255, 255, 0);
-    public static final int DRIVING_DISTANCE = 2;
+    public static final int DRIVING_DISTANCE = 4;
 
     // Roboter Bewegung
     public static final int DRIVE_FORWARD = 0;
@@ -94,7 +94,7 @@ public class SimulationRobot implements Roboter {
     private QLearningAgent lerningAlgorithmus = new QLearningAgent();
     private double reward = 0;
 
-    private SimulationRobot(int robotPixelX, int robotPixelY, int[] position) {
+    private SimulationRobot(int robotPixelX, int robotPixelY, int[] position, int headSize) {
         this.sizeX = robotPixelX;
         this.sizeY = robotPixelY;
         this.position = position;
@@ -114,13 +114,31 @@ public class SimulationRobot implements Roboter {
         this.robotNumber = this.uniqueIndexNumberOfMazeRobot + 1;
         this.robotName = PREFIX_ROBO_NAME + this.robotNumber;
         this.robotMazeIndexNumber = SimulationMaze.getSelectedMazeIndexNumber();
-        this.headSize = 1;
+
+        switch(this.headDirection){
+            case 0:
+            case 2:
+                if(headSize > this.sizeX){
+                    throw new IllegalStateException("Kopf größer als Körper: sizeX: " + this.sizeX + " Kopfgröße: " + headSize);
+                }
+                break;
+            case 1:
+            case 3:
+                if(headSize > this.sizeY){
+                    throw new IllegalStateException("Kopf größer als Körper: sizeY: " + this.sizeY + " Kopfgröße: " + headSize);
+                }
+                break;
+        }
+        if(headSize < 1){
+            throw new IllegalStateException("Kopf muss größer 0 sein");
+        }
+        this.headSize = headSize;
 
         changeHeadPosition();
     }
 
-    public static SimulationRobot addRobot(int robotPixelX, int robotPixelY, int[] position) {
-        return new SimulationRobot(robotPixelX, robotPixelY, position);
+    public static SimulationRobot addRobot(int robotPixelX, int robotPixelY, int[] position, int headSize) {
+        return new SimulationRobot(robotPixelX, robotPixelY, position, headSize);
     }
 
     public void callGuiUpdateFunction() {
@@ -228,86 +246,59 @@ public class SimulationRobot implements Roboter {
         int[] sortedPos = this.position;
         Arrays.sort(sortedPos);
 
-//        System.out.println("HD: " + this.headDirection);
-//        System.out.println("SizeX: " + this.sizeX);
-//        System.out.println("SizeY: " + this.sizeY);
-        int headPosition;
+        int headStartPosition;
         int x;
         int y;
         switch (this.headDirection) {
             case 0:
-                headPosition = (int) Math.floor((double) this.sizeX / 2);
-                this.headPosition.add(sortedPos[headPosition]);
+                headStartPosition = (int) Math.floor((double) this.sizeX / 2);
+                this.headPosition.add(sortedPos[headStartPosition]);
                 break;
             case 1:
                 y = (int) Math.ceil((double) this.sizeY / 2);
-                headPosition = y * this.sizeX - 1;
-                this.headPosition.add(sortedPos[headPosition]);
+                headStartPosition = y * this.sizeX - 1;
+                this.headPosition.add(sortedPos[headStartPosition]);
                 break;
             case 2:
                 x = (int) Math.floor((double) this.sizeX / 2);
-                headPosition = this.sizeX * this.sizeY - 1 - x; // -x
-                this.headPosition.add(sortedPos[headPosition]);
+                headStartPosition = this.sizeX * this.sizeY - 1 - x; // -x
+                this.headPosition.add(sortedPos[headStartPosition]);
                 break;
             case 3:
                 y = (int) Math.ceil((double) this.sizeY / 2);
-                headPosition = y * this.sizeX - this.sizeX;
-                this.headPosition.add(sortedPos[headPosition]);
+                headStartPosition = y * this.sizeX - this.sizeX;
+                this.headPosition.add(sortedPos[headStartPosition]);
                 break;
+            default:
+                throw new IllegalStateException("Fehler in Kopfrichtung: " + this.headDirection);
         }
-//        if (this.sizeX > 0 && this.sizeY > 0) {
-//            switch (this.headDirection) {
-//                case 0:
-////                    if (this.headSize > 0) {
-////                        if (this.sizeX == 1) {
-////                            this.headPosition.add(sortedPos[0]);
-////                        } else if (this.sizeX == 2) {
-////                            this.headPosition.add(sortedPos[1]);
-////                        } else {
-////                            for (int x = 0; x < this.headSize; x++) {
-////                                this.headPosition.add(sortedPos[this.sizeX - this.headSize - 1 + x]);
-////                            }
-////                        }
-////                    }
-//                    this.headPosition.add(sortedPos[1]);
-//                    break;
-//                case 1:
-//                    if (this.headSize > 0) {
-//                        if (this.sizeY == 1 || this.sizeY == 2) {
-//                            this.headPosition.add(sortedPos[this.sizeX * this.sizeY - 1]);
-//                        } else {
-//                            for (int y = 2; y < this.headSize + 2; y++) {
-//                                this.headPosition.add(sortedPos[y * this.sizeX - 1]);
-//                            }
-//                        }
-//                    }
-//                    break;
-//                case 2:
-//                    if (this.headSize > 0) {
-//                        if (this.sizeX == 1) {
-//                            this.headPosition.add(sortedPos[this.sizeY - 1]);
-//                        } else if (this.sizeX == 2) {
-//                            this.headPosition.add(sortedPos[this.sizeX * this.sizeY - 1 - 1]);
-//                        } else {
-//                            for (int x = 0; x < this.headSize; x++) {
-//                                this.headPosition.add(sortedPos[this.sizeX * this.sizeY - 1 - this.headSize + x]);
-//                            }
-//                        }
-//                    }
-//                    break;
-//                case 3:
-//                    if (this.headSize > 0) {
-//                        if (this.sizeY == 1 || this.sizeY == 2) {
-//                            this.headPosition.add(sortedPos[0]);
-//                        } else {
-//                            for (int y = 1; y < this.headSize + 1; y++) {
-//                                this.headPosition.add(sortedPos[y * this.sizeX]);
-//                            }
-//                        }
-//                    }
-//                    break;
-//            }
-//        }
+
+        if(this.headSize > 1){
+            switch(this.headDirection){
+                case 0:
+                case 2:
+                    for(int i = 1, j = 0; i + j < headSize; i++){
+                        this.headPosition.add(sortedPos[headStartPosition + i]);
+
+                        if(i + j + 1 < headSize){
+                            this.headPosition.add(sortedPos[headStartPosition - i]);
+                            j++;
+                        }
+                    }
+                    break;
+                case 1:
+                case 3:
+                    for(int i = 1, j = 0, yi = this.sizeX; i + j < headSize; i++, yi += this.sizeX){
+                        this.headPosition.add(sortedPos[headStartPosition + yi]);
+
+                        if(i + j + 1 < headSize){
+                            this.headPosition.add(sortedPos[headStartPosition - yi]);
+                            j++;
+                        }
+                    }
+                    break;
+            }
+        }
     }
 
     @Override

@@ -174,6 +174,7 @@ public class Controller_MainGUI implements Initializable {
             // Definiere Roboterwerte
             int robotSizeX = 13;//13 - 3;
             int robotSizeY = 18;//18 - 4;
+            int robotHeadSize = 5;
 
             // Roboter versuchen auf das Labyrinth zu setzen
             ArrayList<Integer> robotPositions = new ArrayList<>();
@@ -259,7 +260,7 @@ public class Controller_MainGUI implements Initializable {
 
             if (robotSuccessfullySet) {
                 // Erstelle Roboter und füge ihm aktuell selektiertem Labyrinth zu, zeige ihn anschließend an
-                SimulationRobot newRobot = SimulationRobot.addRobot(robotSizeX, robotSizeY, OwnUtils.convertArrayListToIntArray(robotPositions));
+                SimulationRobot newRobot = SimulationRobot.addRobot(robotSizeX, robotSizeY, OwnUtils.convertArrayListToIntArray(robotPositions), robotHeadSize);
                 SimulationMaze.getSelectedMaze().addRobotToMaze(newRobot);
                 SimulationMaze.getSelectedMaze().changeSelectedRobot(SimulationMaze.getSelectedMaze().getMazeRobots().size() - 1);
                 updateMaze(true);
