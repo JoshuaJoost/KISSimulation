@@ -31,8 +31,8 @@ import java.util.ResourceBundle;
 
 public class Controller_MainGUI implements Initializable {
     // Initialisierungprobleme
-    private static final int mazePaneX = 570;
-    private static final int mazePaneY = 570;
+    private static final int mazePaneX = 430;
+    private static final int mazePaneY = 430;
 
     private final Color mazeWallColor = Color.rgb(0, 0, 0);
     private final Color mazeVoidColor = Color.rgb(255, 255, 255);

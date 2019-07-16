@@ -14,7 +14,7 @@ public class SimulationRobot implements Roboter {
     private static final Color DEFAULT_ROBOT_BODY_COLOR = Color.rgb(55, 109, 19);
     private static final Color DEFAULT_ROBOT_HEAD_COLOR = Color.rgb(255, 0, 0);
     private static final Color DEFAULT_MEASURE_DISTANCE = Color.rgb(255, 255, 0);
-    public static final int DRIVING_DISTANCE = 5;
+    public static final int DRIVING_DISTANCE = 10;
     public static final int MAXIMAL_MEASURE_DISTANCE = 100;
 
     // Roboter Bewegung

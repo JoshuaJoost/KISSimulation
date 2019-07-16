@@ -47,9 +47,9 @@ public class QLearningAgent {
     public void printQTable() {
         System.out.println("\t\t\t\t\t\t\t\t\t vorwärts \t\t\t\t\t links \t\t\t\t\t rechts \t\t\t\t\t rückwärts");
         for (int i = 0; i < BARRIER_LOCATIONS+BUMPED; i++) {
-            System.out.print(QLearningAgent.stateText[i] + ": ");
+            System.out.print(QLearningAgent.stateText[i] + ": \t\t\t\t\t\t\t");
             for (int j=0; j < POSSIBLE_ACTIONS; j++) {
-                System.out.print(this.q[i][j] + ",\t\t\t\t\t\t\t\t\t");
+                System.out.print(this.q[i][j] + ",\t\t\t");
             }
             System.out.println();
         }

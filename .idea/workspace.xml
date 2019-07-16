@@ -3,14 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="a44a8a50-6fbd-4bcc-afba-98189aabe9ac" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/gui_simulation/QLearningAgent.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/gui_simulation/QLearningAgent.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/gui_simulation/SimulationRobot$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/gui_simulation/SimulationRobot.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui_simulation/MainGUI.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui_simulation/MainGUI.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/gui_simulation/SimulationMaze.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/KIS Simulation Roboter/gui_simulation/SimulationMaze.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui_simulation/Controller_MainGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui_simulation/Controller_MainGUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/gui_simulation/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui_simulation/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/gui_simulation/QLearningAgent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui_simulation/QLearningAgent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui_simulation/SimulationMaze.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui_simulation/SimulationMaze.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/gui_simulation/SimulationRobot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui_simulation/SimulationRobot.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/gui_simulation/mazeFiles/mazeOriginal_V2" beforeDir="false" afterPath="$PROJECT_DIR$/src/gui_simulation/mazeFiles/mazeOriginal_V2" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -24,18 +21,30 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/gui_simulation/SimulationRobot.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="287">
-              <caret line="392" column="27" lean-forward="true" selection-start-line="392" selection-start-column="27" selection-end-line="392" selection-end-column="27" />
+            <state relative-caret-position="187">
+              <caret line="16" column="49" selection-start-line="16" selection-start-column="49" selection-end-line="16" selection-end-column="49" />
               <folding>
                 <element signature="e#6743#6744#0" expanded="true" />
                 <element signature="e#6798#6799#0" expanded="true" />
-                <element signature="e#23967#23968#0" expanded="true" />
-                <element signature="e#24036#24037#0" expanded="true" />
-                <element signature="e#24107#24108#0" expanded="true" />
-                <element signature="e#24163#24164#0" expanded="true" />
+                <element signature="e#23968#23969#0" expanded="true" />
+                <element signature="e#24037#24038#0" expanded="true" />
+                <element signature="e#24108#24109#0" expanded="true" />
+                <element signature="e#24164#24165#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/gui_simulation/Main.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="221">
+              <caret line="15" column="46" selection-start-line="15" selection-start-column="46" selection-end-line="15" selection-end-column="46" />
+              <folding>
+                <element signature="imports" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -44,8 +53,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/gui_simulation/QLearningAgent.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="391">
-              <caret line="51" column="56" selection-start-line="51" selection-start-column="56" selection-end-line="51" selection-end-column="56" />
+            <state relative-caret-position="357">
+              <caret line="49" column="64" selection-start-line="49" selection-start-column="64" selection-end-line="49" selection-end-column="64" />
             </state>
           </provider>
         </entry>
@@ -68,11 +77,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/gui_simulation/Controller_MainGUI.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
-              <caret line="176" column="33" selection-start-line="176" selection-start-column="33" selection-end-line="176" selection-end-column="33" />
+            <state relative-caret-position="238">
+              <caret line="34" column="44" selection-start-line="34" selection-start-column="44" selection-end-line="34" selection-end-column="44" />
             </state>
           </provider>
         </entry>
@@ -116,12 +125,12 @@
         <option value="$PROJECT_DIR$/src/gui_simulation/QLearningAgentMovement.java" />
         <option value="$PROJECT_DIR$/src/gui_simulation/mazeFiles/maze_Target-Pos5" />
         <option value="$PROJECT_DIR$/src/gui_simulation/mazeFiles/maze_Target-Pos0" />
+        <option value="$PROJECT_DIR$/src/gui_simulation/mazeFiles/mazeOriginal_V2" />
+        <option value="$PROJECT_DIR$/src/gui_simulation/SimulationMaze.java" />
+        <option value="$PROJECT_DIR$/src/gui_simulation/QLearningAgent.java" />
+        <option value="$PROJECT_DIR$/src/gui_simulation/SimulationRobot.java" />
         <option value="$PROJECT_DIR$/src/gui_simulation/Main.java" />
         <option value="$PROJECT_DIR$/src/gui_simulation/Controller_MainGUI.java" />
-        <option value="$PROJECT_DIR$/src/gui_simulation/mazeFiles/mazeOriginal_V2" />
-        <option value="$PROJECT_DIR$/src/gui_simulation/QLearningAgent.java" />
-        <option value="$PROJECT_DIR$/src/gui_simulation/SimulationMaze.java" />
-        <option value="$PROJECT_DIR$/src/gui_simulation/SimulationRobot.java" />
       </list>
     </option>
   </component>
@@ -337,7 +346,14 @@
       <option name="project" value="LOCAL" />
       <updated>1563307751821</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="- Anwendung kleiner gemacht - sollte jetzt wieder auf den Laptop passen">
+      <created>1563310381484</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1563310381484</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -347,7 +363,7 @@
     <frame x="-8" y="-8" width="1936" height="1176" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.15991472" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.15991472" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -356,7 +372,7 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32885906" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49946696" visible="true" weight="0.28763184" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49946696" visible="true" weight="0.5033557" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39980826" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -429,7 +445,8 @@
     <MESSAGE value="- Kopfgröße anpassbar" />
     <MESSAGE value="- Roboter misst nun über die gesamte Kopfgröße" />
     <MESSAGE value="- Setzen des Roboters auf die Startposition behoben" />
-    <option name="LAST_COMMIT_MESSAGE" value="- Setzen des Roboters auf die Startposition behoben" />
+    <MESSAGE value="- Anwendung kleiner gemacht - sollte jetzt wieder auf den Laptop passen" />
+    <option name="LAST_COMMIT_MESSAGE" value="- Anwendung kleiner gemacht - sollte jetzt wieder auf den Laptop passen" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/gui_simulation/QLearningAgentMovement.java">
@@ -454,30 +471,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/gui_simulation/Main.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="15" column="48" selection-start-line="15" selection-start-column="48" selection-end-line="15" selection-end-column="48" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/gui_simulation/Controller_MainGUI.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="176" column="33" selection-start-line="176" selection-start-column="33" selection-end-line="176" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/gui_simulation/QLearningAgent.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="51" column="56" selection-start-line="51" selection-start-column="56" selection-end-line="51" selection-end-column="56" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/gui_simulation/mazeFiles/mazeOriginal_V2">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="213">
@@ -492,18 +485,42 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/gui_simulation/QLearningAgent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="357">
+          <caret line="49" column="64" selection-start-line="49" selection-start-column="64" selection-end-line="49" selection-end-column="64" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/gui_simulation/SimulationRobot.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="287">
-          <caret line="392" column="27" lean-forward="true" selection-start-line="392" selection-start-column="27" selection-end-line="392" selection-end-column="27" />
+        <state relative-caret-position="187">
+          <caret line="16" column="49" selection-start-line="16" selection-start-column="49" selection-end-line="16" selection-end-column="49" />
           <folding>
             <element signature="e#6743#6744#0" expanded="true" />
             <element signature="e#6798#6799#0" expanded="true" />
-            <element signature="e#23967#23968#0" expanded="true" />
-            <element signature="e#24036#24037#0" expanded="true" />
-            <element signature="e#24107#24108#0" expanded="true" />
-            <element signature="e#24163#24164#0" expanded="true" />
+            <element signature="e#23968#23969#0" expanded="true" />
+            <element signature="e#24037#24038#0" expanded="true" />
+            <element signature="e#24108#24109#0" expanded="true" />
+            <element signature="e#24164#24165#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/gui_simulation/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="15" column="46" selection-start-line="15" selection-start-column="46" selection-end-line="15" selection-end-column="46" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/gui_simulation/Controller_MainGUI.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="34" column="44" selection-start-line="34" selection-start-column="44" selection-end-line="34" selection-end-column="44" />
         </state>
       </provider>
     </entry>
