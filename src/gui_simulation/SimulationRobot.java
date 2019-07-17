@@ -25,10 +25,10 @@ public class SimulationRobot implements Roboter {
 
     //Rewards - Learning Algorithmus
     private static final double REWARD_BUMPED = -1;
-    private static final double REWARD_DRIVE_BACK = -0.25;
+    private static final double REWARD_DRIVE_BACK = -0.05;
     private static final double REWARD_DRIVE_FORWARD = 0;
-    private static final double REWARD_DRIVE_ROTATE_RIGHT = 0;
-    private static final double REWARD_DRIVE_ROTATE_LEFT = 0;
+    private static final double REWARD_DRIVE_ROTATE_RIGHT = 4;
+    private static final double REWARD_DRIVE_ROTATE_LEFT = 4;
     private static final double REWARD_DRIVE_TARGET = 1;
 
     // Bewegungskontrolle
@@ -737,9 +737,9 @@ public class SimulationRobot implements Roboter {
         System.out.println("----------------------------------- Epsilon-lernen ------------------------------------");
         System.out.println("---------------------------------------------------------------------------------------");
         this.lerningAlgorithmus.setEpsilon(1);
-        for (int j = 0; j < 100; j++) {
+        for (int j = 0; j < 1000; j++) {
             setRobotBackToStartPosition();
-            for (int i = 0; i < 10000 && !targetReached(); i++) {
+            for (int i = 0; i < 1000 && !targetReached(); i++) {
                 look();
                 int s = findBarrier();
                 int a = this.lerningAlgorithmus.chooseAction(s);
@@ -766,7 +766,7 @@ public class SimulationRobot implements Roboter {
         System.out.println("----------------------------------- Degradierendes-Epsilon-lernen ---------------------");
         System.out.println("---------------------------------------------------------------------------------------");
         this.lerningAlgorithmus.setEpsilon(1);
-        for (int j = 0, e = 0; j < 100; j++, e += 0.01) {
+        for (int j = 0, e = 0; j < 200; j++, e += 0.01) {
             setRobotBackToStartPosition();
 
             double newEpsilon = this.lerningAlgorithmus.getEpsilon() - e;
@@ -776,7 +776,7 @@ public class SimulationRobot implements Roboter {
                 e = 0;
             }
 
-            for (int i = 0; i < 10000 && !targetReached(); i++) {
+            for (int i = 0; i < 1000 && !targetReached(); i++) {
                 look();
                 int s = findBarrier();
                 int a = this.lerningAlgorithmus.chooseAction(s);
@@ -804,10 +804,10 @@ public class SimulationRobot implements Roboter {
         System.out.println("----------------------------------- Kleines-Epsilon-lernen ----------------------------");
         System.out.println("---------------------------------------------------------------------------------------");
         this.lerningAlgorithmus.setEpsilon(0.2);
-        for (int j = 0; j < 100; j++) {
+        for (int j = 0; j < 200; j++) {
             setRobotBackToStartPosition();
 
-            for (int i = 0; i < 10000 && !targetReached(); i++) {
+            for (int i = 0; i < 1000 && !targetReached(); i++) {
                 look();
                 int s = findBarrier();
                 int a = this.lerningAlgorithmus.chooseAction(s);
@@ -835,10 +835,10 @@ public class SimulationRobot implements Roboter {
         System.out.println("----------------------------------- Q-Tabelle lernen ----------------------------------");
         System.out.println("---------------------------------------------------------------------------------------");
         this.lerningAlgorithmus.setEpsilon(0.1);
-        for (int j = 0; j < 100; j++) {
+        for (int j = 0; j < 200; j++) {
             setRobotBackToStartPosition();
 
-            for (int i = 0; i < 10000 && !targetReached(); i++) {
+            for (int i = 0; i < 1000 && !targetReached(); i++) {
                 look();
                 int s = findBarrier();
                 int a = this.lerningAlgorithmus.chooseAction(s);
@@ -888,11 +888,10 @@ public class SimulationRobot implements Roboter {
         this.lerningAlgorithmus.setEpsilon(0);
         int j = 0;
         setRobotBackToStartPosition();
-        for (int i = 0; i < 10000 && !targetReached(); i++, j++) {
+        for (int i = 0; i < 1000 && !targetReached(); i++, j++) {
             look();
             int s = findBarrier();
 
-            System.out.println("s:" + s);
             switch (s) {
                 case 0:
                     this.stateNoBarrier++;
