@@ -951,7 +951,7 @@ public class SimulationRobot implements Roboter {
         System.out.println("Bei Rechtsrotation angestoßen: " + this.try_drived_rotateRight);
         System.out.println("Linksrotation: " + this.drived_rotateLeft);
         System.out.println("Bei Linksrotation angestoßen: " + this.try_drived_rotateLeft);
-        System.out.println("Iterationen: " + (j + 1));
+        System.out.println("Iterationen: " + j);
         System.out.println("Angestoßen: " + (this.try_drived_forward + this.try_drived_backward + this.try_drived_rotateRight + this.try_drived_rotateLeft));
         if (j > 0) {
             System.out.println("Fehlerquote: " + ((this.try_drived_forward + this.try_drived_backward + this.try_drived_rotateRight + this.try_drived_rotateLeft) * 100 / j) + "%");
