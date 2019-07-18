@@ -24,12 +24,15 @@ public class SimulationRobot implements Roboter {
     public static final int DRIVE_BACKWARD = 3;
 
     //Rewards - Learning Algorithmus
-    private static final double REWARD_BUMPED = -1;
-    private static final double REWARD_DRIVE_BACK = -0.05;
+    private static final double REWARD_BUMPED_FORWARD = -1;
+    private static final double REWARD_BUMPED_BACKWARD = -0.25;
+    private static final double REWARD_BUMPED_ROTATE_RIGHT = -0.05;
+    private static final double REWARD_BUMPED_ROTATE_LEFT = -0.05;
+    private static final double REWARD_DRIVE_BACK = 0;
     private static final double REWARD_DRIVE_FORWARD = 0;
-    private static final double REWARD_DRIVE_ROTATE_RIGHT = 4;
-    private static final double REWARD_DRIVE_ROTATE_LEFT = 4;
-    private static final double REWARD_DRIVE_TARGET = 1;
+    private static final double REWARD_DRIVE_ROTATE_RIGHT = 1;
+    private static final double REWARD_DRIVE_ROTATE_LEFT = 1;
+    private static final double REWARD_DRIVE_TARGET = 0.1;
 
     // Bewegungskontrolle
     private boolean isBumped = false;
@@ -983,7 +986,7 @@ public class SimulationRobot implements Roboter {
                     this.reward = REWARD_DRIVE_FORWARD;
                     this.drived_forward++;
                 } else {
-                    this.reward = REWARD_BUMPED;
+                    this.reward = REWARD_BUMPED_FORWARD;
                     this.try_drived_forward++;
                 }
 
@@ -994,7 +997,7 @@ public class SimulationRobot implements Roboter {
                     this.reward = REWARD_DRIVE_ROTATE_RIGHT;
                     this.drived_rotateRight++;
                 } else {
-                    this.reward = REWARD_BUMPED;
+                    this.reward = REWARD_BUMPED_ROTATE_RIGHT;
                     this.try_drived_rotateRight++;
                 }
 
@@ -1005,7 +1008,7 @@ public class SimulationRobot implements Roboter {
                     this.reward = REWARD_DRIVE_BACK;
                     this.drived_backward++;
                 } else {
-                    this.reward = REWARD_BUMPED;
+                    this.reward = REWARD_BUMPED_BACKWARD;
                     this.try_drived_backward++;
                 }
 
@@ -1016,7 +1019,7 @@ public class SimulationRobot implements Roboter {
                     this.reward = REWARD_DRIVE_ROTATE_LEFT;
                     this.drived_rotateLeft++;
                 } else {
-                    this.reward = REWARD_BUMPED;
+                    this.reward = REWARD_BUMPED_ROTATE_LEFT;
                     this.try_drived_rotateLeft++;
                 }
 
